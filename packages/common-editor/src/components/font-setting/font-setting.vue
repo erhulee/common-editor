@@ -1,0 +1,66 @@
+<template>
+    <div class="flex ">
+        <TextDecorationEditor :value="text_decoration_value" @change="payload => handleChange(payload.path, payload.value)" ></TextDecorationEditor>
+        <AlignSelect :value="props.textAlign" @change="value=>handleChange('textAlign', value)"></AlignSelect>
+    </div>
+
+    <div class=" flex mt-2" >
+        <c-number-input @change="handleChange('fontSize', $event)" />
+    </div>
+</template>
+
+<script setup lang="ts">
+
+import { FontSetting } from '@/type/font-setting';
+import AlignSelect from './align-select.vue';
+import TextDecorationEditor from './text-decoration-editor.vue';
+import { computed } from 'vue';
+type Props = FontSetting;
+const props = defineProps<Props>();
+const emit = defineEmits(["change"]);
+function handleChange(key: keyof Props, value: number | string){
+    emit("change", {
+        path: key,
+        value
+    })
+}
+
+
+const text_decoration_value = computed(()=>([
+    props.fontWeight == 600,
+    props.fontStyle == "italic",
+    props.textDecoration == "underline",
+    props.textDecoration == "line-through"
+])) 
+
+
+</script>
+
+<style scoped>
+.menu-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 2px;
+}
+
+.menu-item:hover {
+    background-color: rgb(244, 244, 244);
+}
+
+.menu-item--active {
+    background-color: #F1F2F4 !important;
+}
+
+.prefix {
+    margin-right: 5px;
+}
+
+.content {
+    flex: 1;
+}
+
+.suffix {
+    margin-left: 5px;
+}
+</style>
+
