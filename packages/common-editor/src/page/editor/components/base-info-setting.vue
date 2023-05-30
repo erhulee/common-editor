@@ -15,7 +15,7 @@
             @click="handleDelete">
             <Delete fill="#888" size="16" ></Delete>
         </CButton>
-        
+     
     </div>
 </template>
 

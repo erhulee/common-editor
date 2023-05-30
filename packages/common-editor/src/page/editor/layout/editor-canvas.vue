@@ -14,8 +14,8 @@ import { computed } from 'vue';
 import { useActorsStore } from '../../../store/actors';
 import actorRender from '../components/actor-render.vue';
 
-const actorsRef = useActorsStore();
-const actors = computed(() => actorsRef.actors);
+const actorsStore = useActorsStore();
+const actors = computed(() => actorsStore.actors);
 
 </script>
 

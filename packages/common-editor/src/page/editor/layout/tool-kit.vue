@@ -1,7 +1,8 @@
 <template>
     <div class=" flex items-center justify-between p-2 relative">
         <div>
-            <CButton class=" mr-2">
+            <CButton class=" mr-2" 
+            @click="actorStore.undo()">
                 <InvertLeft></InvertLeft>
             </CButton>
             <CButton>
@@ -35,6 +36,9 @@
 import CButton from "@/components/c-button.vue";
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { CategoryManagement, InvertLeft, InvertRight } from "@icon-park/vue-next"
+import { useActorsStore } from "@/store/actors"
+const actorStore = useActorsStore();
+
 </script>
 
 <style scoped>

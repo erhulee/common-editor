@@ -1,29 +1,32 @@
-import { BaseSetting, FontSetting } from "@/type/font-setting";
-import { cloneDeep } from "lodash-es";
+import { BaseSetting, FontSetting, TextRenderMaterial } from "@/type/font-setting";
+import { cloneDeep, get } from "lodash-es";
 import { defineStore } from "pinia";
 import { v1 } from "uuid";
+
+type ActorOptions = {
+    // material: TextRenderMaterial
+    base: Partial<BaseSetting>
+    font: Partial<FontSetting>
+};
 type Actor = {
     id: string;
     tag: string;
-    options: Record<string, any> & {
-        base: Partial<BaseSetting>
-        font: Partial<FontSetting>
-    };
+    options: ActorOptions
 };
 
 type TextActor = {
-    content: string;
+    options: {
+        material: TextRenderMaterial
+    }
 } & Actor;
 
 
 function set(target: Record<string, any>, paths: string[], value: any) {
     let current = target;
-
     if (paths.length == 1) {
         target[paths[0]] = value;
         return;
     }
-
     for (let i = 0; i < paths.length; i++) {
         const next = current[paths[i]];
         if (next == null) {
@@ -37,8 +40,32 @@ function set(target: Record<string, any>, paths: string[], value: any) {
         }
     }
 }
+
+enum ActionType {
+    AddActor,
+    DeleteActor,
+    UpdateActor
+}
+
+type HistoryMap = {
+    [ActionType.AddActor]: {
+        id: string
+    }
+    [ActionType.DeleteActor]: {
+        id: string,
+        tag: string,
+        options: any,
+    }
+    [ActionType.UpdateActor]: {
+        id: string,
+        paths: string[],
+        oldValue: any
+    }
+}
+
 export const useActorsStore = defineStore("actors", {
     state: () => ({
+        memoryStack: [] as any[],
         actors: [] as Array<TextActor>,
         currentActorId: "",
     }),
@@ -47,52 +74,84 @@ export const useActorsStore = defineStore("actors", {
     actions: {
         add(
             tag: string,
-            option: {
-                content: string;
-                options: {
-                    font: Partial<FontSetting>;
-                    base: Partial<BaseSetting>
-                };
+            options: {
+                material: TextRenderMaterial;
+                font: Partial<FontSetting>;
+                base: Partial<BaseSetting>
             }
         ) {
             const id = v1();
-            const { content, options } = option;
             this.actors.push({
                 id,
                 tag,
-                content: content,
                 options: options,
             });
+            this.select(id)
+            this.memory(ActionType.AddActor, {
+                id
+            })
         },
         copy(copyInstance: any | undefined, copyCount: number) {
             if (copyInstance == null) return;
-
             const content = cloneDeep(copyInstance);
             content.id = v1();
             content.options.base.top += copyCount * 10;
             content.options.base.left += copyCount * 10;
 
             // 选中新的
-            this.actors.push(content)
+            this.actors.push(content);
+            this.memory(ActionType.AddActor, {
+                id: content.id
+            })
             this.select(content.id);
         },
         select(id: string) {
             this.currentActorId = id;
         },
         updateOption(paths: string[], value: any) {
-            debugger
             const target = this.currentActor!.options;
-            set(target, paths, value)
+            this.memory(ActionType.UpdateActor, {
+                id: this.currentActorId,
+                paths: paths,
+                oldValue: get(target, paths)
+            })
+            set(target, paths, value);
         },
-        delete(id: string) {
-            debugger
+        delete(id: string, skipMemory?: boolean) {
             const index = this.actors.findIndex(item => item.id == id);
             if (index == -1) return
+            const instance = this.actors[index];
+            if (!skipMemory) this.memory(ActionType.DeleteActor, instance)
             this.actors.splice(index, 1)
         },
         deleteCurrent() {
             if (this.currentActorId == "") return;
-            this.delete(this.currentActorId)
+            this.delete(this.currentActorId);
+        },
+
+        // 存储下行为，和数据备份
+        memory<T extends ActionType>(type: T, history: HistoryMap[T]) {
+            this.memoryStack.push({
+                type,
+                history
+            })
+        },
+        undo() {
+            const memoryPack = this.memoryStack.pop();
+            const { type, history } = memoryPack as { type: ActionType, history: any };
+            switch (type) {
+                case ActionType.DeleteActor:
+                    this.actors.push(history);
+                    break;
+                case ActionType.UpdateActor:
+                    const target = this.actors.find(item => item.id == history.id);
+                    if (target == null) break;
+                    set(target, history.paths, history.oldValue);
+                    break;
+                case ActionType.AddActor:
+                    this.delete(history.id, true);
+                    break;
+            }
         }
     },
 

@@ -1,7 +1,7 @@
 <script  lang="ts">
 import * as numberInput from "@zag-js/number-input";
 import { normalizeProps, useMachine } from "@zag-js/vue";
-import { computed, defineComponent, defineProps  } from "vue";
+import { computed, defineComponent  } from "vue";
 import { Up, Down} from "@icon-park/vue-next"
 export default defineComponent({
     name: "c-number-input",

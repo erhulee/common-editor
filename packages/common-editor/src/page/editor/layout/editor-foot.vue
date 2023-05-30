@@ -1,16 +1,20 @@
 <template>
+
     <div class=" bg-gray-100 pb-4 px-4 flex justify-end relative ">
-        <div class="bg-white absolute top-0 p-3 shadow-sm rounded-md panel" v-if="hotKeysVisible">
-            <div class=" font-semibold text-zinc-700">
-                快捷键
-            </div>
-            <div>
-                <div v-for="{ label, value } in hootKeys" class=" w-60 flex justify-between items-center mt-2">
-                    <div class=" text-sm">{{ label }}</div>
-                    <div class=" bg-gray-200 text-neutral-500 p-2 rounded-md text-xs">{{ value }}</div>
+        <Transition>
+           <div class="bg-white absolute top-0 p-3 shadow-sm rounded-md panel" v-if="hotKeysVisible">
+                <div class=" font-semibold text-zinc-700">
+                    快捷键
+                </div>
+                <div>
+                    <div v-for="{ label, value } in hootKeys" class=" w-60 flex justify-between items-center mt-2">
+                        <div class=" text-sm">{{ label }}</div>
+                        <div class=" bg-gray-200 text-neutral-500 p-2 rounded-md text-xs">{{ value }}</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Transition>
+ 
         <div @click="handleHotKeysClick" >
             <Help size="22" fill="#666" class="cursor-pointer">
             </Help>
@@ -47,7 +51,18 @@ function handleHotKeysClick(){
 }
 </script>
 
-<style> .panel {
+<style> 
+.panel {
      transform: translateY(-105%)
- }
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 </style>

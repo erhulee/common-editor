@@ -9,3 +9,8 @@ export type FontSetting = {
 export type BaseSetting = {
     isLocked: boolean
 }
+
+// 渲染的内容
+export type TextRenderMaterial = {
+    content: string
+}

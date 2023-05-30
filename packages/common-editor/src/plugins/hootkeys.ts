@@ -20,5 +20,9 @@ export default function initHotKey() {
         actorStore.deleteCurrent()
     })
 
+    useHotKeys("esc", () => {
+        actorStore.select("")
+    })
+
 
 }

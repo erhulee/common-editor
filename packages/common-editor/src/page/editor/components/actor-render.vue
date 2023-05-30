@@ -1,6 +1,5 @@
 <template>
     <div class="absolute" ref="wrapperRef" @mousedown="startMove" :style="position">
-      
         <div v-if="isActive && !isLocked" class="decoration 
                         absolute top-0 left-0 right-0 bottom-0
                         border-blue-500 border-2 text-blue-500">
@@ -44,7 +43,9 @@ const props = defineProps<{
 const actorStore = useActorsStore();
 const isActive = computed(() => props.id == actorStore.currentActorId);
 const isLocked = computed(() => actorStore.currentActor?.options.base.isLocked)
+console.log("props:", props)
 const position = computed(() => mapValues(pick(props.options.base, ["left", "top", "width", "height"]), (value: number) => value + "px"))
+const dynamicComponentStyle = computed(()=> props.options.font)
 const isBusy = ref(false);
 let   isMoved = false;
 const wrapperRef = ref<HTMLElement | null>(null);
@@ -104,10 +105,9 @@ function move(event: MouseEvent) {
 }
 
 function endMove() {
-    if(!isMoved){
-            actorStore.updateOption(["base", "top"], currentPosition?.top);
+    if(isMoved){
+        actorStore.updateOption(["base", "top"], currentPosition?.top);
         actorStore.updateOption(["base", "left"], currentPosition?.left)
-  
     }
     isMoved = false
     document.removeEventListener("mousemove", move);
@@ -205,7 +205,6 @@ function resize(event: MouseEvent, originRect: Pick<DOMRect, "width"|"height"|"t
 
 function endResize(){
     isBusy.value = false
-
     actorStore.updateOption(["base", "top"], currentPosition?.top);
     actorStore.updateOption(["base", "left"], currentPosition?.left)
     actorStore.updateOption(["base", "width"], currentSize.width);
