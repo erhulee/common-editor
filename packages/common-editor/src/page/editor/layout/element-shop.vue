@@ -23,6 +23,7 @@ const text_template = [
         default_options: {
             content: "双击编辑标题",
             font: {
+                color: "rgb(0,0,0)",
                 fontWeight: 600,
                 fontSize: 90,
             },
@@ -38,7 +39,8 @@ const text_template = [
         icon: "https://cdn.dancf.com/fe-assets/20230206/ca7b9eae10099691c79baae5d4f20b84.svg",
         default_options: {
             content: "双击编辑副标题",
-          font: {
+            font: {
+                color: "rgb(0,0,0)",
                 fontWeight: 400,
                 fontSize: 70,
             },
@@ -55,6 +57,7 @@ const text_template = [
         default_options: {
             content: "双击编辑正文",
             font: {
+                color: "rgb(0,0,0)",
                 fontWeight: 400,
                 fontSize: 40,
             },
@@ -71,7 +74,7 @@ function addTextActor(option: any) {
     const content = option.content;
     const font = option.font;
     const base = option.base;
-    actorsStore.add("text", 
+    actorsStore.add("text",
         {
             material: {
                 content

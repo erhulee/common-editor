@@ -40,14 +40,14 @@ export default defineComponent({
 <template>
     <div ref="ref" 
         v-bind="api.rootProps" 
-        class=" h-10  bg-gray-100 flex rounded-md overflow-hidden">
+        class=" h-10 bg-gray-100 flex rounded-md overflow-hidden box-border">
             <input 
                 v-bind="api.inputProps" 
                 @input="handleChange"
-                class="bg-gray-100 h-full flex-1 px-2
+                class="bg-gray-100 h-full relative z-0
                 border-none outline-none focus-visible:outline-none" />
-            <div class=" flex flex-col justify-around right-0 
-                h-full  pr-2 pl-1 py-1  " >
+            <div class=" flex flex-col justify-around  relative z-10
+                h-full pr-2 pl-1 py-1  " >
                 <Up size="12" v-bind="api.incrementTriggerProps " class="hover:text-gray-400" ></Up>
                 <Down size="12" v-bind="api.decrementTriggerProps" class="hover:text-gray-400" ></Down>
             </div>

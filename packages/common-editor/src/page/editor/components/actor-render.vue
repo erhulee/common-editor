@@ -43,9 +43,8 @@ const props = defineProps<{
 const actorStore = useActorsStore();
 const isActive = computed(() => props.id == actorStore.currentActorId);
 const isLocked = computed(() => actorStore.currentActor?.options.base.isLocked)
-console.log("props:", props)
 const position = computed(() => mapValues(pick(props.options.base, ["left", "top", "width", "height"]), (value: number) => value + "px"))
-const dynamicComponentStyle = computed(()=> props.options.font)
+
 const isBusy = ref(false);
 let   isMoved = false;
 const wrapperRef = ref<HTMLElement | null>(null);

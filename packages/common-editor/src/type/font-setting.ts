@@ -4,6 +4,7 @@ export type FontSetting = {
     textDecoration: "line-through" | "underline" | "none"
     fontStyle: "italic" | "none",
     textAlign: "end" | "start" | "center" | "both"
+    color: string
 }
 
 export type BaseSetting = {

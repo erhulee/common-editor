@@ -43,6 +43,10 @@ const hootKeys = [
     {
         label: "删除",
         value: "Delete/Backspace"
+    },
+    {
+        label: "取消选中",
+        value: "ESC"
     }
 ]
 

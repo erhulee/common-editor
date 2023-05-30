@@ -8,20 +8,27 @@
         <div class=" font-semibold my-3 " >文字</div>
         <FontSetting 
             v-bind="currentFontSetting" 
-            @change="handleFontChange"></FontSetting>
+            @change="handleFontChange">
+        </FontSetting>
+
+        
     </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useActorsStore } from '@/store/actors';
 import FontSetting from '../../../components/font-setting/font-setting.vue';
-import { computed } from 'vue';
 import BaseInfoSetting from '../components/base-info-setting.vue';
 import TextContentSetting from '../components/text-content-setting.vue';
+
+
 const actorStore = useActorsStore();
 const currentFontSetting = computed(()=> actorStore.currentActor?.options?.font || {});
 const currentBaseSetting = computed(()=> actorStore.currentActor?.options.base || {})
 const currentValueSetting = computed(()=> (actorStore.currentActor?.options.material));
+
+
 
 function handleFontChange(payload:{
     path: string, 
@@ -41,3 +48,7 @@ function handleBaseInfoChange(payload: {
 }
 
 </script>
+
+<style>
+   
+</style>
