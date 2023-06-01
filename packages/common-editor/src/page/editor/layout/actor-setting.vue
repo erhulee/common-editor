@@ -5,7 +5,7 @@
             <TextContentSetting :value="currentValueSetting" />
             <FontSetting v-bind="currentFontSetting" @change="handleFontChange" />
         </template>
-        <GlobalSetting v-else @change="handleGlobalChange"></GlobalSetting>
+        <GlobalSetting :backgroundColor="canvasSetting.backgroundColor" v-else @change="handleGlobalChange"></GlobalSetting>
     </div>
 </template>
 
@@ -23,7 +23,7 @@ const globalStore = useGlobalStore();
 const currentFontSetting = computed(() => actorStore.currentActor?.options?.font || {});
 const currentBaseSetting = computed(() => actorStore.currentActor?.options.base || {})
 const currentValueSetting = computed(() => (actorStore.currentActor?.options.material));
-
+const canvasSetting = computed(()=> globalStore.canvas_style);
 
 
 function handleFontChange(payload: {

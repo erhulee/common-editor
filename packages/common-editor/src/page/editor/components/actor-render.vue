@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { useActorsStore } from '@/store/actors';
 import { mapValues, pick } from 'lodash-es';
-import { computed, onMounted, onUpdated, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import {  Lock } from "@icon-park/vue-next"
 type TupleToUnion<T extends any[]> =  T extends Array<infer U> ? U : never
 const props = defineProps<{
@@ -44,9 +44,7 @@ const actorStore = useActorsStore();
 const isActive = computed(() => props.id == actorStore.currentActorId);
 const isLocked = computed(() => actorStore.currentActor?.options.base.isLocked)
 const position = computed(() => mapValues(pick(props.options.base, ["left", "top", "width", "height"]), (value: number) => value + "px"))
-onUpdated(()=>{
-    console.log("update !!!", props.id)
-})
+console.log(position)
 const isBusy = ref(false);
 let   isMoved = false;
 const wrapperRef = ref<HTMLElement | null>(null);

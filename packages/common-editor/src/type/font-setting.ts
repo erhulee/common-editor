@@ -9,6 +9,10 @@ export type FontSetting = {
 }
 
 export type BaseSetting = {
+    width: number,
+    height: number,
+    left: number,
+    top: number
     isLocked: boolean
 }
 
@@ -16,3 +20,5 @@ export type BaseSetting = {
 export type TextRenderMaterial = {
     content: string
 }
+
+

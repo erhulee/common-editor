@@ -1,5 +1,5 @@
 <template>
-    <div class=" bg-gray-100 rounded-lg hover:bg-gray-200 flex flex-col items-center justify-center"
+    <div class=" bg-gray-100 rounded-lg hover:bg-gray-200 flex flex-col items-center justify-center "
         :class="isPureBlock ? 'p-2' : 'px-4 py-3'"
         @click="emit('click')"
         >

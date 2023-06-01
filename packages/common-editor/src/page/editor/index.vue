@@ -8,14 +8,14 @@
                 <TabGroup vertical class=" h-full">
                     <div class=" flex flex-row">
                         <TabList class=" flex flex-col p-2 border-r border-r-gray-200 w-20 text-gray-600">
-                            <Tab v-slot="{ selected }">
+                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none" >
                                 <div class="p-2 rounded-md text-2xl flex-col flex items-center justify-center"
                                     :class="selected ? ' bg-gray-100' : ''">
                                     <AddFour></AddFour>
                                     <div class=" text-xs mt-1 font-semibold">添加</div>
                                 </div>
                             </Tab>
-                            <Tab v-slot="{ selected }">
+                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none" >
                                 <div class="p-2 rounded-md text-2xl flex-col flex items-center justify-center"
                                     :class="selected ? ' bg-gray-100' : ''">
                                     <FolderClose></FolderClose>
