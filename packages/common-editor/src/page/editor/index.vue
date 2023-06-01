@@ -27,7 +27,7 @@
                             <TabPanel class=" p-3">
                                 <element-shop />
                             </TabPanel>
-                            <TabPanel class=" p-3">
+                            <TabPanel class=" p-3 h-full">
                                 <MaterialShop></MaterialShop>
                             </TabPanel>
                         </TabPanels>

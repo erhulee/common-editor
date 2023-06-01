@@ -47,6 +47,10 @@ const hootKeys = [
     {
         label: "取消选中",
         value: "ESC"
+    },
+    {
+        label: "撤回",
+        value: "Ctrl + Z"
     }
 ]
 

@@ -1,8 +1,10 @@
 <template>
-    <div @click="handleClick" class="p-2 text-sm
-            inline-flex justify-center items-center 
-            rounded " :class="className">
-        <slot name="icon"></slot>
+    <div @click="handleClick" class="p-2 text-sm cursor-pointer
+                inline-flex justify-center items-center 
+                rounded " :class="className">
+        <div class=" mr-2">
+            <slot name="icon"></slot>
+        </div>
         <slot></slot>
     </div>
 </template>
@@ -10,8 +12,8 @@
 <script lang="ts">
 import { PropType, computed, defineComponent } from 'vue';
 export default defineComponent({
-    name:"c-button",
-    props:{
+    name: "c-button",
+    props: {
         disable: {
             type: Boolean,
             default: false
@@ -20,12 +22,12 @@ export default defineComponent({
             type: Boolean,
             default: false
         },
-        type:{
-            type: String  as PropType<"default" | "text" | "primary">,
+        type: {
+            type: String as PropType<"default" | "text" | "primary">,
         }
     },
-    emits:["click"],
-    setup(props, ctx){
+    emits: ["click"],
+    setup(props, ctx) {
         const className = computed(() => {
             const result: string[] = [];
             if (props.disable) result.push("--disable");
@@ -37,7 +39,7 @@ export default defineComponent({
             }
             return result
         });
-        const handleClick = ($event:any)=>{
+        const handleClick = ($event: any) => {
             ctx.emit("click", $event)
         }
 

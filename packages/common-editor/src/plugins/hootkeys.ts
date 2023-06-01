@@ -23,4 +23,9 @@ export default function initHotKey() {
     useHotKeys("esc", () => {
         actorStore.select("")
     })
+
+    useHotKeys("ctrl+z, command+z", () => {
+        console.log("hee")
+        actorStore.undo()
+    })
 }

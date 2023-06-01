@@ -3,13 +3,15 @@
         <div v-if="isActive && !isLocked" class="decoration 
                         absolute top-0 left-0 right-0 bottom-0
                         border-blue-500 border-2 text-blue-500">
-                        <span class="absolute bg-white border-blue-500 border w-3 h-3 " 
+                        <span class="absolute bg-white border-blue-500 border w-2 h-2 " 
                             v-for="item in resizeDot"
                             :key="item"
                             :class="item"
                             @mousedown="startResize($event, item)"
                             >
                         </span>
+                        <Refresh  class="rotate"  @mousedown="startRotate($event)"></Refresh>
+
         </div>
 
         <div v-if="isActive && isLocked" class="decoration 
@@ -31,7 +33,7 @@
 import { useActorsStore } from '@/store/actors';
 import { mapValues, pick } from 'lodash-es';
 import { computed, onMounted, ref } from 'vue';
-import {  Lock } from "@icon-park/vue-next"
+import {  Lock, Refresh } from "@icon-park/vue-next"
 type TupleToUnion<T extends any[]> =  T extends Array<infer U> ? U : never
 const props = defineProps<{
     tag: string,
@@ -43,11 +45,19 @@ const props = defineProps<{
 const actorStore = useActorsStore();
 const isActive = computed(() => props.id == actorStore.currentActorId);
 const isLocked = computed(() => actorStore.currentActor?.options.base.isLocked)
-const position = computed(() => mapValues(pick(props.options.base, ["left", "top", "width", "height"]), (value: number) => value + "px"))
-console.log(position)
+const position = computed(() => {
+    return {
+        ...mapValues(pick(props.options.base, ["left", "top", "width", "height"]), (value: number) => value + "px"),
+        transform: `rotate(${props.options.base.rotate || 0}deg)`
+    }
+})
 const isBusy = ref(false);
 let   isMoved = false;
 const wrapperRef = ref<HTMLElement | null>(null);
+const clickPosition = {
+    x: 0,
+    y: 0
+}
 const diff = {
     top: 0,
     left: 0
@@ -58,6 +68,7 @@ let currentSize: { width: number, height: number} = {
     width: 0,
     height: 0
 }
+let currentRotate = 0;
 onMounted(() => {
     const canvas = document.getElementById("editor-canvas");
     canvasRect = canvas!.getBoundingClientRect();
@@ -84,6 +95,7 @@ function startMove(event: MouseEvent) {
         left: elementRect.left - canvasRect!.left,
         top: elementRect.top - canvasRect!.top
     }
+
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", endMove);
 }
@@ -219,9 +231,64 @@ function endResize(){
     actorStore.updateOption(["base", "height"], currentSize.height)
 }
 
+function startRotate(event: MouseEvent ){
+    isBusy.value = true;
+    clickPosition.x = event.clientX;
+    clickPosition.y = event.clientY;
+    document.addEventListener("mousemove", rotate);
+    document.addEventListener("mouseup", endRotate);
+}
+
+
+
+
+function rotate(event: MouseEvent){
+    const elementRect = wrapperRef.value!.getBoundingClientRect();
+    const center = {
+        x: elementRect.left + elementRect.width / 2,
+        y: elementRect.top + elementRect.height / 2
+    }
+
+    const vector_a = [center.x - clickPosition.x, center.y - clickPosition.y];
+    const vector_b = [center.x - event.x, center.y - event.y];
+
+    const len_a = Math.sqrt(Math.pow(vector_a[0], 2) + Math.pow(vector_a[1], 2));
+    const len_b = Math.sqrt(Math.pow(vector_b[0], 2) + Math.pow(vector_b[1], 2));
+    const dot_ab  =  (vector_a[0] * vector_b[0] + vector_a[1] * vector_b[1])
+    const cos = dot_ab / (len_a * len_b);
+    const radians = Math.acos(cos);
+    let degrees = radians * (180 / Math.PI);
+
+
+    // 判断旋转方向，使用叉积（外积）判断向量叉积的方向
+    const cross_ab = vector_a[0] * vector_b[1] - vector_a[1] * vector_b[0];
+    if (cross_ab < 0) {
+        degrees = -degrees;
+    }
+    wrapperRef.value!.style.transform = `rotate(${degrees}deg`
+    currentRotate = degrees
+}
+
+function endRotate(){
+    isBusy.value = false
+    actorStore.updateOption(["base", "rotate"], currentRotate);
+    document.removeEventListener("mousemove", rotate);
+    document.removeEventListener("mouseup", endRotate);
+}
+
 </script>
 
 <style>
+.rotate{
+    position: absolute;
+    bottom: 0;
+    transform: translateY(40px);
+    margin: auto;
+    left: calc( 50% - 7px);
+    display: flex;
+    justify-content: center;    
+
+}
 .active {
     border: solid 1px #101a6c;
 }
