@@ -1,54 +1,56 @@
 <template>
-    <div class=" px-4 h-full pt-5" >
-        <BaseInfoSetting 
-            v-bind="currentBaseSetting" 
-            @change="handleBaseInfoChange" />
-
-        <TextContentSetting :value="currentValueSetting"></TextContentSetting>
-        <div class=" font-semibold my-3 " >文字</div>
-        <FontSetting 
-            v-bind="currentFontSetting" 
-            @change="handleFontChange">
-        </FontSetting>
-
-        
+    <div class=" px-4 h-full pt-5">
+        <template v-if="Boolean(actorStore.currentActorId)">
+            <BaseInfoSetting v-bind="currentBaseSetting" @change="handleBaseInfoChange" />
+            <TextContentSetting :value="currentValueSetting" />
+            <FontSetting v-bind="currentFontSetting" @change="handleFontChange" />
+        </template>
+        <GlobalSetting v-else @change="handleGlobalChange"></GlobalSetting>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useActorsStore } from '@/store/actors';
-import FontSetting from '../../../components/font-setting/font-setting.vue';
 import BaseInfoSetting from '../components/base-info-setting.vue';
+import FontSetting from "../components/font-setting/index.vue"
 import TextContentSetting from '../components/text-content-setting.vue';
-
+import GlobalSetting from '../components/global-setting.vue';
+import { useGlobalStore } from '@/store/global';
 
 const actorStore = useActorsStore();
-const currentFontSetting = computed(()=> actorStore.currentActor?.options?.font || {});
-const currentBaseSetting = computed(()=> actorStore.currentActor?.options.base || {})
-const currentValueSetting = computed(()=> (actorStore.currentActor?.options.material));
+const globalStore = useGlobalStore();
+const currentFontSetting = computed(() => actorStore.currentActor?.options?.font || {});
+const currentBaseSetting = computed(() => actorStore.currentActor?.options.base || {})
+const currentValueSetting = computed(() => (actorStore.currentActor?.options.material));
 
 
 
-function handleFontChange(payload:{
-    path: string, 
+function handleFontChange(payload: {
+    path: string,
     value: any
-}){
-    const {path, value} = payload;
+}) {
+    const { path, value } = payload;
     actorStore.updateOption(["font", path], value)
 }
-
 function handleBaseInfoChange(payload: {
     path: string,
     value: any
 }) {
     const { path, value } = payload;
     actorStore.updateOption(["base", path], value)
-    console.log(path, value)
+}
+
+function handleGlobalChange(payload:{
+    path: string,
+    value: any
+}){
+    // console.log(payload)
+    globalStore.updateCanvasOptions(payload.path, payload.value)
 }
 
 </script>
 
 <style>
-   
+
 </style>

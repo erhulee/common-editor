@@ -26,6 +26,7 @@ const text_template = [
                 color: "rgb(0,0,0)",
                 fontWeight: 600,
                 fontSize: 90,
+                textAlignLast: "center"
             },
             base: {
                 top: 100,
@@ -43,6 +44,7 @@ const text_template = [
                 color: "rgb(0,0,0)",
                 fontWeight: 400,
                 fontSize: 70,
+                textAlignLast:"center"
             },
             base: {
                 top: 100,
@@ -60,6 +62,7 @@ const text_template = [
                 color: "rgb(0,0,0)",
                 fontWeight: 400,
                 fontSize: 40,
+                textAlignLast: "center"
             },
             base: {
                 top: 100,

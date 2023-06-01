@@ -35,7 +35,6 @@ export default defineComponent(
         setup(props, ctx) {
             function handleChange(event: Event){
                 const value = (event.target as any) .value;
-                console.log(value)
                 ctx.emit("change", value)
             }
             return {

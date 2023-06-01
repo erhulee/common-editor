@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "AlimamaShuHeiTi";
+    font-display: auto;
+    src:  url("./assets/fonts/AlimamaShuHeiTi.woff")
+}
+
+
+@font-face {
+    font-family: "Dream-BraveGB-Heavy";
+    font-display: auto;
+    src: url("./assets/fonts/Dream-BraveGB-Heavy.woff")
+}
+
+
+@font-face {
+    font-family: "ZiHunBianTaoTi";
+    font-display: auto;
+    src: url("./assets/fonts/ZiHunBianTaoTi-2.ttf")
+}

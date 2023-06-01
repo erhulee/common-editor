@@ -1,5 +1,5 @@
 <template>
-    <div :style="style">{{ props.options.material.content }}</div>
+    <div :style="style" class=" select-none" >{{ props.options.material.content }}</div>
 </template>
 
 <script setup lang="ts">

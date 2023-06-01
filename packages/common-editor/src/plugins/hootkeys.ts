@@ -23,6 +23,4 @@ export default function initHotKey() {
     useHotKeys("esc", () => {
         actorStore.select("")
     })
-
-
 }

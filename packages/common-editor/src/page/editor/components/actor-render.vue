@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute" ref="wrapperRef" @mousedown="startMove" :style="position">
+    <div class="absolute" ref="wrapperRef" @mousedown="startMove" @click.stop="" :style="position" :id="props.id">
         <div v-if="isActive && !isLocked" class="decoration 
                         absolute top-0 left-0 right-0 bottom-0
                         border-blue-500 border-2 text-blue-500">
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { useActorsStore } from '@/store/actors';
 import { mapValues, pick } from 'lodash-es';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUpdated, ref } from 'vue';
 import {  Lock } from "@icon-park/vue-next"
 type TupleToUnion<T extends any[]> =  T extends Array<infer U> ? U : never
 const props = defineProps<{
@@ -44,7 +44,9 @@ const actorStore = useActorsStore();
 const isActive = computed(() => props.id == actorStore.currentActorId);
 const isLocked = computed(() => actorStore.currentActor?.options.base.isLocked)
 const position = computed(() => mapValues(pick(props.options.base, ["left", "top", "width", "height"]), (value: number) => value + "px"))
-
+onUpdated(()=>{
+    console.log("update !!!", props.id)
+})
 const isBusy = ref(false);
 let   isMoved = false;
 const wrapperRef = ref<HTMLElement | null>(null);
@@ -105,8 +107,17 @@ function move(event: MouseEvent) {
 
 function endMove() {
     if(isMoved){
-        actorStore.updateOption(["base", "top"], currentPosition?.top);
-        actorStore.updateOption(["base", "left"], currentPosition?.left)
+        console.log("down")
+        actorStore.batchUpdateOption([
+            {
+                paths: ["base", "top"],
+                value: currentPosition?.top
+            },
+               {
+                paths: ["base", "left"],
+                value: currentPosition?.left
+            }
+        ])
     }
     isMoved = false
     document.removeEventListener("mousemove", move);

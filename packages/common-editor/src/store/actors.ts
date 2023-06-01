@@ -23,6 +23,7 @@ type TextActor = {
 
 function set(target: Record<string, any>, paths: string[], value: any) {
     let current = target;
+    console.log("Set:", target)
     if (paths.length == 1) {
         target[paths[0]] = value;
         return;
@@ -44,7 +45,8 @@ function set(target: Record<string, any>, paths: string[], value: any) {
 enum ActionType {
     AddActor,
     DeleteActor,
-    UpdateActor
+    UpdateActor,
+    BatchUpdateActor
 }
 
 type HistoryMap = {
@@ -60,6 +62,13 @@ type HistoryMap = {
         id: string,
         paths: string[],
         oldValue: any
+    }
+    [ActionType.BatchUpdateActor]: {
+        id: string,
+        list: Array<{
+            paths: string[],
+            oldValue: any
+        }>
     }
 }
 
@@ -81,10 +90,12 @@ export const useActorsStore = defineStore("actors", {
             }
         ) {
             const id = v1();
+
+
             this.actors.push({
                 id,
                 tag,
-                options: options,
+                options: cloneDeep(options),
             });
             this.select(id)
             this.memory(ActionType.AddActor, {
@@ -109,14 +120,39 @@ export const useActorsStore = defineStore("actors", {
             this.currentActorId = id;
         },
         updateOption(paths: string[], value: any) {
-            const target = this.currentActor!.options;
+            const target = this.currentActor;
+            const completePaths = ["options", ...paths]
             this.memory(ActionType.UpdateActor, {
                 id: this.currentActorId,
-                paths: paths,
-                oldValue: get(target, paths)
+                paths: completePaths,
+                oldValue: get(target, completePaths)
             })
-            set(target, paths, value);
+            set(target!, completePaths, value);
         },
+
+        batchUpdateOption(jobs: Array<{ paths: string[], value: any }>) {
+            const target = this.currentActor;
+            const memoryHistory: {
+                id: string,
+                list: Array<{
+                    paths: string[],
+                    oldValue: any
+                }>
+            } = {
+                id: target!.id,
+                list: []
+            };
+            jobs.forEach(({ paths, value }) => {
+                const completePaths = ["options", ...paths];
+                memoryHistory.list.push({
+                    paths: completePaths,
+                    oldValue: get(target, completePaths)
+                });
+                set(target!, completePaths, value);
+            })
+            this.memory(ActionType.BatchUpdateActor, memoryHistory)
+        },
+
         delete(id: string, skipMemory?: boolean) {
             const index = this.actors.findIndex(item => item.id == id);
             if (index == -1) return
@@ -139,18 +175,26 @@ export const useActorsStore = defineStore("actors", {
         undo() {
             const memoryPack = this.memoryStack.pop();
             const { type, history } = memoryPack as { type: ActionType, history: any };
+            const target = this.actors.find(item => item.id == history.id);
+
             switch (type) {
                 case ActionType.DeleteActor:
                     this.actors.push(history);
                     break;
                 case ActionType.UpdateActor:
-                    const target = this.actors.find(item => item.id == history.id);
                     if (target == null) break;
                     set(target, history.paths, history.oldValue);
                     break;
                 case ActionType.AddActor:
                     this.delete(history.id, true);
                     break;
+                case ActionType.BatchUpdateActor:
+                    if (target == null) break;
+                    const historyList = history.list;
+                    historyList.forEach((item: any) => {
+                        set(target, item.paths, item.oldValue);
+                    });
+                    break
             }
         }
     },

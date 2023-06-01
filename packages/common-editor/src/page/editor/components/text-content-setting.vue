@@ -14,7 +14,6 @@
         }
     }>();
 
-
    function handleChange(value:string){
     actorStore.updateOption(["material", "content"], value)
    }

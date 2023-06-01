@@ -3,8 +3,7 @@
         <div v-for="item,index in renderItems" 
             class=" hover:bg-gray-200 flex-1 flex justify-center items-center" 
             :class="props.value[index] ? ' bg-gray-200' : ''"
-            @click="handleChange(index)"
-        >
+            @click="handleChange(index)">
             <component :is="item.icon"></component>
         </div>
     </div>

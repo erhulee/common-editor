@@ -1,9 +1,10 @@
 export type FontSetting = {
     fontWeight: number,
     fontSize: number,
+    fontFamily: string,
     textDecoration: "line-through" | "underline" | "none"
     fontStyle: "italic" | "none",
-    textAlign: "end" | "start" | "center" | "both"
+    textAlignLast: "left" | "right" | "center" | "justify"
     color: string
 }
 

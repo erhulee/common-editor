@@ -1,13 +1,18 @@
 <template>
+    <div class=" font-semibold my-3"  >字体</div>
     <div class="flex ">
         <TextDecorationEditor :value="text_decoration_value" @change="payload => handleChange(payload.path, payload.value)">
         </TextDecorationEditor>
-        <AlignSelect :value="props.textAlign" @change="value => handleChange('textAlign', value)"></AlignSelect>
+        <AlignSelect :value="props.textAlignLast" @change="value => handleChange('textAlignLast', value)"></AlignSelect>
     </div>
 
     <div class=" flex mt-2 items-stretch ">
-        <c-number-input @change="handleChange('fontSize', $event)" class=" mr-3"  />
+        <c-number-input  @change="handleChange('fontSize', $event)" :min="12" :value="props.fontSize" class=" mr-3 flex-1"  />
         <color-picker v-model:pureColor="props.color" @pureColorChange="handleChange('color', $event )"   />
+    </div>
+    
+    <div class=" flex mt-2 items-stretch " >
+         <FontFamilySelect :value="props.fontFamily" class=" flex-1" @change="handleChange('fontFamily', $event)"></FontFamilySelect>
     </div>
 
 </template>
@@ -19,8 +24,8 @@ import AlignSelect from './align-select.vue';
 import TextDecorationEditor from './text-decoration-editor.vue';
 import { computed } from 'vue';
 import { ColorPicker } from "vue3-colorpicker";
-
 import "vue3-colorpicker/style.css";
+import FontFamilySelect from './font-family-select.vue';
 type Props = FontSetting;
 const props = defineProps<Props>();
 const emit = defineEmits(["change"]);
@@ -44,7 +49,7 @@ const text_decoration_value = computed(() => ([
 
 <style scoped>
 
- :deep(.vc-color-wrap){
+:deep(.vc-color-wrap){
     height: initial !important;
     margin: 3px;
     border-radius: 5px;
