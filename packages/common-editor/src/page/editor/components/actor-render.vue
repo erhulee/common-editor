@@ -1,26 +1,16 @@
-<template>
-    <InteractiveWrapper 
-        :left="position.left"
-        :top="position.top"
-        :width="position.width"
-        :height="position.height"
-        :is-active="isActive"
-        :is-locked="isLocked"
-        :rotate="0"
-        :current-id="props.id">
-        <component 
-            :is="props.tag" 
-            v-bind="props" 
-            :style="contentStyle"
-            @change="handleMaterialChange"
-        ></component>
-    </InteractiveWrapper>
+<template >
+    <div @contextmenu.stop="handleContext">
+        <InteractiveWrapper :left="position.left" :top="position.top" :width="position.width" :height="position.height"
+            :is-active="isActive" :is-locked="isLocked" :rotate="0" :current-id="props.id">
+            <component :is="props.tag" v-bind="props" :style="contentStyle" @change="handleMaterialChange"></component>
+        </InteractiveWrapper>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { useActorsStore } from '@/store/actors';
 import { pick } from 'lodash-es';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 
 import InteractiveWrapper from './interactive-wrapper/interactive-wrapper.vue';
 const props = defineProps<{
@@ -37,10 +27,21 @@ const position = computed(() => pick(props.options.base, ["left", "top", "width"
 const contentStyle = computed(() => ({
     opacity: props.options.base.opacity
 }))
-function handleMaterialChange(payload: {path:string[], value: string|number}){
-    console.log(payload)
+function handleMaterialChange(payload: { path: string[], value: string | number }) {
     actorStore.updateOption(payload.path, payload.value)
 }
+
+const displayContext = inject("display_context") as  (event: Event, payload: {
+    componentId: string
+     type: "actor"
+})=>void;
+function handleContext(event: Event){
+    displayContext(event, {
+        type: "actor",
+        componentId: props.id
+    })
+}
+
 
 // const wrapperRef = ref<HTMLElement | null>(null);
 // const clickPosition = {

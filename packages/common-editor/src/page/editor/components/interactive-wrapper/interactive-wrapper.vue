@@ -72,6 +72,8 @@ const { startMove, endMove, status: moveStatus } = useMove(wrapperRef as any, {
 
 
 const onMove = (event: MouseEvent) => {
+    //  console.log('鼠标右键按下');
+    if (event.button === 2)  return
     if (resizeStatus.value == "resizing") return;
     actorStore.select(props.currentId);
     if (props.isLocked) return;

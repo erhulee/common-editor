@@ -31,8 +31,7 @@
 
 <script setup lang="ts">
 import CButton from "@/components/c-button.vue";
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { CategoryManagement, InvertLeft, InvertRight } from "@icon-park/vue-next"
+import { InvertLeft, InvertRight } from "@icon-park/vue-next"
 import { useActorsStore } from "@/store/actors"
 const actorStore = useActorsStore();
 

@@ -1,4 +1,4 @@
-import { Ref, ref } from "vue";
+import { Ref, onMounted, ref } from "vue";
 type ResizeStatus = "idle" | "resizing";
 type TupleToUnion<T extends any[]> = T extends Array<infer U> ? U : never
 
@@ -20,7 +20,10 @@ export function useResize(contentRef: Ref<HTMLElement>, hooks: {
         top: 0
     }
     const canvas = document.getElementById("editor-canvas");
-    const canvasRect = canvas!.getBoundingClientRect();
+    let canvasRect: any = {};
+    onMounted(() => {
+        canvasRect = canvas!.getBoundingClientRect()
+    })
     let elementRect: null | DOMRect = null;
     let currentDirection = "";
     function startResize(event: MouseEvent) {

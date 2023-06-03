@@ -1,21 +1,21 @@
 <template>
     <div class="flex w-full h-full flex-col page">
-        <div class="header" >
+        <div class="header">
             <editorHeader></editorHeader>
         </div>
-        <div class="main" >
+        <div class="main">
             <div class="left  border-r">
                 <TabGroup vertical class=" h-full">
                     <div class=" flex flex-row">
                         <TabList class=" flex flex-col p-2 border-r border-r-gray-200 w-20 text-gray-600">
-                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none" >
+                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none">
                                 <div class="p-2 rounded-md text-2xl flex-col flex items-center justify-center"
                                     :class="selected ? ' bg-gray-100' : ''">
                                     <AddFour></AddFour>
                                     <div class=" text-xs mt-1 font-semibold">添加</div>
                                 </div>
                             </Tab>
-                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none" >
+                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none">
                                 <div class="p-2 rounded-md text-2xl flex-col flex items-center justify-center"
                                     :class="selected ? ' bg-gray-100' : ''">
                                     <FolderClose></FolderClose>
@@ -43,6 +43,21 @@
                 <actor-setting />
             </div>
         </div>
+
+        <div
+            v-show="showContextMenu" 
+            class=" shadow-lg w-48  bg-white rounded  fixed p-1" 
+            ref="contextMenuRef" 
+            @blur="handleBlur"
+            @contextmenu="($event)=>$event.preventDefault()">
+            <div v-for="{label, suffix, value} in contextMenuItems" 
+                @click="contextMenuResponse(value)"
+                class="menu-item p-2 flex justify-between items-center hover:bg-slate-50" >
+                <span class=" text-sm">{{ label }}</span>
+                <span class=" text-xs text-gray-500  inline-flex items-center px-2 rounded">{{ suffix }}</span>
+            </div>
+       
+        </div>
     </div>
 </template>
 
@@ -56,16 +71,77 @@ import MaterialShop from './layout/material-shop.vue';
 import editorHeader from "./layout/editor-header.vue"
 import toolKitVue from "./layout/tool-kit.vue"
 import EditorFoot from './layout/editor-foot.vue';
+import { computed, provide, ref } from 'vue';
+import { useActorsStore } from '@/store/actors';
+import { copyComponent, pasteComponent } from "../../plugins/hootkeys"
+const showContextMenu = ref(false);
+const contextMenuRef = ref<HTMLElement | null>(null);
+const contextCache = new Map();
+const actorStore = useActorsStore();
+const contextRole = ref<"canvas"|"actor">("canvas");
+const contextMenuItems = computed(()=> [
+    { label: "复制", suffix: "Ctrl + C", value: 1 },
+    { label: "粘贴", suffix: "Ctrl + V", value: 2 },
+    { label: "删除", suffix: "Del", value: 3 },
+].filter(({value})=> contextRole.value == "actor" || value == 2))
+const contextMenuResponse = (key: number) =>{
+    switch(key){
+        case 1:
+            copyComponent(actorStore);
+            break
+        case 2:
+            pasteComponent(actorStore);
+            break;
+        case 3:
+            actorStore.delete(contextCache.get("currentId"));
+            break;
+    }
+    handleBlur()
+}
+function clickOuterListener(event: Event){
+    const targetClassName = (event.target as any).className as string;
+    const isMenuItem = targetClassName.includes("menu-item");
+    if(!isMenuItem){
+        handleBlur()
+    }
+}
+provide("display_context", (event: PointerEvent, payload: {
+    type: "canvas" | "actor"
+    componentId: string,
+}) => {
+    console.log("hello",payload)
+    const { type = "canvas"} = payload;
+    contextRole.value = type;
+    const positionX = event.clientX;
+    const positionY = event.clientY;
+    event.preventDefault();
+    contextMenuRef.value!.style.top = positionY + "px";
+    contextMenuRef.value!.style.left = positionX + "px";
+    contextMenuRef.value?.focus();
+    showContextMenu.value = true;
+    const currentId = payload.componentId;
+    contextCache.set("currentId", currentId);
+    document.addEventListener("mousedown", clickOuterListener);
+})
+
+const handleBlur = ()=>{
+    showContextMenu.value = false;
+    document.removeEventListener("mousedown", clickOuterListener);
+}
+
+
 </script>
 
 <style scoped>
-.page{
+.page {
     height: 100vh;
 }
-.main{
+
+.main {
     flex: 1;
     display: flex;
 }
+
 .left {
     width: 380px;
 }
@@ -76,6 +152,7 @@ import EditorFoot from './layout/editor-foot.vue';
     display: flex;
     flex-direction: column;
 }
+
 .right {
     width: 300px;
 }
