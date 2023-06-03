@@ -19,7 +19,8 @@ const globalStore = useGlobalStore();
 const actors = computed(() => actorsStore.actors);
 const canvasStyle = computed(()=> globalStore.canvas_style)
 const selectGlobal = ()=>{
-    actorsStore.select("");
+    console.log("he")
+    // actorsStore.select("");
 }
 </script>
 

@@ -15,8 +15,8 @@
             </div>
         </Transition>
  
-        <div @click="handleHotKeysClick" >
-            <Help size="22" fill="#666" class="cursor-pointer">
+        <div @mouseenter="handleHotKeysClick" @mouseleave="handleHotKeysClick">
+            <Help size="22" fill="#666" class=" cursor-help">
             </Help>
         </div>
 

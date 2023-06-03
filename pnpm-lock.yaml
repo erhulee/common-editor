@@ -13,6 +13,7 @@ importers:
       '@types/uuid': ^9.0.1
       '@vitejs/plugin-vue': ^4.1.0
       '@zag-js/number-input': ^0.9.2
+      '@zag-js/slider': ^0.10.2
       '@zag-js/vue': ^0.9.2
       autoprefixer: ^10.4.14
       hotkeys-js: ^3.10.2
@@ -32,6 +33,7 @@ importers:
       '@types/lodash-es': registry.npmmirror.com/@types/lodash-es/4.17.7
       '@types/uuid': registry.npmmirror.com/@types/uuid/9.0.1
       '@zag-js/number-input': registry.npmmirror.com/@zag-js/number-input/0.9.2
+      '@zag-js/slider': registry.npmmirror.com/@zag-js/slider/0.10.2
       '@zag-js/vue': registry.npmmirror.com/@zag-js/vue/0.9.2_vue@3.3.4
       autoprefixer: registry.npmmirror.com/autoprefixer/10.4.14_postcss@8.4.23
       hotkeys-js: registry.npmmirror.com/hotkeys-js/3.10.2
@@ -683,10 +685,25 @@ packages:
       - vue
     dev: false
 
+  registry.npmmirror.com/@zag-js/anatomy/0.10.2:
+    resolution: {integrity: sha512-hXJO047Bx1ilIQIlY4yk4f7QM7hFWg5p6DC4zZBsQf2A/FmDikGcOvqYhM4NM5Zuw8Rp4RF8aSU2qWONqAo8kA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/anatomy/-/anatomy-0.10.2.tgz}
+    name: '@zag-js/anatomy'
+    version: 0.10.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/anatomy/0.9.2:
     resolution: {integrity: sha512-DgzZf4oo1/tdnSzUDu75pdxYep8WmgvxZi3h1Qa0hlu0erGvWPV0L7aAkdrau+Z3z4phc0FndieIDZN1oN1bEg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/anatomy/-/anatomy-0.9.2.tgz}
     name: '@zag-js/anatomy'
     version: 0.9.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/core/0.10.2:
+    resolution: {integrity: sha512-p9ctX27Dik2PYUPE66O2sJwesGsmlV6FbMSbGfc/lteZiQHkFxulOTs1kiFxUDfjFgbsHDu4a0QwBmNrHH25Uw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/core/-/core-0.10.2.tgz}
+    name: '@zag-js/core'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/store': registry.npmmirror.com/@zag-js/store/0.10.2
+      klona: registry.npmmirror.com/klona/2.0.6
     dev: false
 
   registry.npmmirror.com/@zag-js/core/0.9.2:
@@ -698,6 +715,15 @@ packages:
       klona: registry.npmmirror.com/klona/2.0.6
     dev: false
 
+  registry.npmmirror.com/@zag-js/dom-event/0.10.2:
+    resolution: {integrity: sha512-W44npN40fufpser5SBGLhXo+0AyDSEX+ySP2gBX2uIaPxRa/GZJGt8lWJf/tVRx6XOCa8eZtLvHrYRcJ6mWqWg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/dom-event/-/dom-event-0.10.2.tgz}
+    name: '@zag-js/dom-event'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/text-selection': registry.npmmirror.com/@zag-js/text-selection/0.10.2
+      '@zag-js/types': registry.npmmirror.com/@zag-js/types/0.10.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/dom-event/0.9.2:
     resolution: {integrity: sha512-2HUoIZw7Ig5bzm3S1f5i7S50LlyakhAD1seHBw6w+VwM7I6AFpbpJZjYAESeeKE+SAIA5q3CpdpL+KfdO5jpRg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/dom-event/-/dom-event-0.9.2.tgz}
     name: '@zag-js/dom-event'
@@ -707,10 +733,30 @@ packages:
       '@zag-js/types': registry.npmmirror.com/@zag-js/types/0.9.2
     dev: false
 
+  registry.npmmirror.com/@zag-js/dom-query/0.10.2:
+    resolution: {integrity: sha512-gsQztWG54tkxzFvteUxWa017oDz4qJj1okCMMQ1s0mGkK4N7HY5AzAx8zMJoVYwZPmlBKOgCwJTbGB/1mUBaqg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/dom-query/-/dom-query-0.10.2.tgz}
+    name: '@zag-js/dom-query'
+    version: 0.10.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/dom-query/0.9.2:
     resolution: {integrity: sha512-N4K9sl3Dup+Jb0kaXrrwClwUdXgpgBb4xKYRDfG9HPO8ixX11Px8j4iTU3MdvhEt81sE7SkECdJNoyXaNxFqZA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/dom-query/-/dom-query-0.9.2.tgz}
     name: '@zag-js/dom-query'
     version: 0.9.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/element-size/0.10.2:
+    resolution: {integrity: sha512-HeGbw0gPKC0S+hg9BjgHpgBdTt/o+nk7ydswbBqElP/VBMSVias8mzMlxX6dBmaUrvjox//wQBWLnZQRf5U/zw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/element-size/-/element-size-0.10.2.tgz}
+    name: '@zag-js/element-size'
+    version: 0.10.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/form-utils/0.10.2:
+    resolution: {integrity: sha512-lMce2u8EXpAQWzEsfIgIdHhbygYvWZQy/5Vwv6tRt7hQd076iJX+DWXTkawlwPREwNm/pn7Dy7SETyX7qeAkRw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/form-utils/-/form-utils-0.10.2.tgz}
+    name: '@zag-js/form-utils'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/mutation-observer': registry.npmmirror.com/@zag-js/mutation-observer/0.10.2
     dev: false
 
   registry.npmmirror.com/@zag-js/form-utils/0.9.2:
@@ -719,6 +765,12 @@ packages:
     version: 0.9.2
     dependencies:
       '@zag-js/mutation-observer': registry.npmmirror.com/@zag-js/mutation-observer/0.9.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/mutation-observer/0.10.2:
+    resolution: {integrity: sha512-D2nCn8m7LexaPjVLLvlKzGLxJidH6LlMrhEyQt8BmUtpQf/u9dF21c+L72SrrLleiDv1Ke7us6HYj4xhSA/aTg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/mutation-observer/-/mutation-observer-0.10.2.tgz}
+    name: '@zag-js/mutation-observer'
+    version: 0.10.2
     dev: false
 
   registry.npmmirror.com/@zag-js/mutation-observer/0.9.2:
@@ -749,12 +801,50 @@ packages:
     version: 0.9.2
     dev: false
 
+  registry.npmmirror.com/@zag-js/numeric-range/0.10.2:
+    resolution: {integrity: sha512-zeFjzF/+QYVpJ07kYWgYfmfrXB/0GUVofSM3SEv+dBGLtdCAShl5o+/JQlvOFIqyAiydhftdo9hAwl6DoO/0og==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/numeric-range/-/numeric-range-0.10.2.tgz}
+    name: '@zag-js/numeric-range'
+    version: 0.10.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/slider/0.10.2:
+    resolution: {integrity: sha512-q5CQu4pM2X/xv9D9lBwziM5dyxE5HiDL7h/H0Wq0uzUbGHGDprHP1oHb8xDtB8Kbf7qOoJH6b6yMB+WVPy7ChQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/slider/-/slider-0.10.2.tgz}
+    name: '@zag-js/slider'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/anatomy': registry.npmmirror.com/@zag-js/anatomy/0.10.2
+      '@zag-js/core': registry.npmmirror.com/@zag-js/core/0.10.2
+      '@zag-js/dom-event': registry.npmmirror.com/@zag-js/dom-event/0.10.2
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
+      '@zag-js/element-size': registry.npmmirror.com/@zag-js/element-size/0.10.2
+      '@zag-js/form-utils': registry.npmmirror.com/@zag-js/form-utils/0.10.2
+      '@zag-js/numeric-range': registry.npmmirror.com/@zag-js/numeric-range/0.10.2
+      '@zag-js/types': registry.npmmirror.com/@zag-js/types/0.10.2
+      '@zag-js/utils': registry.npmmirror.com/@zag-js/utils/0.10.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/store/0.10.2:
+    resolution: {integrity: sha512-GUTViqs+v8Pkn96ooqjMZbMtywFEtOogbz5/3qJJoPAjFFtFGxjycQRZOB1mg4a52lK0Uh4BQ1x1atG06EkLaw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/store/-/store-0.10.2.tgz}
+    name: '@zag-js/store'
+    version: 0.10.2
+    dependencies:
+      proxy-compare: registry.npmmirror.com/proxy-compare/2.5.1
+    dev: false
+
   registry.npmmirror.com/@zag-js/store/0.9.2:
     resolution: {integrity: sha512-FO6BUK6ri0pZCEWqT8veiaZoTQwnCMqQ+C1pvf+ZtMnGMCjMXe/QvNUx/dcHSrscGckWJDBTJRbLhmDedyDPUA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/store/-/store-0.9.2.tgz}
     name: '@zag-js/store'
     version: 0.9.2
     dependencies:
       proxy-compare: registry.npmmirror.com/proxy-compare/2.5.1
+    dev: false
+
+  registry.npmmirror.com/@zag-js/text-selection/0.10.2:
+    resolution: {integrity: sha512-XPhowW6odc5jZ9Lzolh1KiqeQbNkXQwMFU8t5/gh15xC0Bds/ueksnhWJgYrr9DBWIkCi2MyXMM5hmKqBRIepg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/text-selection/-/text-selection-0.10.2.tgz}
+    name: '@zag-js/text-selection'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
     dev: false
 
   registry.npmmirror.com/@zag-js/text-selection/0.9.2:
@@ -765,12 +855,26 @@ packages:
       '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.9.2
     dev: false
 
+  registry.npmmirror.com/@zag-js/types/0.10.2:
+    resolution: {integrity: sha512-a5VK1VfsYfvJs2JzLFMcM3yLf2NU+WQLql5ChV5qa9M2CLyUH+czgwKvjFFrSsvUWYSdVJyTxFEZI9sfNnQg/Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/types/-/types-0.10.2.tgz}
+    name: '@zag-js/types'
+    version: 0.10.2
+    dependencies:
+      csstype: registry.npmmirror.com/csstype/3.1.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/types/0.9.2:
     resolution: {integrity: sha512-MM8KPTW5nX438fDb57K0DM+nxcLA9+WoFyE9A/fEaCH2kGsaVltmsY1ejolU4duYNOEQVon9T39QlGfgc81f/w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/types/-/types-0.9.2.tgz}
     name: '@zag-js/types'
     version: 0.9.2
     dependencies:
       csstype: registry.npmmirror.com/csstype/3.1.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/utils/0.10.2:
+    resolution: {integrity: sha512-CRxtBtPyNE9tjFnwxGZsU8Gr4kLAb1JhhpRv9yJKVs2aQp03+//USP0nn98L8qy3rIy7kVZtUL6+NosB3pkebA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/utils/-/utils-0.10.2.tgz}
+    name: '@zag-js/utils'
+    version: 0.10.2
     dev: false
 
   registry.npmmirror.com/@zag-js/utils/0.9.2:

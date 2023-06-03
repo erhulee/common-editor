@@ -46,7 +46,8 @@ const image_list = [
             left: 100,
             width: 200,
             height: 100,
-            isLocked: false
+            isLocked: false,
+            opacity: 0.5
         }
     },
     {
@@ -58,7 +59,8 @@ const image_list = [
             left: 100,
             width: 200,
             height: 100,
-            isLocked: false
+            isLocked: false,
+            opacity: 0.5
         }
     },
     {
@@ -70,7 +72,8 @@ const image_list = [
             left: 100,
             width: 200,
             height: 100,
-            isLocked: false
+            isLocked: false,
+            opacity: 0.5
         }
     },
 

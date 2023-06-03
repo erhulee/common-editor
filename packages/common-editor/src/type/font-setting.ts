@@ -12,7 +12,8 @@ export type BaseSetting = {
     width: number,
     height: number,
     left: number,
-    top: number
+    top: number,
+    opacity: number
     isLocked: boolean
 }
 

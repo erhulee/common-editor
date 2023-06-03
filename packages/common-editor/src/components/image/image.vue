@@ -1,5 +1,8 @@
 <template>
-    <img :src="props.options.material.src" class="x-image select-none" />
+    <img 
+        :src="props.options.material.src" 
+        draggable="false"
+        class="x-image select-none" />
 </template>
 
 <script setup lang="ts">
