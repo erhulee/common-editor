@@ -5,13 +5,18 @@ import cButton from "./c-button.vue";
 import cDivider from "./c-divider.vue";
 import cUpload from "./c-upload.vue"
 import cSlider from "./c-slider.vue"
+import cTooltip from "./c-tooltip.vue"
+import cAvatar from "./c-avatar.vue"
 const components = [
     CNumberInput,
     CInput,
     cButton,
     cDivider,
     cUpload,
-    cSlider
+    cSlider,
+    cTooltip,
+    cAvatar,
+
 ]
 const install = (app: App) => {
     components.forEach(component => {

@@ -1,8 +1,8 @@
 <template>
-    <div class=" bg-gray-100 h-full flex items-center justify-center" 
+    <div class=" h-full flex items-center justify-center" 
         @contextmenu="handleContext"
         @click="selectGlobal">
-        <div class=" bg-white page-a4 page relative" id="editor-canvas" :style="canvasStyle">
+        <div class=" bg-white page-a4 page relative canvas" id="editor-canvas" :style="canvasStyle">
             <div v-for="item in actors">
                 <actorRender v-bind="item"></actorRender>
             </div>
@@ -20,7 +20,13 @@ const actorsStore = useActorsStore();
 const globalStore = useGlobalStore();
 const actors = computed(() => actorsStore.actors);
 const canvasStyle = computed(()=> globalStore.canvas_style)
+const zoomListener = inject("listener") as (eventName: string, ...args:any[]) => void;
 
+zoomListener("zoom", (arg)=>{
+    const canvas = document.getElementById("editor-canvas");
+    if(canvas == null) return;
+    canvas.style.transform = `scale(${arg})`
+})
 const selectGlobal = ()=>{
     // actorsStore.select("");
 }
@@ -28,6 +34,7 @@ const selectGlobal = ()=>{
 const displayContext = inject("display_context") as (event: Event, payload: {
     type: "canvas"
 }) => void;
+
 function handleContext(event: Event) {
     displayContext(event, {
         type: "canvas",
@@ -46,6 +53,10 @@ function handleContext(event: Event) {
     overflow: hidden;
     width: 600px;
     height: 1000px;
+}
+
+.canvas{
+    transform: scale(0.7);
 }
 </style>
 

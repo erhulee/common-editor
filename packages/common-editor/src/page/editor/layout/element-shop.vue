@@ -3,10 +3,23 @@
         <div class=" font-semibold text-sm mb-3">
             文字
         </div>
-
         <div class=" grid grid-cols-3 gap-2">
-            <Block v-for="item in text_template" @click="() => addTextActor(item.default_options)" :icon="item.icon"
-                :title="item.name"></Block>
+            <Block v-for="item in text_template" @click="() => addTextActor(item.default_options)" :title="item.name">
+                <template #icon>
+                    <component :stroke-width="2" :is="item.icon" :size="25"></component>
+                </template>
+            </Block>
+        </div>
+
+        <div class=" font-semibold text-sm my-3">
+            形状
+        </div>
+        <div class=" grid grid-cols-3 gap-2">
+            <Block v-for="item in shape_template" @click="() => addTextActor(item.default_options)" :title="item.name">
+                <template #icon>
+                    <component :stroke-width="2" :is="item.icon" :size="20"></component>
+                </template>
+            </Block>
         </div>
 
     </div>
@@ -15,11 +28,12 @@
 <script setup lang="ts">
 import Block from '@/components/block.vue';
 import { useActorsStore } from "@/store/actors"
+import { Round, H1, H2, Text } from "@icon-park/vue-next"
 const actorsStore = useActorsStore();
 const text_template = [
     {
         name: "标题",
-        icon: "https://cdn.dancf.com/fe-assets/20230206/dcdc7e8889b7374c8710db81169a56ae.svg",
+        icon: H1,
         default_options: {
             content: "双击编辑标题",
             font: {
@@ -38,14 +52,14 @@ const text_template = [
     },
     {
         name: "副标题",
-        icon: "https://cdn.dancf.com/fe-assets/20230206/ca7b9eae10099691c79baae5d4f20b84.svg",
+        icon: H2,
         default_options: {
             content: "双击编辑副标题",
             font: {
                 color: "rgb(0,0,0)",
                 fontWeight: 400,
                 fontSize: 70,
-                textAlignLast:"center"
+                textAlignLast: "center"
             },
             base: {
                 top: 100,
@@ -57,7 +71,7 @@ const text_template = [
     },
     {
         name: "正文",
-        icon: "https://cdn.dancf.com/fe-assets/20230206/ec78fe9ae7da4c8e94b9fa63166e566c.svg",
+        icon: Text,
         default_options: {
             content: "双击编辑正文",
             font: {
@@ -74,6 +88,29 @@ const text_template = [
             }
         }
     }
+]
+
+const shape_template = [
+    {
+        name: "圆形",
+        icon: Round,
+        default_options: {
+            content: "双击编辑标题",
+            font: {
+                color: "rgb(0,0,0)",
+                fontWeight: 600,
+                fontSize: 90,
+                textAlignLast: "center"
+            },
+            base: {
+                top: 100,
+                left: 100,
+                rotate: 0,
+                isLocked: false
+            }
+        }
+    }
+
 ]
 
 function addTextActor(option: any) {

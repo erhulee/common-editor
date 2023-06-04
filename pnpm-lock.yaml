@@ -12,10 +12,13 @@ importers:
       '@types/lodash-es': ^4.17.7
       '@types/uuid': ^9.0.1
       '@vitejs/plugin-vue': ^4.1.0
+      '@zag-js/menu': ^0.10.2
       '@zag-js/number-input': ^0.9.2
       '@zag-js/slider': ^0.10.2
+      '@zag-js/tooltip': ^0.10.2
       '@zag-js/vue': ^0.9.2
       autoprefixer: ^10.4.14
+      eventemitter3: ^5.0.1
       hotkeys-js: ^3.10.2
       lodash-es: ^4.17.21
       pinia: ^2.1.3
@@ -25,6 +28,7 @@ importers:
       uuid: ^9.0.0
       vite: ^4.3.2
       vue: ^3.2.47
+      vue-router: '4'
       vue-tsc: ^1.4.2
       vue3-colorpicker: ^2.1.3
     dependencies:
@@ -32,10 +36,13 @@ importers:
       '@icon-park/vue-next': registry.npmmirror.com/@icon-park/vue-next/1.4.2_vue@3.3.4
       '@types/lodash-es': registry.npmmirror.com/@types/lodash-es/4.17.7
       '@types/uuid': registry.npmmirror.com/@types/uuid/9.0.1
+      '@zag-js/menu': registry.npmmirror.com/@zag-js/menu/0.10.2
       '@zag-js/number-input': registry.npmmirror.com/@zag-js/number-input/0.9.2
       '@zag-js/slider': registry.npmmirror.com/@zag-js/slider/0.10.2
+      '@zag-js/tooltip': registry.npmmirror.com/@zag-js/tooltip/0.10.2
       '@zag-js/vue': registry.npmmirror.com/@zag-js/vue/0.9.2_vue@3.3.4
       autoprefixer: registry.npmmirror.com/autoprefixer/10.4.14_postcss@8.4.23
+      eventemitter3: registry.npmmirror.com/eventemitter3/5.0.1
       hotkeys-js: registry.npmmirror.com/hotkeys-js/3.10.2
       lodash-es: registry.npmmirror.com/lodash-es/4.17.21
       pinia: registry.npmmirror.com/pinia/2.1.3_typescript@5.0.4+vue@3.3.4
@@ -43,22 +50,8 @@ importers:
       tailwindcss: registry.npmmirror.com/tailwindcss/3.3.2
       uuid: registry.npmmirror.com/uuid/9.0.0
       vue: registry.npmmirror.com/vue/3.3.4
+      vue-router: registry.npmmirror.com/vue-router/4.2.2_vue@3.3.4
       vue3-colorpicker: registry.npmmirror.com/vue3-colorpicker/2.1.3_vlh4sa24rj7c77nbth7b4gzwee
-    devDependencies:
-      '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/4.2.3_vite@4.3.9+vue@3.3.4
-      typescript: registry.npmmirror.com/typescript/5.0.4
-      vite: registry.npmmirror.com/vite/4.3.9
-      vue-tsc: registry.npmmirror.com/vue-tsc/1.6.5_typescript@5.0.4
-
-  packages/vite-project:
-    specifiers:
-      '@vitejs/plugin-vue': ^4.1.0
-      typescript: ^5.0.2
-      vite: ^4.3.2
-      vue: ^3.2.47
-      vue-tsc: ^1.4.2
-    dependencies:
-      vue: registry.npmmirror.com/vue/3.3.4
     devDependencies:
       '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/4.2.3_vite@4.3.9+vue@3.3.4
       typescript: registry.npmmirror.com/typescript/5.0.4
@@ -352,6 +345,20 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  registry.npmmirror.com/@floating-ui/core/1.2.6:
+    resolution: {integrity: sha512-EvYTiXet5XqweYGClEmpu3BoxmsQ4hkj3QaYA6qEnigCWffTP3vNRwBReTdrwDwo7OoJ3wM8Uoe9Uk4n+d4hfg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@floating-ui/core/-/core-1.2.6.tgz}
+    name: '@floating-ui/core'
+    version: 1.2.6
+    dev: false
+
+  registry.npmmirror.com/@floating-ui/dom/1.2.9:
+    resolution: {integrity: sha512-sosQxsqgxMNkV3C+3UqTS6LxP7isRLwX8WMepp843Rb3/b0Wz8+MdUkxJksByip3C2WwLugLHN1b4ibn//zKwQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@floating-ui/dom/-/dom-1.2.9.tgz}
+    name: '@floating-ui/dom'
+    version: 1.2.9
+    dependencies:
+      '@floating-ui/core': registry.npmmirror.com/@floating-ui/core/1.2.6
+    dev: false
 
   registry.npmmirror.com/@headlessui/vue/1.7.13_vue@3.3.4:
     resolution: {integrity: sha512-obG5TdPdBDfs+jiA1mY29LPFqyJl93Q90EL86ontfRe1B6XvbjPkx+x1aAC5DA18bXbb0Juni1ayDbXo0w1u0A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@headlessui/vue/-/vue-1.7.13.tgz}
@@ -715,6 +722,17 @@ packages:
       klona: registry.npmmirror.com/klona/2.0.6
     dev: false
 
+  registry.npmmirror.com/@zag-js/dismissable/0.10.2:
+    resolution: {integrity: sha512-PLucaqXBCyner2CIfOaFLYPd/PeHCpIcbmdahg/ZNHClGo3+J8pQLJzOJpJ6q8VxpBbNdGb+VJ7WTbw9ZDZyRA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/dismissable/-/dismissable-0.10.2.tgz}
+    name: '@zag-js/dismissable'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/dom-event': registry.npmmirror.com/@zag-js/dom-event/0.10.2
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
+      '@zag-js/interact-outside': registry.npmmirror.com/@zag-js/interact-outside/0.10.2
+      '@zag-js/utils': registry.npmmirror.com/@zag-js/utils/0.10.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/dom-event/0.10.2:
     resolution: {integrity: sha512-W44npN40fufpser5SBGLhXo+0AyDSEX+ySP2gBX2uIaPxRa/GZJGt8lWJf/tVRx6XOCa8eZtLvHrYRcJ6mWqWg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/dom-event/-/dom-event-0.10.2.tgz}
     name: '@zag-js/dom-event'
@@ -745,6 +763,12 @@ packages:
     version: 0.9.2
     dev: false
 
+  registry.npmmirror.com/@zag-js/element-rect/0.10.2:
+    resolution: {integrity: sha512-7r7tFqH04JbshAaYExn3RjW0+uScImNpWBa87s3vfohar6lfCPLX7MvUZ+WiaA2KgLFGVnE4rrYXCnDkOeW5/A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/element-rect/-/element-rect-0.10.2.tgz}
+    name: '@zag-js/element-rect'
+    version: 0.10.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/element-size/0.10.2:
     resolution: {integrity: sha512-HeGbw0gPKC0S+hg9BjgHpgBdTt/o+nk7ydswbBqElP/VBMSVias8mzMlxX6dBmaUrvjox//wQBWLnZQRf5U/zw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/element-size/-/element-size-0.10.2.tgz}
     name: '@zag-js/element-size'
@@ -765,6 +789,33 @@ packages:
     version: 0.9.2
     dependencies:
       '@zag-js/mutation-observer': registry.npmmirror.com/@zag-js/mutation-observer/0.9.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/interact-outside/0.10.2:
+    resolution: {integrity: sha512-j+5lFvWlp0tm/oKcN4Vxe0jQogp27IkkMVzt1aVseH/LzA0qqUiKyZ2bQyzehTh8cEsc9cgP9TLZD897WatTCw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/interact-outside/-/interact-outside-0.10.2.tgz}
+    name: '@zag-js/interact-outside'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/dom-event': registry.npmmirror.com/@zag-js/dom-event/0.10.2
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
+      '@zag-js/tabbable': registry.npmmirror.com/@zag-js/tabbable/0.10.2
+      '@zag-js/utils': registry.npmmirror.com/@zag-js/utils/0.10.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/menu/0.10.2:
+    resolution: {integrity: sha512-ypj05A+DhvgCUldifeVrpwxP4lTz8BYaqUmQAHfNzYjRiLAxPZU4cHZaxaLTZPyr90Bh8JaSQwB0GlbC2AhAKA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/menu/-/menu-0.10.2.tgz}
+    name: '@zag-js/menu'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/anatomy': registry.npmmirror.com/@zag-js/anatomy/0.10.2
+      '@zag-js/core': registry.npmmirror.com/@zag-js/core/0.10.2
+      '@zag-js/dismissable': registry.npmmirror.com/@zag-js/dismissable/0.10.2
+      '@zag-js/dom-event': registry.npmmirror.com/@zag-js/dom-event/0.10.2
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
+      '@zag-js/popper': registry.npmmirror.com/@zag-js/popper/0.10.2
+      '@zag-js/rect-utils': registry.npmmirror.com/@zag-js/rect-utils/0.10.2
+      '@zag-js/types': registry.npmmirror.com/@zag-js/types/0.10.2
+      '@zag-js/utils': registry.npmmirror.com/@zag-js/utils/0.10.2
     dev: false
 
   registry.npmmirror.com/@zag-js/mutation-observer/0.10.2:
@@ -807,6 +858,23 @@ packages:
     version: 0.10.2
     dev: false
 
+  registry.npmmirror.com/@zag-js/popper/0.10.2:
+    resolution: {integrity: sha512-UckgTCwa+fNv3VQNKImO8EhkPoJBB5gQz2K4CQ5CEyFuiubQQpQRL/p/QGvivaIKmZ5kfQnl2SVechoiiMSpTg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/popper/-/popper-0.10.2.tgz}
+    name: '@zag-js/popper'
+    version: 0.10.2
+    dependencies:
+      '@floating-ui/dom': registry.npmmirror.com/@floating-ui/dom/1.2.9
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
+      '@zag-js/element-rect': registry.npmmirror.com/@zag-js/element-rect/0.10.2
+      '@zag-js/utils': registry.npmmirror.com/@zag-js/utils/0.10.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/rect-utils/0.10.2:
+    resolution: {integrity: sha512-rie7sO39T0bsTRO6CWL5bFpKbhoTEd+8apVuQIBDRof2GGU7RGePKV3BQA5q5gQ4nIG6zXIZ9k6HD+syQ4ivOA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/rect-utils/-/rect-utils-0.10.2.tgz}
+    name: '@zag-js/rect-utils'
+    version: 0.10.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/slider/0.10.2:
     resolution: {integrity: sha512-q5CQu4pM2X/xv9D9lBwziM5dyxE5HiDL7h/H0Wq0uzUbGHGDprHP1oHb8xDtB8Kbf7qOoJH6b6yMB+WVPy7ChQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/slider/-/slider-0.10.2.tgz}
     name: '@zag-js/slider'
@@ -839,6 +907,14 @@ packages:
       proxy-compare: registry.npmmirror.com/proxy-compare/2.5.1
     dev: false
 
+  registry.npmmirror.com/@zag-js/tabbable/0.10.2:
+    resolution: {integrity: sha512-f887/rLBzRdZQmU2U5+z/4zcotcvlaA1BHvR5G7lG4WDLSLWdyNoKGO7dkV3jskNfAKvzoJFnh1HoD2lBQB6tw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/tabbable/-/tabbable-0.10.2.tgz}
+    name: '@zag-js/tabbable'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
+    dev: false
+
   registry.npmmirror.com/@zag-js/text-selection/0.10.2:
     resolution: {integrity: sha512-XPhowW6odc5jZ9Lzolh1KiqeQbNkXQwMFU8t5/gh15xC0Bds/ueksnhWJgYrr9DBWIkCi2MyXMM5hmKqBRIepg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/text-selection/-/text-selection-0.10.2.tgz}
     name: '@zag-js/text-selection'
@@ -853,6 +929,21 @@ packages:
     version: 0.9.2
     dependencies:
       '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.9.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/tooltip/0.10.2:
+    resolution: {integrity: sha512-MAsJb0qhIVqAr+Vb8IH5ycN52MWVcnT706+R7yAVYjQNd285Ah5CZ8e4fOaSPn2QW6K5ntpwvcjx5+Ndb9LCwQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/tooltip/-/tooltip-0.10.2.tgz}
+    name: '@zag-js/tooltip'
+    version: 0.10.2
+    dependencies:
+      '@zag-js/anatomy': registry.npmmirror.com/@zag-js/anatomy/0.10.2
+      '@zag-js/core': registry.npmmirror.com/@zag-js/core/0.10.2
+      '@zag-js/dom-event': registry.npmmirror.com/@zag-js/dom-event/0.10.2
+      '@zag-js/dom-query': registry.npmmirror.com/@zag-js/dom-query/0.10.2
+      '@zag-js/popper': registry.npmmirror.com/@zag-js/popper/0.10.2
+      '@zag-js/types': registry.npmmirror.com/@zag-js/types/0.10.2
+      '@zag-js/utils': registry.npmmirror.com/@zag-js/utils/0.10.2
+      '@zag-js/visually-hidden': registry.npmmirror.com/@zag-js/visually-hidden/0.10.2
     dev: false
 
   registry.npmmirror.com/@zag-js/types/0.10.2:
@@ -881,6 +972,12 @@ packages:
     resolution: {integrity: sha512-PQZRIhgaowNrON7UF4u1JTABUhlWhMiu4uwN7S7SXcpyq1z8JXb4j5YEHNkH4F7lLMQAwmMdpJXHfjH5bYXR1Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/utils/-/utils-0.9.2.tgz}
     name: '@zag-js/utils'
     version: 0.9.2
+    dev: false
+
+  registry.npmmirror.com/@zag-js/visually-hidden/0.10.2:
+    resolution: {integrity: sha512-xPGGRqWLHNDTeniWiiVxZeE8iIPRtramM8yWTYm7ewDjJuyvmBq52zOzv8vwJy7N2QsQbMiMAtfpo8DbIAxknA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@zag-js/visually-hidden/-/visually-hidden-0.10.2.tgz}
+    name: '@zag-js/visually-hidden'
+    version: 0.10.2
     dev: false
 
   registry.npmmirror.com/@zag-js/vue/0.9.2_vue@3.3.4:
@@ -1112,6 +1209,12 @@ packages:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/estree-walker/-/estree-walker-2.0.2.tgz}
     name: estree-walker
     version: 2.0.2
+
+  registry.npmmirror.com/eventemitter3/5.0.1:
+    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/eventemitter3/-/eventemitter3-5.0.1.tgz}
+    name: eventemitter3
+    version: 5.0.1
+    dev: false
 
   registry.npmmirror.com/fast-glob/3.2.12:
     resolution: {integrity: sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fast-glob/-/fast-glob-3.2.12.tgz}
@@ -1853,6 +1956,18 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
+      vue: registry.npmmirror.com/vue/3.3.4
+    dev: false
+
+  registry.npmmirror.com/vue-router/4.2.2_vue@3.3.4:
+    resolution: {integrity: sha512-cChBPPmAflgBGmy3tBsjeoe3f3VOSG6naKyY5pjtrqLGbNEXdzCigFUHgBvp9e3ysAtFtEx7OLqcSDh/1Cq2TQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-router/-/vue-router-4.2.2.tgz}
+    id: registry.npmmirror.com/vue-router/4.2.2
+    name: vue-router
+    version: 4.2.2
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      '@vue/devtools-api': registry.npmmirror.com/@vue/devtools-api/6.5.0
       vue: registry.npmmirror.com/vue/3.3.4
     dev: false
 

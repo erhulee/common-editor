@@ -2,7 +2,7 @@
     <div @click="handleClick" class="p-2 text-sm cursor-pointer
                 inline-flex justify-center items-center 
                 rounded " :class="className">
-        <div class=" mr-2">
+        <div class=" mr-2" v-if="$slots.icon">
             <slot name="icon"></slot>
         </div>
         <slot></slot>
@@ -37,6 +37,8 @@ export default defineComponent({
             } else {
                 result.push("default")
             }
+            console.log(ctx.slots)
+            if(ctx.slots.default && ctx.slots.icon) result.push("mr-2")
             return result
         });
         const handleClick = ($event: any) => {
@@ -61,7 +63,7 @@ export default defineComponent({
 }
 
 .default:hover {
-    background: rgb(243, 244, 246)
+    background: #eceef1
 }
 
 .primary {

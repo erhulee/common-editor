@@ -10,7 +10,6 @@
                     <input v-bind="api.hiddenInputProps" />
                 </div>
             </div>
-
         </div>
         <slot name="output" v-if="$slots.output"></slot>
         <div class="output" v-else>
@@ -52,7 +51,7 @@ export default defineComponent({
     setup(props, ctx) {
         const [state, send] = useMachine(
             slider.machine({
-                id: "slider",
+                id: Math.random(),
                 value: props.value,
                 min: props.min,
                 max: props.max,
@@ -76,6 +75,7 @@ export default defineComponent({
 <style scoped>
 .slider {
     margin: 0px 20px 0px 8px;
+    min-width: 100px;
 }
 
 .thumb {
@@ -103,5 +103,6 @@ export default defineComponent({
 .output {
     color: #5f5d5d;
     font-size: 14px;
+    min-width: 5rem;
 }
 </style>

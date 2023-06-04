@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import editor from "./page/editor/index.vue"
-import initHotKey from "./plugins/hootkeys";
-initHotKey()
+// import editor from "./page/editor/index.vue"
+// import initHotKey from "./plugins/hootkeys";
+// initHotKey()
 </script>
 
 <template>
-  <editor></editor>
+ <router-view></router-view>
+
+ 
 </template>
 
 <style scoped>

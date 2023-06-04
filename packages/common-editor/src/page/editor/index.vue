@@ -1,8 +1,6 @@
 <template>
     <div class="flex w-full h-full flex-col page">
-        <div class="header">
-            <editorHeader></editorHeader>
-        </div>
+    
         <div class="main">
             <div class="left  border-r">
                 <TabGroup vertical class=" h-full">
@@ -11,15 +9,15 @@
                             <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none">
                                 <div class="p-2 rounded-md text-2xl flex-col flex items-center justify-center"
                                     :class="selected ? ' bg-gray-100' : ''">
-                                    <AddFour></AddFour>
-                                    <div class=" text-xs mt-1 font-semibold">添加</div>
+                                    <AddFour :stroke-width="2"></AddFour>
+                                    <div class=" text-xs mt-1 ">添加</div>
                                 </div>
                             </Tab>
-                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none">
+                            <Tab v-slot="{ selected }" class="focus-visible:border-none focus-visible:outline-none mt-2">
                                 <div class="p-2 rounded-md text-2xl flex-col flex items-center justify-center"
                                     :class="selected ? ' bg-gray-100' : ''">
-                                    <FolderClose></FolderClose>
-                                    <div class=" text-xs mt-1 font-semibold">素材</div>
+                                    <FolderClose :stroke-width="2"></FolderClose>
+                                    <div class=" text-xs mt-1 ">素材</div>
                                 </div>
                             </Tab>
                         </TabList>
@@ -36,7 +34,9 @@
             </div>
             <div class="middle">
                 <toolKitVue></toolKitVue>
-                <editorCanvas />
+                <div class="canvas" >
+                    <editorCanvas />
+                </div>
                 <EditorFoot></EditorFoot>
             </div>
             <div class="right  border-l">
@@ -56,8 +56,10 @@
                 <span class=" text-sm">{{ label }}</span>
                 <span class=" text-xs text-gray-500  inline-flex items-center px-2 rounded">{{ suffix }}</span>
             </div>
-       
         </div>
+
+        <Login></Login>
+  
     </div>
 </template>
 
@@ -68,12 +70,13 @@ import elementShop from './layout/element-shop.vue';
 import editorCanvas from './layout/editor-canvas.vue';
 import ActorSetting from './layout/actor-setting.vue';
 import MaterialShop from './layout/material-shop.vue';
-import editorHeader from "./layout/editor-header.vue"
 import toolKitVue from "./layout/tool-kit.vue"
 import EditorFoot from './layout/editor-foot.vue';
 import { computed, provide, ref } from 'vue';
 import { useActorsStore } from '@/store/actors';
-import { copyComponent, pasteComponent } from "../../plugins/hootkeys"
+import initHotKey, { copyComponent, pasteComponent } from "../../plugins/hootkeys"
+import Login from './layout/login.vue';
+initHotKey();
 const showContextMenu = ref(false);
 const contextMenuRef = ref<HTMLElement | null>(null);
 const contextCache = new Map();
@@ -109,7 +112,6 @@ provide("display_context", (event: PointerEvent, payload: {
     type: "canvas" | "actor"
     componentId: string,
 }) => {
-    console.log("hello",payload)
     const { type = "canvas"} = payload;
     contextRole.value = type;
     const positionX = event.clientX;
@@ -151,9 +153,36 @@ const handleBlur = ()=>{
     height: 100%;
     display: flex;
     flex-direction: column;
+
+    position: relative;
+}
+
+.canvas{
+    overflow: auto;
+    height: 100%;
+    background-color: rgb(235, 235, 235);
 }
 
 .right {
     width: 300px;
 }
+
+::-webkit-scrollbar {
+   width: 10px;
+   height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+   background-color: #c2c2c2;
+   border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+   background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-corner{
+   background-color: #f1f1f1;
+}
+
 </style>

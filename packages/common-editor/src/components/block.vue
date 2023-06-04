@@ -4,6 +4,9 @@
         @click="emit('click')"
         >
         <img :src="props.icon" v-if="props.icon">
+        <div class=" mb-1"  v-if="$slots.icon" >
+            <slot name="icon"></slot>
+        </div>
         <div class=" text-xs text-gray-700" v-if="props.title">
             {{ props.title }}
         </div>
@@ -19,7 +22,9 @@ const props = defineProps<{
     title?: string
 }>();
 
-const isPureBlock = computed(() => !Boolean(props.icon && props.title))
+const slot = defineSlots();
+console.log(slot)
+const isPureBlock = computed(() => !Boolean(props.title && ( props.icon || slot.icon)))
 const emit = defineEmits(["click"])
 
 </script>

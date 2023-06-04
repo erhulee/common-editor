@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col h-full" >
-        <c-input size="small">
+        <c-input size="small" class=" mb-2">
             <Search fill="#aaa" />
         </c-input>
         <div class="gap-3 columns-2 mt-2 flex-1">
