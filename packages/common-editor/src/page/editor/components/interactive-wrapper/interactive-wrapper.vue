@@ -6,21 +6,23 @@
         @mousedown="onMove" 
         :style="position" 
         :id="props.currentId">
+      
         <div class=" relative z-40 h-full" >
-        <slot></slot>
-
+            <slot></slot>
         </div>
 
         <div v-if="props.isActive && !props.isLocked" 
+            draggable="false" 
             class="active cursor-move decoration absolute top-0 left-0 right-0 bottom-0 border-blue-500 border-2 text-blue-500">
             <span class="absolute bg-white border-blue-500 border w-2 h-2 cursor-grab " 
                 v-for="item in resizeDot" 
+                draggable="false"
                 :key="item"
                 :id="item" 
                 :class="item" 
                 @mousedown="onResize">
             </span>
-            <Refresh class="rotate cursor-pointer" ></Refresh>
+            <Refresh class="rotate cursor-pointer" @mousedown.stop="onRotate" draggable="false" ></Refresh>
         </div>
 
         <div v-if="isActive && isLocked" 
@@ -39,6 +41,7 @@ import { useMove } from "./useMove"
 import { useResize } from "./useResize"
 import { computed, ref } from 'vue';
 import { Lock, Refresh } from "@icon-park/vue-next"
+import { useRotate } from "./useRotate";
 const props = defineProps<{
     currentId: string
     isLocked: boolean
@@ -59,6 +62,8 @@ const position = computed(() => ({
     height: props.height + "px",
     transform: `rotate(${props.rotate || 0}deg)`
 }))
+
+
 const resizeDot = ['left-top', 'left-bottom', 'left', 'top', 'bottom', 'right', 'right-top', 'right-bottom'];
 
 const { startMove, endMove, status: moveStatus } = useMove(wrapperRef as any, {
@@ -72,15 +77,16 @@ const { startMove, endMove, status: moveStatus } = useMove(wrapperRef as any, {
 
 
 const onMove = (event: MouseEvent) => {
-    //  console.log('鼠标右键按下');
     if (event.button === 2)  return
     if (resizeStatus.value == "resizing") return;
     actorStore.select(props.currentId);
     if (props.isLocked) return;
-    startMove(event)
+    // endResize();
+    // endRotate();
+    startMove();
 }
 
-const { startResize, status: resizeStatus } = useResize(wrapperRef as any, {
+const { startResize, status: resizeStatus, endResize } = useResize(wrapperRef as any, {
     endResize: (x, y, width, height) => {
         actorStore.batchUpdateOption([
             { paths: ["base", "top"], value: y },
@@ -91,10 +97,24 @@ const { startResize, status: resizeStatus } = useResize(wrapperRef as any, {
     }
 })
 
-const onResize = (event: MouseEvent) => {
+const onResize = () => {
     if (props.isLocked) return;
     endMove();
-    startResize(event)
+    endRotate();
+    startResize()
+}
+
+const { startRotate, status: rotateStatus, endRotate } = useRotate(wrapperRef as any, {
+    endRotate: (deg) => {
+        actorStore.updateOption(["base", "rotate"], deg)
+    }
+})
+
+const onRotate = (event: MouseEvent) => {
+    if( props.isLocked ) return;
+    endMove();
+    endResize();
+    startRotate(event)
 }
 
 

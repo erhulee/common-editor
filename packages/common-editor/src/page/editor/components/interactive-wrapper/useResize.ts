@@ -7,118 +7,94 @@ export function useResize(contentRef: Ref<HTMLElement>, hooks: {
     endResize: (x: number, y: number, width: number, height: number) => void
 }) {
     const status = ref<ResizeStatus>("idle");
-    const clickDiff = {
-        left: 0,
-        top: 0
-    }
-    const currentSize = {
+    const currentRect = {
         height: 0,
-        width: 0
-    }
-    const currentPosition = {
+        width: 0,
         left: 0,
         top: 0
     }
-    const canvas = document.getElementById("editor-canvas");
-    let canvasRect: any = {};
-    onMounted(() => {
-        canvasRect = canvas!.getBoundingClientRect()
-    })
-    let elementRect: null | DOMRect = null;
     let currentDirection = "";
-    function startResize(event: MouseEvent) {
-        // endMove();
-        elementRect = contentRef.value!.getBoundingClientRect();
-        // 点击位置
-        const point = {
-            x: event.x,
-            y: event.y
-        };
 
-        clickDiff.left = point.x - elementRect.left;
-        clickDiff.top = point.y - elementRect.top;
+    onMounted(() => {
+        const { left, top, height, width } = contentRef.value.style;
+        currentRect.left = Number.parseFloat(left);
+        currentRect.top = Number.parseFloat(top);
+        currentRect.height = Number.parseFloat(height);
+        currentRect.width = Number.parseFloat(width);
+    })
+
+    function startResize() {
+        const { left, top, height, width } = contentRef.value.style;
+        currentRect.left = Number.parseFloat(left);
+        currentRect.top = Number.parseFloat(top);
+        currentRect.height = Number.parseFloat(height);
+        currentRect.width = Number.parseFloat(width);
 
         document.addEventListener("mousemove", resize);
         document.addEventListener("mouseup", endResize);
-
         status.value = "resizing"
     }
 
     function resize(event: MouseEvent) {
         const id = (event.target as any).id as TupleToUnion<['left-top', 'left-bottom', 'left', 'top', 'bottom', 'right', 'right-top', 'right-bottom']>;
-
-
         if (resizeDot.includes(id)) {
             currentDirection = id
         }
-
         status.value = "resizing"
         // 1. 先拿到位移的距离，规定向左/向下是正方向
-        const currentLeft = event.clientX;
-        const currentTop = event.clientY;
-
-        const moveX = currentLeft - clickDiff.left - elementRect!.left;
-        const moveY = currentTop - clickDiff.top - elementRect!.top;
-
-        currentSize.height = elementRect!.height;
-        currentSize.width = elementRect!.width;
-        currentPosition.left = elementRect!.left - canvasRect!.left;
-        currentPosition.top = elementRect!.top - canvasRect!.top
+        const { movementX, movementY } = event
 
         switch (currentDirection) {
             case "right-bottom":
-                currentSize.width = elementRect!.width + moveX
-                currentSize.height = elementRect!.height + moveY
+                currentRect.width += movementX
+                currentRect.height += movementY
                 break;
             case "right":
-                currentSize.width = elementRect!.width + moveX
+                currentRect.width += movementX
                 break;
             case "right-top":
-                currentSize.width = elementRect!.width + moveX
-                currentSize.height = elementRect!.height - moveY
-                currentPosition!.top += moveY
+                currentRect.width += movementX
+                currentRect.height += movementY
+                currentRect.top += movementY
                 break;
             case "bottom":
-                currentSize.height = elementRect!.height + moveY
+                currentRect.height += movementY
                 break;
             case "left":
-                currentSize.width = elementRect!.width - moveX;
-                currentPosition!.left += moveX
+                currentRect.width += movementX;
+                currentRect.left += movementX
                 break;
             case "top":
-                currentSize.height = elementRect!.height - moveY
-                currentPosition!.top += moveY
+                currentRect.height += movementY
+                currentRect.top += movementY
                 break;
             case "left-bottom":
-                currentPosition!.left += moveX
-                currentSize.width = elementRect!.width - moveX
-                currentSize.height = elementRect!.height + moveY
+                currentRect.left += movementX
+                currentRect.width += movementX
+                currentRect.height += movementY
                 break;
             case "left-top":
-                currentSize.width = elementRect!.width - moveX
-                currentSize.height = elementRect!.height - moveY
-                currentPosition!.top += moveY
-                currentPosition!.left += moveX
+                currentRect.width = movementX
+                currentRect.height = movementY
+                currentRect.top += movementY
+                currentRect.left += movementX
                 break;
         }
 
-        console.log(currentSize, moveX)
-        contentRef.value!.style.width = currentSize.width + "px";
-        contentRef.value!.style.height = currentSize.height + "px";
-        contentRef.value!.style.top = currentPosition!.top + "px"
-        contentRef.value!.style.left = currentPosition!.left + "px"
+        contentRef.value!.style.width = currentRect.width + "px";
+        contentRef.value!.style.height = currentRect.height + "px";
+        contentRef.value!.style.top = currentRect!.top + "px"
+        contentRef.value!.style.left = currentRect!.left + "px"
 
     }
 
     function endResize() {
-        hooks.endResize(currentPosition.left, currentPosition.top, currentSize.width, currentSize.height)
+        if (status.value !== "idle") {
+            hooks.endResize(currentRect.left, currentRect.top, currentRect.width, currentRect.height)
+        }
         status.value = "idle"
         document.removeEventListener("mousemove", resize);
         document.removeEventListener("mouseup", endResize);
-        // actorStore.updateOption(["base", "top"], currentPosition?.top);
-        // actorStore.updateOption(["base", "left"], currentPosition?.left)
-        // actorStore.updateOption(["base", "width"], currentSize.width);
-        // actorStore.updateOption(["base", "height"], currentSize.height)
     }
 
     return {
@@ -126,6 +102,4 @@ export function useResize(contentRef: Ref<HTMLElement>, hooks: {
         endResize,
         status
     }
-
-
 }

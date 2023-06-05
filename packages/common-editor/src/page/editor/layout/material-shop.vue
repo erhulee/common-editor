@@ -30,7 +30,9 @@ function handleClick(option: {
     base: {
         top: number,
         left: number,
-        isLocked: boolean
+        isLocked: boolean,
+        width: number,
+        height: number
     }
 }) {
     actorsStore.add("image", option)

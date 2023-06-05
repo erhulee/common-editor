@@ -2,7 +2,9 @@
     <div class=" h-full flex items-center justify-center" 
         @contextmenu="handleContext"
         @click="selectGlobal">
-        <div class=" bg-white page-a4 page relative canvas" id="editor-canvas" :style="canvasStyle">
+  
+        <div class=" bg-white page-a4 page relative canvas" 
+            id="editor-canvas" :style="canvasStyle">
             <div v-for="item in actors">
                 <actorRender v-bind="item"></actorRender>
             </div>
@@ -11,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed, inject, onMounted, reactive } from 'vue';
 import { useActorsStore } from '../../../store/actors';
 import { useGlobalStore } from '../../../store/global';
 import actorRender from '../components/actor-render.vue';
@@ -21,6 +23,21 @@ const globalStore = useGlobalStore();
 const actors = computed(() => actorsStore.actors);
 const canvasStyle = computed(()=> globalStore.canvas_style)
 const zoomListener = inject("listener") as (eventName: string, ...args:any[]) => void;
+
+const pointPosition = reactive({
+    x: 0,
+    y: 0
+})
+
+onMounted(()=>{
+    document.addEventListener("click", (event) => {
+        pointPosition.x = event.clientX
+        pointPosition.y = event.clientY
+    })
+
+})
+
+
 
 zoomListener("zoom", (arg)=>{
     const canvas = document.getElementById("editor-canvas");

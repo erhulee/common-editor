@@ -1,63 +1,44 @@
-import { Ref, nextTick, ref } from "vue";
+import { Ref, nextTick, onMounted, ref } from "vue";
 type MoveStatus = "idle" | "selected" | "moving";
 export function useMove(contentRef: Ref<HTMLElement>, hooks: {
     endMove: (x: number, y: number) => void
 }) {
     const status = ref<MoveStatus>("idle");
-    const canvas = document.getElementById("editor-canvas");
-    const canvasRect = canvas!.getBoundingClientRect();
-    // 点击位置到元素边缘的距离
-    const diff = {
-        left: 0,
-        top: 0
+
+    // 鼠标指针相对于浏览器可视区域的偏移
+    let offsetX = 0;
+    let offsetY = 0;
+    const getSafeOffset = ({ movementX, movementY }: Pick<MouseEvent, "movementX" | "movementY">) => {
+        offsetX += movementX;
+        offsetY += movementY;
+        return { offsetX, offsetY };
     }
 
-    // move 过程中临时变量
-    const currentPosition = {
-        left: 0,
-        top: 0
-    }
-    function startMove(event: MouseEvent) {
-        // 点击位置
-        const clickPoint = {
-            x: event.clientX,
-            y: event.clientY,
-        };
-        const elementRect = contentRef.value!.getBoundingClientRect();
-        diff.left = clickPoint.x - elementRect.left;
-        diff.top = clickPoint.y - elementRect.top;
-        currentPosition.left = elementRect.left - canvasRect!.left;
-        currentPosition.top = elementRect.top - canvasRect!.top;
+    onMounted(() => {
+        const { top, left } = contentRef.value.style;
+        offsetX = Number.parseInt(left);
+        offsetY = Number.parseInt(top);
+    })
+    function startMove() {
         status.value = "selected"
+        const { top, left } = contentRef.value.style;
+        offsetX = Number.parseInt(left);
+        offsetY = Number.parseInt(top);
         document.addEventListener("mousemove", move);
         document.addEventListener("mouseup", endMove);
-
-        console.log("监听 move")
     }
 
     function move(event: MouseEvent) {
         status.value = "moving"
-        const currentLeft = event.clientX;
-        const currentTop = event.clientY;
-        const elementRect = contentRef.value!.getBoundingClientRect();
-        const moveX = currentLeft - diff.left - elementRect.left;
-        const moveY = currentTop - diff.top - elementRect.top;
-
-        currentPosition.left = currentPosition!.left + moveX;
-        currentPosition.top = currentPosition!.top + moveY;
-
-        contentRef.value!.style.top = currentPosition!.top + "px";
-        contentRef.value!.style.left = currentPosition!.left + "px";
+        const { offsetX, offsetY } = getSafeOffset(event);
+        contentRef.value!.style.top = offsetY + "px";
+        contentRef.value!.style.left = offsetX + "px";
     }
 
     function endMove() {
-        console.log("endMove")
-
         if (status.value == "moving") {
-            hooks.endMove(currentPosition?.left, currentPosition?.top)
+            hooks.endMove(offsetX, offsetY)
         }
-
-
         status.value = "idle";
         document.removeEventListener("mousemove", move);
         document.removeEventListener("mouseup", endMove);

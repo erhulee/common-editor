@@ -1,7 +1,7 @@
 <template >
     <div @contextmenu.stop="handleContext">
         <InteractiveWrapper :left="position.left" :top="position.top" :width="position.width" :height="position.height"
-            :is-active="isActive" :is-locked="isLocked" :rotate="0" :current-id="props.id">
+            :is-active="isActive" :is-locked="isLocked" :rotate="position.rotate" :current-id="props.id" >
             <component :is="props.tag" v-bind="props" :style="contentStyle" @change="handleMaterialChange"></component>
         </InteractiveWrapper>
     </div>
@@ -19,10 +19,13 @@ const props = defineProps<{
     content: string
     id: string
 }>();
+
+
 const actorStore = useActorsStore();
 const isActive = computed(() => props.id == actorStore.currentActorId);
 const isLocked = computed(() => Boolean(actorStore.currentActor?.options.base.isLocked))
-const position = computed(() => pick(props.options.base, ["left", "top", "width", "height"]));
+const position = computed(() => pick(props.options.base, ["left", "top", "width", "height", "rotate"]));
+console.log(position)
 
 const contentStyle = computed(() => ({
     opacity: props.options.base.opacity

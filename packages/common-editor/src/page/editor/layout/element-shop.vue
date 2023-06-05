@@ -45,6 +45,8 @@ const text_template = [
             base: {
                 top: 100,
                 left: 100,
+                width: 500,
+                height: 80,
                 rotate: 0,
                 isLocked: false
             }
@@ -64,6 +66,8 @@ const text_template = [
             base: {
                 top: 100,
                 left: 100,
+                width: 200,
+                height: 200,
                 rotate: 0,
                 isLocked: false
             }
@@ -83,6 +87,8 @@ const text_template = [
             base: {
                 top: 100,
                 left: 100,
+                width: 400,
+                height: 80,
                 rotate: 0,
                 isLocked: false
             }

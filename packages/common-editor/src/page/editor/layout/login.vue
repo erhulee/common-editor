@@ -8,8 +8,11 @@
                 <div class=" text-lg font-semibold mb-4">账号密码登录</div>
                 <c-input label="账号" class="w-72" />
                 <c-input label="密码" class="w-72 my-2" />
-                <c-button type="primary" class=" mt-8 w-72">
+                <c-button type="primary" class=" mt-8 mb-2 w-72">
                     登录
+                </c-button>
+                <c-button type="text" class="w-72">
+                    去注册
                 </c-button>
             </div>
         </div>
