@@ -17,7 +17,7 @@
             >
             <slot></slot>
             <input 
-                :value="props.value" 
+                :value="props.modelValue || props['onUpdate:modelValue']" 
                 @change="handleChange" 
                 @input="handleChange" 
                 class=" text-sm 
@@ -39,13 +39,17 @@ import { defineComponent, PropType } from 'vue';
 export default defineComponent(
     {
         name: "c-input",
-        emits: ["change"],
+        emits: ["change", "update:modelValue"],
         props: {
             size: {
                 type: String as PropType<'small' | 'large'>,
                 default: 'small',
             },
             value: {
+                type: String,
+                default: ""
+            },
+            modelValue:{
                 type: String,
                 default: ""
             },
@@ -57,7 +61,10 @@ export default defineComponent(
             function handleChange(event: Event) {
                 const value = (event.target as any).value;
                 ctx.emit("change", value)
+                console.log("@!3213")
+                ctx.emit("update:modelValue", value)
             }
+        
             return {
                 handleChange,
                 props,

@@ -12,17 +12,15 @@
         </div>
 
         <div v-if="props.isActive && !props.isLocked" 
-            draggable="false" 
             class="active cursor-move decoration absolute top-0 left-0 right-0 bottom-0 border-blue-500 border-2 text-blue-500">
             <span class="absolute bg-white border-blue-500 border w-2 h-2 cursor-grab " 
                 v-for="item in resizeDot" 
-                draggable="false"
                 :key="item"
                 :id="item" 
                 :class="item" 
                 @mousedown="onResize">
             </span>
-            <Refresh class="rotate cursor-pointer" @mousedown.stop="onRotate" draggable="false" ></Refresh>
+            <Refresh class="rotate cursor-pointer" @mousedown.stop="onRotate" ></Refresh>
         </div>
 
         <div v-if="isActive && isLocked" 
@@ -111,6 +109,7 @@ const { startRotate, status: rotateStatus, endRotate } = useRotate(wrapperRef as
 })
 
 const onRotate = (event: MouseEvent) => {
+    event.preventDefault();
     if( props.isLocked ) return;
     endMove();
     endResize();

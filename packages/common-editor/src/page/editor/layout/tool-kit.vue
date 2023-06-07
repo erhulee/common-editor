@@ -49,10 +49,14 @@ import CButton from "@/components/c-button.vue";
 import { InvertLeft, InvertRight } from "@icon-park/vue-next"
 import { useActorsStore } from "@/store/actors"
 import CMenu from "@/components/c-menu.vue";
+import { save } from "@/api/project";
 const actorStore = useActorsStore();
 
 function handleSave(){
-    console.log("save")
+    save({
+        projectId:"",
+        elementJSON:""
+    })
 }
 </script>
 

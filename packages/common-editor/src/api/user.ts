@@ -1,0 +1,16 @@
+import axios from "axios";
+
+export function register(username: string, password: string, password_confirm: string) {
+    return axios.post("/api/auth/register", {
+        username,
+        password,
+        password_confirm
+    })
+}
+
+export function login(username: string, password: string) {
+    return axios.post("/api/auth/login", {
+        username,
+        password,
+    })
+}

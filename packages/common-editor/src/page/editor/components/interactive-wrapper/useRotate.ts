@@ -1,6 +1,15 @@
 import { Ref, ref } from "vue";
 type RotateStatus = "idle" | "rotate";
-
+export function getDeg(rotate: string) {
+    const rotateRegex = /rotate\((-?\d+.?\d*)(deg)?\)/;
+    const match = rotate.match(rotateRegex);
+    if (match && match[1]) {
+        return Number(match[1]); // 输出 -42.6541  
+    } else {
+        console.log("无法匹配到符合条件的字符串");
+        return 0;
+    }
+}
 export function useRotate(contentRef: Ref<HTMLElement>, hooks: {
     endRotate: (deg: number) => void
 }) {
@@ -27,16 +36,7 @@ export function useRotate(contentRef: Ref<HTMLElement>, hooks: {
         y: 0
     }
     function startRotate(event: MouseEvent) {
-        const rotateRegex = /rotate\((-?\d+.?\d*)(deg)?\)/;
-        const rotateString = contentRef.value.style?.transform || "";
-        const match = rotateString.match(rotateRegex);
-        if (match && match[1]) {
-            console.log("123:", match[1])
-            deg = Number(match[1]); // 输出 -42.6541  
-        } else {
-            console.log("无法匹配到符合条件的字符串");
-        }
-
+        deg = getDeg(contentRef.value.style?.transform);
         const { left, top, height, width } = contentRef.value.style;
         currentRect.left = Number.parseFloat(left);
         currentRect.top = Number.parseFloat(top);

@@ -1,4 +1,5 @@
 import { Ref, onMounted, ref } from "vue";
+import { getDeg } from "./useRotate";
 type ResizeStatus = "idle" | "resizing";
 type TupleToUnion<T extends any[]> = T extends Array<infer U> ? U : never
 
@@ -43,6 +44,7 @@ export function useResize(contentRef: Ref<HTMLElement>, hooks: {
         status.value = "resizing"
         // 1. 先拿到位移的距离，规定向左/向下是正方向
         const { movementX, movementY } = event
+
 
         switch (currentDirection) {
             case "right-bottom":

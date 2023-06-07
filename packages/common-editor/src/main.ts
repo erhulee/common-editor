@@ -9,7 +9,8 @@ import EventBus from './plugins/eventBus'
 import App from "@/App.vue"
 import './style.css'
 import "@icon-park/vue-next/styles/index.css"
-
+import initAxios from './api/http'
+initAxios()
 const routes: Array<RouteRecordRaw> = [
     {
         name: 'editor',
@@ -42,14 +43,14 @@ app.use(CommonDesign)
 
 // 权限指令
 function authHandler(e: Event) {
-    console.log(e)
+    if (pinia.state.value.global.auth) return;
     eventBus.event_emitter.emit("login");
     e.stopImmediatePropagation();
 }
 app.directive("auth", {
     mounted(el: HTMLElement) {
         const globalStore = pinia.state.value.global
-        if (!globalStore.token) {
+        if (!globalStore.auth) {
             el.addEventListener("click", authHandler, true)
         }
     },
@@ -62,3 +63,5 @@ app.component("text", Text);
 app.component('image', Image);
 app.component("circle", Circle)
 app.mount('#app')
+
+
