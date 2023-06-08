@@ -34,7 +34,8 @@
                     <c-avatar class=" mr-4" v-auth></c-avatar>
                 </template>
                 <template #content>
-                    <div class=" bg-white shadow p-1 mt-1 flex flex-col rounded relative right-14 top-1">
+                    <div class=" bg-white shadow p-1 mt-1 flex flex-col rounded relative right-28 top-2 w-40">
+                        <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2" @click="handleSetting">账号设置</div>
                         <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2">退出登录</div>
                         <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2">返回团队空间</div>
                     </div>
@@ -50,6 +51,8 @@ import { InvertLeft, InvertRight } from "@icon-park/vue-next"
 import { useActorsStore } from "@/store/actors"
 import CMenu from "@/components/c-menu.vue";
 import { save } from "@/api/project";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const actorStore = useActorsStore();
 
 function handleSave(){
@@ -57,6 +60,10 @@ function handleSave(){
         projectId:"",
         elementJSON:""
     })
+}
+
+function handleSetting(){
+    router.push("/profile")
 }
 </script>
 

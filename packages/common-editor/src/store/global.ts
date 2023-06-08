@@ -1,3 +1,4 @@
+import { getInfo } from "@/api/user";
 import { defineStore } from "pinia";
 enum UserState {
     VISITOR,
@@ -8,7 +9,12 @@ export const useGlobalStore = defineStore("global", {
         canvas_style: {
             backgroundColor: "rgb(255,255,255)",
         },
-        auth: ""
+        auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjE0fQ.Icvjm074v6zkgfzT5C_qGqlqBNRw3R4O0sILMVptn5c",
+        userInfo: {
+            name: "我是设计师",
+            uid: "9023088745581528099",
+            avatar: ""
+        }
     }),
 
     actions: {
@@ -22,6 +28,8 @@ export const useGlobalStore = defineStore("global", {
             this.auth = token
             localStorage.setItem("common-editor-token", token)
         }
+
+
     },
 
     getters: {

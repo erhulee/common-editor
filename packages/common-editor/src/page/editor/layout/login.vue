@@ -62,15 +62,21 @@ const changeStage = (val: Stage) => {
 };
 
 const submit = async ()=>{
-    if(stage.value == Stage.REGISTER){
-        const data: any = await register(account.value, password.value, password_confirm.value);
-        const token = data.token;
-        global.login(token)
-    }else{
-         const data: any = await login(account.value, password.value)
-        const token = data.token;
-        global.login(token)
+    try {
+        if (stage.value == Stage.REGISTER) {
+            const data: any = await register(account.value, password.value, password_confirm.value);
+            const token = data.token;
+            global.login(token)
+        } else {
+            const data: any = await login(account.value, password.value)
+            const token = data.token;
+            global.login(token)
+        }
+        show.value = false
+    } catch (error) {
+        
     }
+
 }
 
 </script>
