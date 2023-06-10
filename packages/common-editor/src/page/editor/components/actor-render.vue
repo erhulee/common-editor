@@ -20,6 +20,8 @@ const props = defineProps<{
     id: string
 }>();
 
+console.log(props.tag)
+
 
 const actorStore = useActorsStore();
 const isActive = computed(() => props.id == actorStore.currentActorId);

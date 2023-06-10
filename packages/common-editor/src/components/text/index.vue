@@ -39,8 +39,6 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(["change"]);
-
-
 function handleClick(){
     isEdit.value = true
     nextTick(()=>{
@@ -48,7 +46,6 @@ function handleClick(){
 
     })
 }
-
 function handleBlur(){
     isEdit.value = false
 }

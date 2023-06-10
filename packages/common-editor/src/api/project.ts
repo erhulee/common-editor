@@ -4,5 +4,10 @@ export function save(data: {
     projectId: string
     elementJSON: string
 }) {
-    return axios.post("/api/project/save", data)
+    const projectId = data.projectId;
+    const actors = data.elementJSON;
+    return axios.post("/api/project/save", {
+        projectId,
+        actors
+    })
 }

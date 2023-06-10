@@ -26,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "profile",
         path: "/profile",
         component: () => import("@/page/profile/index.vue")
+    },
+    {
+        name: "space",
+        path: "/space",
+        component: () => import("@/page/space/index.vue")
     }
 ]
 
@@ -54,10 +59,7 @@ function authHandler(e: Event) {
 }
 app.directive("auth", {
     mounted(el: HTMLElement) {
-        const globalStore = pinia.state.value.global
-        if (!globalStore.auth) {
-            el.addEventListener("click", authHandler, true)
-        }
+        el.addEventListener("click", authHandler, true)
     },
     unmounted(el: HTMLElement) {
         el.removeEventListener("click", authHandler)

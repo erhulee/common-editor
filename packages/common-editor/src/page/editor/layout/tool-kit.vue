@@ -24,11 +24,9 @@
             <c-button type="primary" class=" px-4" v-auth @click="handleSave" >
                 保存
             </c-button>
-       
             <c-button class=" px-4 mx-2" v-auth >
                 分享
             </c-button>
-
             <CMenu>
                 <template #trigger>
                     <c-avatar class=" mr-4" v-auth></c-avatar>
@@ -36,8 +34,8 @@
                 <template #content>
                     <div class=" bg-white shadow p-1 mt-1 flex flex-col rounded relative right-28 top-2 w-40">
                         <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2" @click="handleSetting">账号设置</div>
-                        <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2">退出登录</div>
-                        <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2">返回团队空间</div>
+                        <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2" @click="handleLogOut" >退出登录</div>
+                        <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2" @click="handleGoSpace">我的空间</div>
                     </div>
                 </template>
             </CMenu>
@@ -49,21 +47,29 @@
 import CButton from "@/components/c-button.vue";
 import { InvertLeft, InvertRight } from "@icon-park/vue-next"
 import { useActorsStore } from "@/store/actors"
+import { useGlobalStore } from "@/store/global";
 import CMenu from "@/components/c-menu.vue";
 import { save } from "@/api/project";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const actorStore = useActorsStore();
-
+const globalStore =  useGlobalStore();
 function handleSave(){
     save({
         projectId:"",
-        elementJSON:""
+        elementJSON: JSON.stringify(actorStore.actors)
     })
 }
-
 function handleSetting(){
     router.push("/profile")
+}
+
+function handleLogOut(){
+    globalStore.auth = ""
+}
+
+function handleGoSpace(){
+     router.push("/space")
 }
 </script>
 

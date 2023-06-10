@@ -1,10 +1,24 @@
 <template>
-    yuanxing
+    <svg>
+        <circle cx="100" cy="100" r="50"/>
+    </svg>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 export default defineComponent({
-    name: "circle"
+    name: "circle",
+    props: {
+        center: {
+           type: Object as PropType<{
+                x:  number,
+                y:  number,
+           }>,
+           default: {
+            x: 0,
+            y: 0
+           }
+        }
+    }
 })
 </script>

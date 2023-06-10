@@ -15,7 +15,7 @@
             形状
         </div>
         <div class=" grid grid-cols-3 gap-2">
-            <Block v-for="item in shape_template" @click="() => addTextActor(item.default_options)" :title="item.name">
+            <Block v-for="item in shape_template" @click="() => addShape(item.tag, item.default_options)" :title="item.name">
                 <template #icon>
                     <component :stroke-width="2" :is="item.icon" :size="20"></component>
                 </template>
@@ -97,11 +97,11 @@ const text_template = [
 ]
 
 const shape_template = [
-    {
+    {   
+        tag: "circle",
         name: "圆形",
         icon: Round,
         default_options: {
-            content: "双击编辑标题",
             font: {
                 color: "rgb(0,0,0)",
                 fontWeight: 600,
@@ -109,6 +109,8 @@ const shape_template = [
                 textAlignLast: "center"
             },
             base: {
+                width: 100,
+                height: 100,
                 top: 100,
                 left: 100,
                 rotate: 0,
@@ -116,9 +118,19 @@ const shape_template = [
             }
         }
     }
-
 ]
 
+
+function addShape(type:string, option:any){
+     const base = option.base;
+    actorsStore.add(type,
+        {
+            base,
+            material: {
+            },
+        }
+    )
+}
 function addTextActor(option: any) {
     const content = option.content;
     const font = option.font;

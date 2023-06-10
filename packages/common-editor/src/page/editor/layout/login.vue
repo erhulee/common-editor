@@ -6,8 +6,8 @@
             </div>
             <div class=" m-auto flex flex-col justify-center items-center" v-if="stage == Stage.LOGIN" >
                 <div class=" text-lg font-semibold mb-4">账号密码登录</div>
-                <c-input label="账号" class="w-72" v-model="account" />
-                <c-input label="密码" class="w-72 my-2" v-model="password"/>
+                <c-input label="账号" class="w-72" v-model:value="account" />
+                <c-input label="密码" class="w-72 my-2" v-model:value="password"/>
                 <c-button type="primary" class=" mt-8 mb-2 w-72" @click="submit">
                     登录
                 </c-button>
@@ -18,9 +18,9 @@
 
             <div class=" m-auto flex flex-col justify-center items-center" v-if="stage == Stage.REGISTER">
                     <div class=" text-lg font-semibold mb-4">用户注册</div>
-                    <c-input label="账号" class="w-72" v-model="account" />
-                    <c-input label="密码" class="w-72 my-2" v-model="password" />
-                    <c-input label="确认密码" class="w-72 my-2" v-model="password_confirm" />
+                    <c-input label="账号" class="w-72" v-model:value="account" />
+                    <c-input label="密码" class="w-72 my-2" v-model:value="password" />
+                    <c-input label="确认密码" class="w-72 my-2" v-model:value="password_confirm" />
                     <c-button type="primary" class=" mt-8 mb-2 w-72" @click="submit" >
                         注册
                     </c-button>

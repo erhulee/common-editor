@@ -24,6 +24,10 @@ export default defineComponent({
         },
         type: {
             type: String as PropType<"default" | "text" | "primary">,
+        },
+        size:{
+            type: String as PropType<"small" | "normal" | "big">,
+            default: "normal"
         }
     },
     emits: ["click"],
@@ -37,8 +41,9 @@ export default defineComponent({
             } else {
                 result.push("default")
             }
-            console.log(ctx.slots)
             if(ctx.slots.default && ctx.slots.icon) result.push("mr-2")
+
+            result.push(props.size || "normal")
             return result
         });
         const handleClick = ($event: any) => {
@@ -79,5 +84,17 @@ export default defineComponent({
 
 .--disable {
     cursor: not-allowed;
+}
+
+.small{
+    height: 28px;
+    font-size: 12px;
+}
+.normal{
+    height: 36px;
+    font-size: 14px;
+}
+.big{
+    height: 42px;
 }
 </style>

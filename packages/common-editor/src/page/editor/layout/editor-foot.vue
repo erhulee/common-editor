@@ -1,6 +1,6 @@
 <template>
-    <div class=" bg-gray-50 py-2 px-4 flex justify-end items-center     absolute left-0 right-0 bottom-0 shadow">
-        <div class="bg-white px-4 py-1 shadow rounded mr-4 w-48" >
+    <div class="  py-2 px-4 flex justify-end items-center     absolute left-0 right-0 bottom-0 shadow">
+        <div class="bg-white px-4 py-1 shadow rounded mr-3 w-48" >
             <c-slider :outputFormatter="outputFormatter"  
                 :max = "5" 
                 :min="0" 
@@ -9,7 +9,7 @@
                 ></c-slider>
         </div>
         <Transition>
-           <div class="bg-white absolute top-0 p-3 shadow-lg rounded-md panel" v-if="hotKeysVisible">
+           <div class="bg-white absolute top-0 p-3 shadow-md rounded-md panel" v-if="hotKeysVisible">
                 <div class=" font-semibold text-zinc-700">
                     快捷键
                 </div>
@@ -23,7 +23,7 @@
         </Transition>
         <div  @mouseenter="handleHotKeysClick" 
               @mouseleave="handleHotKeysClick"
-              class=" bg-white rounded-full shadow-lg  flex items-center justify-center p-1"
+              class=" bg-white rounded-md shadow-md flex items-center justify-center p-1"
             >
             <Help size="22" fill="#666" class=" cursor-help">
             </Help>
@@ -75,7 +75,7 @@ function outputFormatter(value: number) {
 
 <style> 
 .panel {
-     transform: translateY(-105%)
+     transform: translateY(-100%)
 }
 
 .v-enter-active,
