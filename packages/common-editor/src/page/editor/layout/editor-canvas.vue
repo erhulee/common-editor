@@ -1,23 +1,19 @@
 <template>
-    <div class=" h-full flex items-center justify-center" 
-        @contextmenu="handleContext"
-        @click="selectGlobal">
-  
-        <div class=" bg-white page-a4 page relative canvas" 
-            id="editor-canvas" :style="canvasStyle">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                :width="globalStore.canvas_style.width" 
-                :height="globalStore.canvas_style.height" >
-                <template v-for="item in actors">
-                    <actorRender v-bind="item" :is-saving="isSaving"></actorRender>
-                </template>
-            </svg>
-        </div>
-    </div>
+    <!-- <div class="h-full page-a4 page relative canvas"  > -->
+
+    <svg xmlns="http://www.w3.org/2000/svg" 
+        id="editor-canvas" 
+        @contextmenu="handleContext" 
+        @click="selectGlobal"
+        v-bind="zoomBox">
+        <template v-for="item in actors">
+            <actorRender v-bind="item" :is-saving="isSaving"></actorRender>
+        </template>
+    </svg>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, reactive } from 'vue';
+import { computed, inject, onMounted, reactive, ref } from 'vue';
 import { useActorsStore } from '../../../store/actors';
 import { useGlobalStore } from '../../../store/global';
 import actorRender from '../components/actor-render.vue';
@@ -26,17 +22,15 @@ import { EditorProvide } from '@/type/provide';
 const actorsStore = useActorsStore();
 const globalStore = useGlobalStore();
 const actors = computed(() => actorsStore.actors);
-const canvasStyle = computed(()=> globalStore.canvas_style)
-const zoomListener = inject(EditorProvide.LISTENER) as (eventName: string, ...args:any[]) => void;
+const zoomListener = inject(EditorProvide.LISTENER) as (eventName: string, ...args: any[]) => void;
 const isSaving = inject(EditorProvide.IS_SAVING) as boolean
 
-console.log("isSaving:", isSaving)
 const pointPosition = reactive({
     x: 0,
     y: 0
 })
 
-onMounted(()=>{
+onMounted(() => {
     document.addEventListener("click", (event) => {
         pointPosition.x = event.clientX
         pointPosition.y = event.clientY
@@ -44,12 +38,26 @@ onMounted(()=>{
 
 })
 
-zoomListener("zoom", (arg)=>{
+const scaleRef = ref(1)
+
+const zoomBox = computed(() => ({
+    width: globalStore.canvas_style.width * scaleRef.value,
+    height: globalStore.canvas_style.height * scaleRef.value,
+    viewBox: "0 0 600 1000"
+}))
+
+// 使用 viewBox 将元素尺寸映射到 scale 后
+zoomListener("zoom", (arg) => {
     const canvas = document.getElementById("editor-canvas");
-    if(canvas == null) return;
-    canvas.style.transform = `scale(${arg})`
+    if (canvas == null) return;
+    scaleRef.value = arg
+    // const width = 600;
+    // const height = 1000;
+    // canvas.style.transform = `scale(${arg})`
+    // canvas.style.width = `${width * arg}px`;
+    // canvas.style.height = `${height * arg}px`;
 })
-const selectGlobal = ()=>{
+const selectGlobal = () => {
 }
 
 const displayContext = inject("display_context") as (event: Event, payload: {
@@ -63,6 +71,8 @@ function handleContext(event: Event) {
 }
 
 
+
+
 </script>
 
 <style scoped>
@@ -72,12 +82,11 @@ function handleContext(event: Event) {
 
 .page-a4 {
     overflow: hidden;
-    width: 600px;
-    height: 1000px;
 }
 
-.canvas{
-    transform: scale(0.7);
+#editor-canvas{
+    background-color: white;
+    margin: auto;
 }
 </style>
 

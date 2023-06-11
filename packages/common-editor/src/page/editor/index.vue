@@ -170,12 +170,15 @@ const handleBlur = ()=>{
     flex-direction: column;
 
     position: relative;
+    height: 100vh;
 }
 
 .canvas{
-    overflow: auto;
+    overflow: scroll;
     height: 100%;
-    background-color: rgb(235, 235, 235);
+    padding-top: 150px;
+    padding-bottom: 150px;
+    background-color: #f1f1f1;
 }
 
 .right {

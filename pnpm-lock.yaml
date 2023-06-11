@@ -21,6 +21,7 @@ importers:
       axios: ^1.4.0
       eventemitter3: ^5.0.1
       hotkeys-js: ^3.10.2
+      html2canvas: ^1.4.1
       lodash-es: ^4.17.21
       pinia: ^2.1.3
       postcss: ^8.4.23
@@ -46,6 +47,7 @@ importers:
       axios: registry.npmmirror.com/axios/1.4.0
       eventemitter3: registry.npmmirror.com/eventemitter3/5.0.1
       hotkeys-js: registry.npmmirror.com/hotkeys-js/3.10.2
+      html2canvas: registry.npmmirror.com/html2canvas/1.4.1
       lodash-es: registry.npmmirror.com/lodash-es/4.17.21
       pinia: registry.npmmirror.com/pinia/2.1.3_typescript@5.0.4+vue@3.3.4
       postcss: registry.npmmirror.com/postcss/8.4.23
@@ -1060,6 +1062,13 @@ packages:
     name: balanced-match
     version: 1.0.2
 
+  registry.npmmirror.com/base64-arraybuffer/1.0.2:
+    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz}
+    name: base64-arraybuffer
+    version: 1.0.2
+    engines: {node: '>= 0.6.0'}
+    dev: false
+
   registry.npmmirror.com/binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/binary-extensions/-/binary-extensions-2.2.0.tgz}
     name: binary-extensions
@@ -1156,6 +1165,14 @@ packages:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/concat-map/-/concat-map-0.0.1.tgz}
     name: concat-map
     version: 0.0.1
+    dev: false
+
+  registry.npmmirror.com/css-line-break/2.1.0:
+    resolution: {integrity: sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/css-line-break/-/css-line-break-2.1.0.tgz}
+    name: css-line-break
+    version: 2.1.0
+    dependencies:
+      utrie: registry.npmmirror.com/utrie/1.0.2
     dev: false
 
   registry.npmmirror.com/cssesc/3.0.0:
@@ -1390,6 +1407,16 @@ packages:
     resolution: {integrity: sha512-Z6vLmJTYzkbZZXlBkhrYB962Q/rZGc/WHQiyEGu9ZZVF7bAeFDjjDa31grWREuw9Ygb4zmlov2bTkPYqj0aFnQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hotkeys-js/-/hotkeys-js-3.10.2.tgz}
     name: hotkeys-js
     version: 3.10.2
+    dev: false
+
+  registry.npmmirror.com/html2canvas/1.4.1:
+    resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/html2canvas/-/html2canvas-1.4.1.tgz}
+    name: html2canvas
+    version: 1.4.1
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      css-line-break: registry.npmmirror.com/css-line-break/2.1.0
+      text-segmentation: registry.npmmirror.com/text-segmentation/1.0.3
     dev: false
 
   registry.npmmirror.com/inflight/1.0.6:
@@ -1910,6 +1937,14 @@ packages:
       - ts-node
     dev: false
 
+  registry.npmmirror.com/text-segmentation/1.0.3:
+    resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/text-segmentation/-/text-segmentation-1.0.3.tgz}
+    name: text-segmentation
+    version: 1.0.3
+    dependencies:
+      utrie: registry.npmmirror.com/utrie/1.0.2
+    dev: false
+
   registry.npmmirror.com/thenify-all/1.6.0:
     resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/thenify-all/-/thenify-all-1.6.0.tgz}
     name: thenify-all
@@ -1979,6 +2014,14 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz}
     name: util-deprecate
     version: 1.0.2
+    dev: false
+
+  registry.npmmirror.com/utrie/1.0.2:
+    resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/utrie/-/utrie-1.0.2.tgz}
+    name: utrie
+    version: 1.0.2
+    dependencies:
+      base64-arraybuffer: registry.npmmirror.com/base64-arraybuffer/1.0.2
     dev: false
 
   registry.npmmirror.com/uuid/9.0.0:
