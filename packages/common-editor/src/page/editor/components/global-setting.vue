@@ -12,8 +12,6 @@
         <span class=" py-1" > 背景色 </span>
         <color-picker v-model:pureColor="props.backgroundColor" @update:pureColor="handleChange"  />
     </div>
-
-
 </template>
 
 <script setup lang="ts">

@@ -1,32 +1,23 @@
 <template>
-    <div 
-        v-if="!isEdit"
-        @dblclick="handleClick" 
-        :style="style" 
-        class=" select-none cursor-text h-full" 
-        draggable="false" 
-    >
+    <foreignObject v-if="isEdit" v-bind="inputAttribute">
+        <input ref="inputRef" :value="props.options.material.content" :style="style" @blur="handleBlur"
+            @input="handleChange" class=" w-full p-0 bg-transparent focus-visible:outline-none" />
+    </foreignObject>
+    <text v-else @dblclick="handleClick" class=" select-none"  draggable="false" v-bind="svgAttribute" :fill="style.color"
+        :font-size="style['font-size']" :font-weight="style['font-weight']">
         {{ props.options.material.content }}
-    </div>
-    <input v-else
-        ref="inputRef"
-        :value="props.options.material.content"
-        :style="style" 
-        @blur="handleBlur"
-        @input="handleChange"
-        class=" w-full p-0 bg-transparent focus-visible:outline-none"
-        />
+    </text>
 </template>
 
 <script setup lang="ts">
-import { FontSetting } from '@/type/font-setting';
+import { BaseSetting, FontSetting } from '@/type/setting';
 import { mapKeys } from 'lodash-es';
 import { computed, nextTick, ref } from 'vue';
 
 const isEdit = ref(false)
 const inputRef = ref<HTMLElement | null>(null)
-function transformKeys(value: Record<string, any>){
-    return mapKeys(value, (_, key)=>key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase())
+function transformKeys(value: Record<string, any>) {
+    return mapKeys(value, (_, key) => key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase())
 }
 const props = defineProps<{
     id: string,
@@ -34,22 +25,23 @@ const props = defineProps<{
         material: {
             content: string
         }
+        base: BaseSetting
         font: FontSetting
     }
 }>();
 
 const emit = defineEmits(["change"]);
-function handleClick(){
+function handleClick() {
     isEdit.value = true
-    nextTick(()=>{
-    inputRef.value?.focus()
+    nextTick(() => {
+        inputRef.value?.focus()
 
     })
 }
-function handleBlur(){
+function handleBlur() {
     isEdit.value = false
 }
-function handleChange(e:any){
+function handleChange(e: any) {
     emit("change", {
         path: ["material", "content"],
         value: e.target.value
@@ -70,6 +62,28 @@ const style = computed(() => {
         whiteSpace: "nowrap"
     }))
 });
+
+
+
+const svgAttribute = computed(() => {
+    // y 坐标需要兼容 字体的特殊性
+    return {
+        x: props.options.base.left,
+        y: props.options.base.top + props.options.font.fontSize,
+      
+    }
+})
+
+const inputAttribute = computed(() => {
+    // y 坐标需要兼容 字体的特殊性
+    return {
+        x: props.options.base.left,
+        y: props.options.base.top,
+        width: props.options.base.width,
+        height: props.options.base.height
+    }
+})
+
 
 
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="  py-2 px-4 flex justify-end items-center     absolute left-0 right-0 bottom-0 shadow">
-        <div class="bg-white px-4 py-1 shadow rounded mr-3 w-48" >
+        <div class="bg-white px-4 py-1 shadow rounded mr-3" >
             <c-slider :outputFormatter="outputFormatter"  
                 :max = "5" 
                 :min="0" 

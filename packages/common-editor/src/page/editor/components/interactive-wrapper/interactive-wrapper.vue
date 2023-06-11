@@ -1,17 +1,17 @@
 <template>
-    <div 
-        draggable="false"
-        class="absolute" 
-        ref="wrapperRef" 
-        @mousedown="onMove" 
-        :style="position" 
-        :id="props.currentId">
-      
-        <div class=" relative z-40 h-full" >
-            <slot></slot>
-        </div>
-
-        <div v-if="props.isActive && !props.isLocked" 
+    <!-- 考虑线性变化要不要直接在这里做更好 -->
+    <g
+        v-bind="groupAttributeValue" 
+        @mousedown="startMove" >
+          <slot></slot>
+          <SelectorBox 
+            v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
+            @resize="({direction})=>startResize(direction)"
+            @rotate="onRotate"
+            :size="{ width: props.width, height: props.height }" 
+            :origin="{ x: props.left, y: props.top }"
+        ></SelectorBox>
+        <!-- <div v-if="props.isActive && !props.isLocked" 
             class="active cursor-move decoration absolute top-0 left-0 right-0 bottom-0 border-blue-500 border-2 text-blue-500">
             <span class="absolute bg-white border-blue-500 border w-2 h-2 cursor-grab " 
                 v-for="item in resizeDot" 
@@ -21,25 +21,22 @@
                 @mousedown="onResize">
             </span>
             <Refresh class="rotate cursor-pointer" @mousedown.stop="onRotate" ></Refresh>
-        </div>
+        </div> -->
 
-        <div v-if="isActive && isLocked" 
+        <div v-if="isActive && isLocked && !props.isSaving" 
             class="decoration absolute top-0 left-0 right-0 bottom-0 border-red-500 border-2 text-red-500  cursor-none">
             <div class="cursor-none  absolute -top-2 -left-2 w-5 h-5 bg-red-600 rounded-md flex items-center justify-center ">
                 <Lock size="12" fill="#fff"></Lock>
             </div>
         </div>
-
-    </div>
+    </g>
 </template>
 
 <script setup lang="ts">
 import { useActorsStore } from "@/store/actors";
-import { useMove } from "./useMove"
-import { useResize } from "./useResize"
 import { computed, ref } from 'vue';
-import { Lock, Refresh } from "@icon-park/vue-next"
-import { useRotate } from "./useRotate";
+import { Lock } from "@icon-park/vue-next"
+import SelectorBox from "../selector-box.vue";
 const props = defineProps<{
     currentId: string
     isLocked: boolean
@@ -49,72 +46,187 @@ const props = defineProps<{
     width: number
     height: number
     rotate: number
+
+    isSaving: boolean
 }>();
 
 const actorStore = useActorsStore();
-const wrapperRef = ref<HTMLElement | null>(null);
-const position = computed(() => ({
-    top: props.top + "px",
-    left: props.left + "px",
-    width: props.width + "px",
-    height: props.height + "px",
-    transform: `rotate(${props.rotate || 0}deg)`
-}))
+const resizeDirection = ref("");
+const rotateOriginPoint = {
+    x: 0,
+    y: 0
+}
+const emit = defineEmits(["change"]);
 
 
-const resizeDot = ['left-top', 'left-bottom', 'left', 'top', 'bottom', 'right', 'right-top', 'right-bottom'];
-
-const { startMove, endMove, status: moveStatus } = useMove(wrapperRef as any, {
-    endMove: (x, y) => {
-        actorStore.batchUpdateOption([
-            { paths: ["base", "top"], value: y },
-            { paths: ["base", "left"], value: x }
-        ])
+// group Transform Value
+const groupAttributeValue = computed(()=>{
+    const centerX = props.left + props.width / 2;
+    const centerY = props.top + props.height / 2; 
+    return {
+        transform: `rotate(${props.rotate},${centerX},${centerY})`,
+        id: props.currentId
     }
 })
 
 
-const onMove = (event: MouseEvent) => {
-    if (event.button === 2)  return
-    if (resizeStatus.value == "resizing") return;
-    actorStore.select(props.currentId);
-    if (props.isLocked) return;
-    // endResize();
-    // endRotate();
-    startMove();
+function startMove() {
+    actorStore.select(props.currentId)
+    document.addEventListener("mousemove", move);
+    document.addEventListener("mouseup", endMove);
 }
 
-const { startResize, status: resizeStatus, endResize } = useResize(wrapperRef as any, {
-    endResize: (x, y, width, height) => {
-        actorStore.batchUpdateOption([
-            { paths: ["base", "top"], value: y },
-            { paths: ["base", "left"], value: x },
-            { paths: ["base", "width"], value: width },
-            { paths: ["base", "height"], value: height }
-        ])
+function move(event: MouseEvent) {
+    emit("change", {
+        left: props.left + event.movementX,
+        top: props.top + event.movementY
+    })
+}
+
+function endMove() {
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", endMove);
+}
+
+
+function startResize(direction:string){
+    resizeDirection.value = direction;
+    document.addEventListener("mousemove", resize);
+    document.addEventListener("mouseup", endResize);
+}
+
+function resize(event: MouseEvent) {
+    // 1. 先拿到位移的距离，规定向左/向下是正方向
+    const { movementX, movementY } = event
+    switch (resizeDirection.value) {
+        case "right-bottom":
+            emit("change", {
+                width: props.width + movementX,
+                height: props.height + movementY
+            })
+            break;
+
+        case "right-top":
+            emit("change", {
+                width: props.width + movementX,
+                height: props.height + movementY,
+                top: props.top + movementY
+            })
+            break;
+        case "left-bottom":
+            emit("change", {
+                width: props.width + movementX,
+                height: props.height + movementY,
+                left: props.left + movementX
+            })
+            break;
+        case "left-top":
+              emit("change", {
+                width: props.width + movementX,
+                height: props.height + movementY,
+                left: props.left + movementX,
+                top: props.top + movementY
+            })
+            break;
     }
-})
-
-const onResize = () => {
-    if (props.isLocked) return;
-    endMove();
-    endRotate();
-    startResize()
 }
 
-const { startRotate, status: rotateStatus, endRotate } = useRotate(wrapperRef as any, {
-    endRotate: (deg) => {
-        actorStore.updateOption(["base", "rotate"], deg)
+function endResize() {
+    document.removeEventListener("mousemove", resize);
+    document.removeEventListener("mouseup", endResize);
+}
+
+function onRotate(event: MouseEvent){
+    rotateOriginPoint.x = event.clientX;
+    rotateOriginPoint.y = event.clientY;
+    document.addEventListener("mousemove", rotate);
+    document.addEventListener("mouseup", endRotate);
+}
+
+function rotate(event: MouseEvent) {
+    const centerX = props.left + props.width / 2;
+    const centerY = props.top + props.height / 2;
+
+    const endPointX = event.clientX;
+    const endPontY = event.clientY;
+
+    const vector_a = [centerX - rotateOriginPoint.x, centerY - rotateOriginPoint.y];
+    const vector_b = [centerX - endPointX, centerY - endPontY];
+
+    // // console.log(vector_a, vector_b)
+    const len_a = Math.sqrt(Math.pow(vector_a[0], 2) + Math.pow(vector_a[1], 2));
+    const len_b = Math.sqrt(Math.pow(vector_b[0], 2) + Math.pow(vector_b[1], 2));
+    const dot_ab = (vector_a[0] * vector_b[0] + vector_a[1] * vector_b[1])
+    const cos = dot_ab / (len_a * len_b);
+    const radians = Math.acos(cos);
+    let degrees = radians * (180 / Math.PI);
+
+    // // 判断旋转方向，使用叉积（外积）判断向量叉积的方向
+    const cross_ab = vector_a[0] * vector_b[1] - vector_a[1] * vector_b[0];
+    if (cross_ab < 0) {
+        degrees = -degrees;
     }
-})
-
-const onRotate = (event: MouseEvent) => {
-    event.preventDefault();
-    if( props.isLocked ) return;
-    endMove();
-    endResize();
-    startRotate(event)
+    console.log(degrees)
+    emit("change", {rotate: degrees})
+    // result = deg + degrees;
+    // contentRef.value!.style.transform = `rotate(${deg + degrees}deg`
 }
+
+function endRotate() {
+    document.removeEventListener("mousemove", rotate);
+    document.removeEventListener("mouseup", endRotate);
+}
+// const { startMove, endMove, status: moveStatus } = useSVGMove(transformValue, {
+//     endMove: (x, y) => {
+//         actorStore.batchUpdateOption([
+//             { paths: ["base", "top"], value: y },
+//             { paths: ["base", "left"], value: x }
+//         ])
+//     }
+// })
+
+
+// const onMove = (event: MouseEvent) => {
+//     if (event.button === 2)  return
+//     if (resizeStatus.value == "resizing") return;
+//     actorStore.select(props.currentId);
+//     if (props.isLocked) return;
+//     // endResize();
+//     // endRotate();
+//     startMove();
+// }
+
+// const { startResize, status: resizeStatus, endResize } = useResize(wrapperRef as any, {
+//     endResize: (x, y, width, height) => {
+//         actorStore.batchUpdateOption([
+//             { paths: ["base", "top"], value: y },
+//             { paths: ["base", "left"], value: x },
+//             { paths: ["base", "width"], value: width },
+//             { paths: ["base", "height"], value: height }
+//         ])
+//     }
+// })
+
+// const onResize = () => {
+//     if (props.isLocked) return;
+//     endMove();
+//     endRotate();
+//     startResize()
+// }
+
+// const { startRotate, status: rotateStatus, endRotate } = useRotate(wrapperRef as any, {
+//     endRotate: (deg) => {
+//         actorStore.updateOption(["base", "rotate"], deg)
+//     }
+// })
+
+// const onRotate = (event: MouseEvent) => {
+//     event.preventDefault();
+//     if( props.isLocked ) return;
+//     endMove();
+//     endResize();
+//     startRotate(event)
+// }
 
 
 

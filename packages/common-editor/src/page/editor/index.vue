@@ -72,10 +72,12 @@ import ActorSetting from './layout/actor-setting.vue';
 import MaterialShop from './layout/material-shop.vue';
 import toolKitVue from "./layout/tool-kit.vue"
 import EditorFoot from './layout/editor-foot.vue';
-import { computed, provide, ref } from 'vue';
+import { computed, inject, provide, ref } from 'vue';
 import { useActorsStore } from '@/store/actors';
 import initHotKey, { copyComponent, pasteComponent } from "../../plugins/hootkeys"
 import Login from './layout/login.vue';
+import { GlobalEvents }  from "@/type/Events"
+import { EditorProvide } from "@/type/provide"
 initHotKey();
 const showContextMenu = ref(false);
 const contextMenuRef = ref<HTMLElement | null>(null);
@@ -126,10 +128,23 @@ provide("display_context", (event: PointerEvent, payload: {
     document.addEventListener("mousedown", clickOuterListener);
 })
 
+// html2canvas 
+const listener = inject("listener") as any;
+const isSaving = ref(false)
+listener(GlobalEvents.SAVING_STATUS_CHANGE, (status: boolean) => {
+    isSaving.value = status
+})
+provide(EditorProvide.IS_SAVING, isSaving);
+
 const handleBlur = ()=>{
     showContextMenu.value = false;
     document.removeEventListener("mousedown", clickOuterListener);
 }
+
+
+
+
+
 
 
 </script>

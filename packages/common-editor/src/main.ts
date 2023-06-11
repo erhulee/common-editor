@@ -4,12 +4,16 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import Text from "./components/text/index.vue"
 import Image from "./components/image/image.vue"
 import Circle from "./components/shape/circle.vue"
+import Rectangle from "./components/shape/rectangle.vue"
+import Triangle from "./components/shape/triangle.vue"
+import Diamond from "./components/shape/diamond.vue"
 import CommonDesign from "./components/index"
 import EventBus from './plugins/eventBus'
 import App from "@/App.vue"
 import './style.css'
 import "@icon-park/vue-next/styles/index.css"
 import initAxios from './api/http'
+
 initAxios()
 const routes: Array<RouteRecordRaw> = [
     {
@@ -68,7 +72,10 @@ app.directive("auth", {
 
 app.component("text", Text);
 app.component('image', Image);
-app.component("circle", Circle)
+app.component("circle", Circle);
+app.component("rectangle", Rectangle);
+app.component("triangle", Triangle);
+app.component("diamond", Diamond)
 app.mount('#app')
 
 

@@ -19,7 +19,7 @@ import { computed } from "vue";
 export default defineComponent({
     name: "c-menu",
     setup(props) {
-        const [state, send] = useMachine(menu.machine({ id: "menu", "aria-label": "File" }));
+        const [state, send] = useMachine(menu.machine({ id: Math.random(), "aria-label": "File" }));
         const api = computed(() => menu.connect(state.value, send, normalizeProps));
         return {
             api

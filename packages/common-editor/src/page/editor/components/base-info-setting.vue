@@ -34,7 +34,7 @@
 import CButton from '@/components/c-button.vue';
 import CTooltip from '@/components/c-tooltip.vue';
 import { useActorsStore } from '@/store/actors';
-import { BaseSetting } from '@/type/font-setting';
+import { BaseSetting } from '@/type/setting';
 import { Lock, DeleteOne, Mosaic, FlipHorizontally } from "@icon-park/vue-next"
 
 

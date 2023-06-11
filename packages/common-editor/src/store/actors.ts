@@ -1,24 +1,22 @@
-import { BaseSetting, FontSetting, TextRenderMaterial } from "@/type/font-setting";
+import { BaseSetting, FillSetting, FontSetting, ShapeSetting, StrokeSetting, TextRenderMaterial } from "@/type/setting";
 import { cloneDeep, get } from "lodash-es";
 import { defineStore } from "pinia";
 import { v1 } from "uuid";
 
 type ActorOptions = {
-    // material: TextRenderMaterial
     base: Partial<BaseSetting>
-    font: Partial<FontSetting>
+    font?: Partial<FontSetting>
+    fill?: FillSetting
+    stroke?: StrokeSetting
+    shape?: ShapeSetting
 };
 type Actor = {
     id: string;
     tag: string;
-    options: ActorOptions
-};
-
-type TextActor = {
-    options: {
+    options: ActorOptions & {
         material: TextRenderMaterial
     }
-} & Actor;
+};
 
 
 function set(target: Record<string, any>, paths: string[], value: any) {
@@ -75,7 +73,7 @@ type HistoryMap = {
 export const useActorsStore = defineStore("actors", {
     state: () => ({
         memoryStack: [] as any[],
-        actors: [] as Array<TextActor>,
+        actors: [] as Array<Actor>,
         currentActorId: "",
     }),
     // 也可以定义为

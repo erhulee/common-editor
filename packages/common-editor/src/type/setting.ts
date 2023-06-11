@@ -13,8 +13,22 @@ export type BaseSetting = {
     height: number,
     left: number,
     top: number,
+    rotate: number,
     opacity: number
     isLocked: boolean
+}
+
+export type FillSetting = {
+    color: string
+}
+
+export type StrokeSetting = {
+    color: string
+    width: number
+}
+
+export type ShapeSetting = {
+    radius: number
 }
 
 // 渲染的内容

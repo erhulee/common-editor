@@ -103,6 +103,8 @@ export default defineComponent({
 .output {
     color: #5f5d5d;
     font-size: 14px;
-    min-width: 5rem;
+    min-width: 3rem;
+
+    text-align: right;
 }
 </style>

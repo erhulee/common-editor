@@ -12,6 +12,6 @@ export default defineComponent({
 
 <style scoped>
 .divider{
-    border-bottom: 1px solid #b4b4b4 ;
+    border-bottom: 1px solid #dbdada ;
 }
 </style>

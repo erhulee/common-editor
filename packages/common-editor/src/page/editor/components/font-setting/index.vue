@@ -18,14 +18,14 @@
 </template>
 
 <script setup lang="ts">
-
-import { FontSetting } from '@/type/font-setting';
+import { computed } from 'vue';
+import { FontSetting } from '@/type/setting';
 import AlignSelect from './align-select.vue';
 import TextDecorationEditor from './text-decoration-editor.vue';
-import { computed } from 'vue';
 import { ColorPicker } from "vue3-colorpicker";
-import "vue3-colorpicker/style.css";
 import FontFamilySelect from './font-family-select.vue';
+
+import "vue3-colorpicker/style.css";
 type Props = FontSetting;
 const props = defineProps<Props>();
 const emit = defineEmits(["change"]);

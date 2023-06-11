@@ -7,6 +7,8 @@ enum UserState {
 export const useGlobalStore = defineStore("global", {
     state: () => ({
         canvas_style: {
+            width: 600,
+            height: 1000,
             backgroundColor: "rgb(255,255,255)",
         },
         auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjE0fQ.Icvjm074v6zkgfzT5C_qGqlqBNRw3R4O0sILMVptn5c",
