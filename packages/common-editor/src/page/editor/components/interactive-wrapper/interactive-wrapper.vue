@@ -2,7 +2,8 @@
     <!-- 考虑线性变化要不要直接在这里做更好 -->
     <g
         v-bind="groupAttributeValue" 
-        @mousedown="startMove" >
+        @click.stop=""
+        @mousedown.stop="startMove" >
           <slot></slot>
           <SelectorBox 
             v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
@@ -11,18 +12,6 @@
             :size="{ width: props.width, height: props.height }" 
             :origin="{ x: props.left, y: props.top }"
         ></SelectorBox>
-        <!-- <div v-if="props.isActive && !props.isLocked" 
-            class="active cursor-move decoration absolute top-0 left-0 right-0 bottom-0 border-blue-500 border-2 text-blue-500">
-            <span class="absolute bg-white border-blue-500 border w-2 h-2 cursor-grab " 
-                v-for="item in resizeDot" 
-                :key="item"
-                :id="item" 
-                :class="item" 
-                @mousedown="onResize">
-            </span>
-            <Refresh class="rotate cursor-pointer" @mousedown.stop="onRotate" ></Refresh>
-        </div> -->
-
         <div v-if="isActive && isLocked && !props.isSaving" 
             class="decoration absolute top-0 left-0 right-0 bottom-0 border-red-500 border-2 text-red-500  cursor-none">
             <div class="cursor-none  absolute -top-2 -left-2 w-5 h-5 bg-red-600 rounded-md flex items-center justify-center ">

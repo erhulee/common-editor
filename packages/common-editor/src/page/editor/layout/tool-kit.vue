@@ -40,7 +40,8 @@
                 </template>
                 <template #content>
                     <div class=" bg-white shadow p-1 mt-1 flex flex-col rounded absolute right-0 w-40">
-                        <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2" @click="handleExportImage">导出为图片
+                        <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2" @click="handleExportImage">
+                            导出为图片
                         </div>
                     </div>
                 </template>
@@ -61,14 +62,16 @@ import { useGlobalStore } from "@/store/global";
 import { save } from "@/api/project";
 import { useRouter } from "vue-router";
 
-import html2canvas from 'html2canvas'
-import { EditorProvide} from "@/type/provide"
 import { inject } from "vue";
-import { GlobalEvents } from "@/type/Events";
+import { GlobalEvents, Runtime } from "../runtime";
+
+import { Canvg, presets } from 'canvg';
+const preset = presets.offscreen()
 const router = useRouter();
 const actorStore = useActorsStore();
 const globalStore = useGlobalStore();
-const trigger = inject(EditorProvide.TRIGGER) as any;
+
+const runtime = inject("runtime") as Runtime
 function handleSave() {
     save({
         projectId: "",
@@ -87,18 +90,40 @@ function handleGoSpace() {
     router.push("/space")
 }
 
-function handleExportImage(){
-    const element = document.getElementById("editor-canvas") as HTMLElement;
-    trigger(GlobalEvents.SAVING_STATUS_CHANGE, true);
+async function toPng(data: {
+    width: number,
+    height: number,
+    svg: string
+}) {
+    const {
+        width,
+        height,
+        svg
+    } = data
+    const canvas = new OffscreenCanvas(width, height)
+    const ctx = canvas.getContext('2d')
+    const v = await Canvg.from(ctx!, svg, preset)
+    await v.render()
+    const blob = await canvas.convertToBlob()
+    const pngUrl = URL.createObjectURL(blob)
+    return pngUrl
+}
 
-    setTimeout(()=>{
-        html2canvas(element).then((canvas) => {
-            let img = document.createElement('a');
-            img.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
-            img.download = 'pic_name.jpg';
-            img.click();
-            trigger(GlobalEvents.SAVING_STATUS_CHANGE, false)
+function handleExportImage() {
+    runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "saving")
+    const svg = document.getElementById("editor-canvas") as HTMLElement;
+    let img = document.createElement('a');
+    setTimeout(async () => {
+        const url = await toPng({
+            width: 600,
+            height: 1000,
+            svg: svg.innerHTML
         })
+        img.href = url.replace("image/jpeg", "image/octet-stream");
+        img.download = 'pic_name.jpg';
+        img.click();
+        runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "editing")
+
     }, 0)
 
 }

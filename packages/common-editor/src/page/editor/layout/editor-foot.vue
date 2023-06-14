@@ -5,7 +5,7 @@
                 :max = "5" 
                 :min="0" 
                 :step="0.01"
-                @change="eventTrigger('zoom', $event)"
+                @change="runtime.trigger(GlobalEvents.ZOOM, $event)"
                 ></c-slider>
         </div>
         <Transition>
@@ -35,7 +35,9 @@
 <script setup lang="ts">
 import { Help } from "@icon-park/vue-next"
 import { inject, ref } from "vue";
-const eventTrigger = inject("trigger") as Function;
+import { Runtime } from "../runtime";
+import { GlobalEvents } from "../runtime";
+const runtime = inject("runtime") as Runtime;
 const hotKeysVisible = ref(false);
 const hootKeys = [
     {

@@ -3,17 +3,21 @@
         <template v-if="Boolean(actorStore.currentActorId)">
             <BaseInfoSetting v-bind="currentBaseSetting" @change="handleBaseInfoChange" />
 
-            <c-divider class=" mt-6" ></c-divider>
-            <template v-if="actorStore.currentActor?.tag == 'text'">
+            <c-divider class=" mt-6"></c-divider>
+            <template v-if="runtime.setting == 'text'">
                 <TextContentSetting :value="currentValueSetting" />
                 <FontSetting v-bind="currentFontSetting" @change="handleFontChange" />
             </template>
-            <template v-if="actorStore.currentActor?.tag == 'image'">
+            <template v-if="runtime.setting == 'image'">
                 <ImageSetting></ImageSetting>
             </template>
-            <template v-if="isShape(actorStore.currentActor?.tag) ">
+            <template v-if="runtime.setting == 'shape'">
                 <ShapeSetting v-bind="currentShapeSetting" @change="handleShapeChange"></ShapeSetting>
             </template>
+        </template>
+
+        <template v-if="runtime.setting == SettingRouter.SIZE">
+            <SizeSetting></SizeSetting>
         </template>
         <GlobalSetting :backgroundColor="canvasSetting.backgroundColor" v-else @change="handleGlobalChange"></GlobalSetting>
 
@@ -21,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { useActorsStore } from '@/store/actors';
 import { useGlobalStore } from '@/store/global';
 
@@ -31,14 +35,17 @@ import TextContentSetting from '../components/text-content-setting.vue';
 import GlobalSetting from '../components/global-setting.vue';
 import ImageSetting from '../components/image-setting.vue';
 import ShapeSetting from '../components/shape-setting.vue';
-import { isShape } from '@/utils/isShape';
+import { Runtime, SettingRouter } from '../runtime';
+import SizeSetting from '../components/setting-viewer/size-setting.vue';
+
+const runtime = inject("runtime") as Runtime;
 
 const actorStore = useActorsStore();
 const globalStore = useGlobalStore();
 const currentFontSetting = computed(() => actorStore.currentActor?.options?.font || {});
 const currentBaseSetting = computed(() => actorStore.currentActor?.options.base || {})
 const currentValueSetting = computed(() => (actorStore.currentActor?.options.material));
-const currentShapeSetting = computed(()=>({
+const currentShapeSetting = computed(() => ({
     fill: {
         color: actorStore.currentActor?.options.fill?.color
     },
@@ -71,8 +78,8 @@ function handleFontChange(payload: {
 function handleShapeChange(payload: {
     path: string[],
     value: any
-}){
-   actorStore.updateOption(payload.path, payload.value)
+}) {
+    actorStore.updateOption(payload.path, payload.value)
 }
 
 function handleGlobalChange(payload: {

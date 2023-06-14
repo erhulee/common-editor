@@ -1,11 +1,16 @@
 <script  lang="ts">
 import * as numberInput from "@zag-js/number-input";
 import { normalizeProps, useMachine } from "@zag-js/vue";
-import { computed, defineComponent  } from "vue";
+import { PropType, computed, defineComponent  } from "vue";
+import { useId } from "./hooks/useId"
 import { Up, Down} from "@icon-park/vue-next"
 export default defineComponent({
     name: "c-number-input",
     props:{
+        size: {
+            type: String as PropType<"small" | "normal" | "big">,
+            default: "normal"
+        },
         value: {
             type: Number,
             default: 0
@@ -24,7 +29,7 @@ export default defineComponent({
     emits:["change"],
     setup(props, ctx){
         const [state, send] = useMachine(numberInput.machine({ 
-            id: "1" ,
+            id: useId(),
             allowMouseWheel: true,
             value: props.value,
             max: props.max,
@@ -37,9 +42,19 @@ export default defineComponent({
             const value = event.target.value;
             ctx.emit("change", Number(value))
         }
+
+        const dynamicClassName = computed(()=>{
+            const classNames:string[] = [];
+            if(props.size == "normal") classNames.push("h-10");
+            if(props.size == "big") classNames.push("h-12");
+            if (props.size == "small") classNames.push("h-8");
+            return classNames.join(" ")
+
+        })
         return {
             api,
             props,
+            dynamicClassName,
             handleChange
         }
     }
@@ -49,7 +64,9 @@ export default defineComponent({
 <template>
     <div ref="ref" 
         v-bind="api.rootProps" 
-        class=" h-10 bg-gray-100 flex rounded-md overflow-hidden box-border">
+        class=" bg-gray-100 flex rounded-md overflow-hidden box-border"
+        :class="dynamicClassName"
+        >
             <input 
                 v-bind="api.inputProps" 
                 @input="handleChange"

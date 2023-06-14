@@ -7,7 +7,7 @@
         @click="selectGlobal"
         v-bind="zoomBox">
         <template v-for="item in actors">
-            <actorRender v-bind="item" :is-saving="isSaving"></actorRender>
+            <actorRender v-bind="item" :is-saving="runtime.globalState.value == 'saving'"></actorRender>
         </template>
     </svg>
 </template>
@@ -17,13 +17,12 @@ import { computed, inject, onMounted, reactive, ref } from 'vue';
 import { useActorsStore } from '../../../store/actors';
 import { useGlobalStore } from '../../../store/global';
 import actorRender from '../components/actor-render.vue';
-import { EditorProvide } from '@/type/provide';
+import { GlobalEvents, Runtime } from '../runtime';
 
 const actorsStore = useActorsStore();
 const globalStore = useGlobalStore();
 const actors = computed(() => actorsStore.actors);
-const zoomListener = inject(EditorProvide.LISTENER) as (eventName: string, ...args: any[]) => void;
-const isSaving = inject(EditorProvide.IS_SAVING) as boolean
+const runtime = inject("runtime") as Runtime
 
 const pointPosition = reactive({
     x: 0,
@@ -47,18 +46,12 @@ const zoomBox = computed(() => ({
 }))
 
 // 使用 viewBox 将元素尺寸映射到 scale 后
-zoomListener("zoom", (arg) => {
+runtime.listen(GlobalEvents.ZOOM, (arg) => {
     const canvas = document.getElementById("editor-canvas");
     if (canvas == null) return;
     scaleRef.value = arg
-    // const width = 600;
-    // const height = 1000;
-    // canvas.style.transform = `scale(${arg})`
-    // canvas.style.width = `${width * arg}px`;
-    // canvas.style.height = `${height * arg}px`;
 })
-const selectGlobal = () => {
-}
+
 
 const displayContext = inject("display_context") as (event: Event, payload: {
     type: "canvas"
@@ -70,6 +63,10 @@ function handleContext(event: Event) {
     })
 }
 
+
+function selectGlobal(){
+    actorsStore.select("")
+}
 
 
 

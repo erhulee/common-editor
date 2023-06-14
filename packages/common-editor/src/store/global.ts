@@ -24,14 +24,11 @@ export const useGlobalStore = defineStore("global", {
             const target = this.canvas_style as any;
             target[key] = value
         },
-
         // 拿到token -> pinia 内部获取 userInfo 
         login(token: string) {
             this.auth = token
             localStorage.setItem("common-editor-token", token)
         }
-
-
     },
 
     getters: {

@@ -4,7 +4,7 @@
         <span class="text-gray-600">尺寸</span>
         <span class=" text-gray-400">624 x 567mm</span>
     </div>
-    <c-button class=" w-full">调整尺寸</c-button>
+    <c-button class=" w-full" @click="changeSize">调整尺寸</c-button>
 
     <c-divider class=" my-3" ></c-divider>
  
@@ -15,9 +15,13 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from "vue";
 import { ColorPicker } from "vue3-colorpicker";
+import { Runtime, SettingRouter } from "../runtime";
+
 import "vue3-colorpicker/style.css";
 const emit = defineEmits(["change"])
+const runtime = inject("runtime") as Runtime;
 const props = defineProps<{
     backgroundColor: string
 }>()
@@ -26,6 +30,10 @@ function handleChange(value:any) {
         path: "backgroundColor",
         value,
     })
+}
+
+function changeSize(){
+    runtime.settingRouterPush(SettingRouter.SIZE)
 }
 </script>
 
