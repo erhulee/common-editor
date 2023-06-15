@@ -2,7 +2,6 @@
     <div class=" px-4 h-full pt-5">
         <template v-if="Boolean(actorStore.currentActorId)">
             <BaseInfoSetting v-bind="currentBaseSetting" @change="handleBaseInfoChange" />
-
             <c-divider class=" mt-6"></c-divider>
             <template v-if="runtime.setting == 'text'">
                 <TextContentSetting :value="currentValueSetting" />
@@ -16,10 +15,13 @@
             </template>
         </template>
 
-        <template v-if="runtime.setting == SettingRouter.SIZE">
-            <SizeSetting></SizeSetting>
+        <template v-else>
+             <template v-if="runtime.setting == SettingRouter.SIZE">
+                <SizeSetting></SizeSetting>
+            </template>
+            <GlobalSetting :backgroundColor="canvasSetting.backgroundColor" v-else @change="handleGlobalChange"></GlobalSetting>
         </template>
-        <GlobalSetting :backgroundColor="canvasSetting.backgroundColor" v-else @change="handleGlobalChange"></GlobalSetting>
+       
 
     </div>
 </template>
@@ -29,14 +31,14 @@ import { computed, inject } from 'vue';
 import { useActorsStore } from '@/store/actors';
 import { useGlobalStore } from '@/store/global';
 
-import BaseInfoSetting from '../components/base-info-setting.vue';
-import FontSetting from "../components/font-setting/index.vue"
-import TextContentSetting from '../components/text-content-setting.vue';
-import GlobalSetting from '../components/global-setting.vue';
-import ImageSetting from '../components/image-setting.vue';
-import ShapeSetting from '../components/shape-setting.vue';
+import BaseInfoSetting from '../components/setting-viewer/base-info-setting.vue';
+import FontSetting from "../components/setting-viewer/font-setting/index.vue"
+import TextContentSetting from "../components/setting-viewer/font-setting/text-content-setting.vue"
+import GlobalSetting from '../components/setting-viewer/global-setting.vue';
+import ImageSetting from '../components/setting-viewer/image-setting.vue';
 import { Runtime, SettingRouter } from '../runtime';
 import SizeSetting from '../components/setting-viewer/size-setting.vue';
+import ShapeSetting from '../components/setting-viewer/shape-setting.vue';
 
 const runtime = inject("runtime") as Runtime;
 

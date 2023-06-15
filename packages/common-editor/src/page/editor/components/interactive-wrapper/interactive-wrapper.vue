@@ -25,7 +25,7 @@
 import { useActorsStore } from "@/store/actors";
 import { computed, ref } from 'vue';
 import { Lock } from "@icon-park/vue-next"
-import SelectorBox from "../selector-box.vue";
+import SelectorBox from "./selector-box.vue";
 const props = defineProps<{
     currentId: string
     isLocked: boolean

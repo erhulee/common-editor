@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import { inject } from "vue";
 import { ColorPicker } from "vue3-colorpicker";
-import { Runtime, SettingRouter } from "../runtime";
 
 import "vue3-colorpicker/style.css";
+import { Runtime, SettingRouter } from "../../runtime";
 const emit = defineEmits(["change"])
 const runtime = inject("runtime") as Runtime;
 const props = defineProps<{

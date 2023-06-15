@@ -46,8 +46,6 @@
                     </div>
                 </template>
             </CMenu>
-
-
         </div>
     </div>
 </template>
@@ -64,14 +62,12 @@ import { useRouter } from "vue-router";
 
 import { inject } from "vue";
 import { GlobalEvents, Runtime } from "../runtime";
-
-import { Canvg, presets } from 'canvg';
-const preset = presets.offscreen()
+import exportAsImage from "@/utils/exportAsImage"
 const router = useRouter();
 const actorStore = useActorsStore();
 const globalStore = useGlobalStore();
-
 const runtime = inject("runtime") as Runtime
+
 function handleSave() {
     save({
         projectId: "",
@@ -81,52 +77,27 @@ function handleSave() {
 function handleSetting() {
     router.push("/profile")
 }
-
+function handleGoSpace() {
+    router.push("/space")
+}
 function handleLogOut() {
     globalStore.auth = ""
 }
 
-function handleGoSpace() {
-    router.push("/space")
-}
 
-async function toPng(data: {
-    width: number,
-    height: number,
-    svg: string
-}) {
-    const {
-        width,
-        height,
-        svg
-    } = data
-    const canvas = new OffscreenCanvas(width, height)
-    const ctx = canvas.getContext('2d')
-    const v = await Canvg.from(ctx!, svg, preset)
-    await v.render()
-    const blob = await canvas.convertToBlob()
-    const pngUrl = URL.createObjectURL(blob)
-    return pngUrl
-}
 
-function handleExportImage() {
+async function handleExportImage() {
     runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "saving")
-    const svg = document.getElementById("editor-canvas") as HTMLElement;
-    let img = document.createElement('a');
-    setTimeout(async () => {
-        const url = await toPng({
-            width: 600,
-            height: 1000,
-            svg: svg.innerHTML
-        })
-        img.href = url.replace("image/jpeg", "image/octet-stream");
-        img.download = 'pic_name.jpg';
-        img.click();
+    try {
+        await exportAsImage("editor-canvas", "default.jpg")
+    } catch {
+    } finally {
         runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "editing")
-
-    }, 0)
+    }
 
 }
+
+
 </script>
 
 <style scoped>

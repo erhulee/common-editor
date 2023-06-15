@@ -12,7 +12,11 @@ export enum SettingRouter {
     SIZE = "size"
 }
 
+
 type GlobalState = "editing" | "saving"
+let _state: GlobalState = "editing";
+
+
 export class Runtime {
     eventsEmitter: EventEmitter
     globalState: Ref<GlobalState>
@@ -55,5 +59,11 @@ export class Runtime {
         this.eventsEmitter.emit(eventName, payload)
     }
 
-
+    globalStateChange(state: GlobalState) {
+        _state = state
+        this.globalState.value = state
+    }
+    globalStateReset() {
+        this.globalState.value = _state
+    }
 }

@@ -1,4 +1,5 @@
 <template>
+    
     <div class=" font-semibold my-3"  >字体</div>
     <div class="flex ">
         <TextDecorationEditor :value="text_decoration_value" @change="payload => handleChange(payload.path, payload.value)">
