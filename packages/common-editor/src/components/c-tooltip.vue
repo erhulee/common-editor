@@ -12,6 +12,7 @@ import { defineComponent } from 'vue';
 import * as tooltip from "@zag-js/tooltip";
 import { normalizeProps, useMachine } from "@zag-js/vue";
 import { computed } from "vue";
+import { useId } from './hooks/useId';
 export default defineComponent({
     name:"c-tooltip",
     props:{
@@ -21,7 +22,7 @@ export default defineComponent({
     },
     setup(props, ctx){
         const [state, send] = useMachine(tooltip.machine({ 
-            id: props.content,
+            id: useId(),
             openDelay: 100,
             closeDelay: 200
         }));

@@ -19,6 +19,7 @@ export class PathCommand {
         return new PathCommand("M", [[x, y]])
     }
 
+
     static LineTo(points: { x: number, y: number } | Array<{ x: number, y: number }>) {
         const input = Array.isArray(points) ? points : [points];
         return new PathCommand("L", [...

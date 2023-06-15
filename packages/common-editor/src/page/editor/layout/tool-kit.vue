@@ -89,8 +89,10 @@ function handleLogOut() {
 async function handleExportImage() {
     runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "saving")
     try {
+        debugger
         await exportAsImage("editor-canvas", "default.jpg")
-    } catch {
+    } catch(e) {
+        console.log("error", e)
     } finally {
         runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "editing")
     }

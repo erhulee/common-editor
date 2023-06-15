@@ -1,20 +1,15 @@
 <template>
     <!-- 考虑线性变化要不要直接在这里做更好 -->
-    <g
-        v-bind="groupAttributeValue" 
-        @click.stop=""
-        @mousedown.stop="startMove" >
-          <slot></slot>
-          <SelectorBox 
-            v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
-            @resize="({direction})=>startResize(direction)"
-            @rotate="onRotate"
-            :size="{ width: props.width, height: props.height }" 
-            :origin="{ x: props.left, y: props.top }"
-        ></SelectorBox>
-        <div v-if="isActive && isLocked && !props.isSaving" 
+    <g v-bind="groupAttributeValue" @click.stop="" @mousedown.stop="startMove">
+        <slot></slot>
+        <SelectorBox :is-lock="props.isLocked" v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
+            @resize="({ direction }) => startResize(direction)" @rotate="onRotate"
+            :size="{ width: props.width, height: props.height }" :origin="{ x: props.left, y: props.top }">
+        </SelectorBox>
+        <div v-if="isActive && isLocked && !props.isSaving"
             class="decoration absolute top-0 left-0 right-0 bottom-0 border-red-500 border-2 text-red-500  cursor-none">
-            <div class="cursor-none  absolute -top-2 -left-2 w-5 h-5 bg-red-600 rounded-md flex items-center justify-center ">
+            <div
+                class="cursor-none  absolute -top-2 -left-2 w-5 h-5 bg-red-600 rounded-md flex items-center justify-center ">
                 <Lock size="12" fill="#fff"></Lock>
             </div>
         </div>
@@ -49,9 +44,9 @@ const emit = defineEmits(["change"]);
 
 
 // group Transform Value
-const groupAttributeValue = computed(()=>{
+const groupAttributeValue = computed(() => {
     const centerX = props.left + props.width / 2;
-    const centerY = props.top + props.height / 2; 
+    const centerY = props.top + props.height / 2;
     return {
         transform: `rotate(${props.rotate},${centerX},${centerY})`,
         id: props.currentId
@@ -78,7 +73,7 @@ function endMove() {
 }
 
 
-function startResize(direction:string){
+function startResize(direction: string) {
     resizeDirection.value = direction;
     document.addEventListener("mousemove", resize);
     document.addEventListener("mouseup", endResize);
@@ -110,7 +105,7 @@ function resize(event: MouseEvent) {
             })
             break;
         case "left-top":
-              emit("change", {
+            emit("change", {
                 width: props.width + movementX,
                 height: props.height + movementY,
                 left: props.left + movementX,
@@ -125,7 +120,7 @@ function endResize() {
     document.removeEventListener("mouseup", endResize);
 }
 
-function onRotate(event: MouseEvent){
+function onRotate(event: MouseEvent) {
     rotateOriginPoint.x = event.clientX;
     rotateOriginPoint.y = event.clientY;
     document.addEventListener("mousemove", rotate);
@@ -155,8 +150,7 @@ function rotate(event: MouseEvent) {
     if (cross_ab < 0) {
         degrees = -degrees;
     }
-    console.log(degrees)
-    emit("change", {rotate: degrees})
+    emit("change", { rotate: degrees })
     // result = deg + degrees;
     // contentRef.value!.style.transform = `rotate(${deg + degrees}deg`
 }
@@ -233,8 +227,7 @@ function endRotate() {
 
 }
 
-.active {
-}
+.active {}
 
 .lock {
     border: solid 1px red;

@@ -1,11 +1,26 @@
 <template>
     <g>
-        <path fill="none" stroke="#4F80FF" :d="outline + 'Z'"></path>
+        <!-- 边框 -->
+        <path fill="none" :stroke="props.isLock ? '#D91A21' : '#4F80FF'" :d="outline + 'Z'"></path>
+
+        <!-- resize dot -->
         <rect v-for="{ item, x, y } in resizeDot" :key="item" @mousedown.stop="onResize(item)" :x="x" :y="y" width="10"
             height="10" fill="#4F80FF" stroke="rgba(0,0,0,0)" :class="item">
         </rect>
-        <svg v-bind="rotateIconSVGAttribute" class="rotate-icon">
-            <g @mousedown.stop="onRotate" >
+
+        <!-- lock icon-->
+        <svg v-if="props.isLock" v-bind="lockSVGAttribute" xmlns="http://www.w3.org/2000/svg">
+            <path fill="red" d="M 0 0 L 60 0 L 60 60 L 0 60 Z" />    
+            <rect x="6" y="22" width="36" height="22" rx="2" fill="#fff" stroke="#fff" stroke-width="4"
+                stroke-linejoin="round" />
+            <path d="M14 22V14C14 8.47715 18.4772 4 24 4C29.5228 4 34 8.47715 34 14V22" stroke="#fff" stroke-width="4"
+                stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M24 30V36" stroke="#D01" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <!-- rotate icon -->
+        <svg v-else v-bind="rotateIconSVGAttribute" class="rotate-icon">
+            <!-- mousedown 停止向上冒泡，触发 move -->
+            <g @mousedown.stop="onRotate" @click.stop="">
                 <circle cx="25" cy="25" r="20" fill="transparent"></circle>
                 <path d="M42 8V24" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
                 </path>
@@ -30,7 +45,8 @@ const props = defineProps<{
     size: {
         width: number
         height: number
-    }
+    },
+    isLock: boolean
 }>()
 const emit = defineEmits(["resize", "rotate"])
 
@@ -43,11 +59,15 @@ const outline = computed(() => {
     return PathCommand.compose(moveCommand, lineCommand)
 })
 
-const resizeDot = computed(() => ['left-top', 'left-bottom', 'right-top', 'right-bottom'].map(item => ({
-    item,
-    x: props.origin.x - 4 + (item.includes("right") ? props.size.width : 0),
-    y: props.origin.y - 4 + (item.includes("bottom") ? props.size.height : 0)
-})));
+const resizeDot = computed(() => {
+    if (props.isLock) return [];
+    else return ['left-top', 'left-bottom', 'right-top', 'right-bottom'].map(item => ({
+        item,
+        x: props.origin.x - 4 + (item.includes("right") ? props.size.width : 0),
+        y: props.origin.y - 4 + (item.includes("bottom") ? props.size.height : 0)
+    }))
+
+});
 
 const rotateIconSVGAttribute = computed(() => ({
     fill: "none",
@@ -57,6 +77,16 @@ const rotateIconSVGAttribute = computed(() => ({
     height: 50,
     viewBox: "0 0 100 100"
 }))
+
+const lockSVGAttribute = computed(()=>({
+    fill: "none",
+    x: props.origin.x,
+    y: props.origin.y,
+    width: 25,
+    height: 25,
+    viewBox: "0 0 100 100"
+}))
+
 const onResize = (direction: string) => emit("resize", { direction })
 const onRotate = (e: MouseEvent) => emit("rotate", e)
 </script>
@@ -81,5 +111,4 @@ const onRotate = (e: MouseEvent) => emit("rotate", e)
 
 .right-bottom {
     cursor: nwse-resize;
-}
-</style>
+}</style>

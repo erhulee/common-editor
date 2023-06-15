@@ -177,7 +177,6 @@ const handleBlur = ()=>{
     overflow: scroll;
     height: 100%;
     padding-top: 150px;
-    padding-bottom: 150px;
     background-color: #f1f1f1;
 }
 

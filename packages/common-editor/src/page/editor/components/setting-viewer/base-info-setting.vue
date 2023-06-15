@@ -2,7 +2,7 @@
     <div class="font-semibold mb-3 ">
         基础信息
     </div>
-    <div>
+    <div class=" flex flex-row justify-start gap-3">
         <CTooltip content="锁定" class=" inline-block">
             <CButton type="text" :class="props.isLocked && ' bg-gray-200'"
                 @click="() => handleChange('isLocked', !props.isLocked)">
@@ -17,6 +17,11 @@
         <CTooltip content="翻转" class=" inline-block">
             <CButton type="text" class=" " @click="handleDelete">
                 <FlipHorizontally fill="#888" size="16"></FlipHorizontally>
+            </CButton>
+        </CTooltip>
+        <CTooltip content="复制" class=" inline-block">
+            <CButton type="text" class=" " @click="handleDelete">
+                <Copy fill="#888" size="16"></Copy>
             </CButton>
         </CTooltip>
     </div>
@@ -35,7 +40,7 @@ import CButton from '@/components/c-button.vue';
 import CTooltip from '@/components/c-tooltip.vue';
 import { useActorsStore } from '@/store/actors';
 import { BaseSetting } from '@/type/setting';
-import { Lock, DeleteOne, Mosaic, FlipHorizontally } from "@icon-park/vue-next"
+import { Lock, DeleteOne, Mosaic, FlipHorizontally, Copy } from "@icon-park/vue-next"
 
 
 function outputFormatter(value: number) {
