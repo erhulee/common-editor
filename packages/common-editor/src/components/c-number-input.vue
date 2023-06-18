@@ -28,8 +28,9 @@ export default defineComponent({
     },
     emits:["change"],
     setup(props, ctx){
+        const id = useId();
         const [state, send] = useMachine(numberInput.machine({ 
-            id: useId(),
+            id,
             allowMouseWheel: true,
             value: props.value,
             max: props.max,
@@ -47,11 +48,12 @@ export default defineComponent({
             const classNames:string[] = [];
             if(props.size == "normal") classNames.push("h-10");
             if(props.size == "big") classNames.push("h-12");
-            if (props.size == "small") classNames.push("h-8");
+            if(props.size == "small") classNames.push("h-8");
             return classNames.join(" ")
 
         })
         return {
+            id,
             api,
             props,
             dynamicClassName,
@@ -63,6 +65,7 @@ export default defineComponent({
 
 <template>
     <div ref="ref" 
+        :id="id"
         v-bind="api.rootProps" 
         class=" bg-gray-100 flex rounded-md overflow-hidden box-border"
         :class="dynamicClassName"

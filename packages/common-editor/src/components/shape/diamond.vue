@@ -40,14 +40,10 @@ export default defineComponent({
                 d: PathCommand.compose(move, line) + " z",
                 fill: props.options.fill.color,
                 stroke: props.options.stroke.color,
-                ['stroke-width']: props.options.stroke.width
+                ['stroke-width']: props.options.stroke.width,
+                opacity: props.options.base.opacity
             }
-            // rx: props.options.base.width / 2,
-            // ry: props.options.base.height / 2,
         })
-
-
-        console.log(attribute)
 
         return {
             attribute

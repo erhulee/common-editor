@@ -45,7 +45,10 @@ const runtime = inject("runtime") as Runtime;
 const actorStore = useActorsStore();
 const globalStore = useGlobalStore();
 const currentFontSetting = computed(() => actorStore.currentActor?.options?.font || {});
-const currentBaseSetting = computed(() => actorStore.currentActor?.options.base || {})
+const currentBaseSetting = computed(() => ({
+    ... actorStore.currentActor?.options.base,
+    id: actorStore.currentActor?.id
+}) || {})
 const currentValueSetting = computed(() => (actorStore.currentActor?.options.material));
 const currentShapeSetting = computed(() => ({
     fill: {

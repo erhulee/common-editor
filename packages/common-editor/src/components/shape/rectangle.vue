@@ -31,7 +31,8 @@ export default defineComponent({
             height: props.options.base.height,
             fill: props.options.fill.color,
             stroke: props.options.stroke.color,
-            ['stroke-width']: props.options.stroke.width
+            ['stroke-width']: props.options.stroke.width,
+            opacity: props.options.base.opacity
         }))
 
         return {

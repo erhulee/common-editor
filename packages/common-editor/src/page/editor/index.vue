@@ -59,6 +59,7 @@
         </div>
 
         <Login></Login>
+        <MaterialUpload></MaterialUpload>
   
     </div>
 </template>
@@ -72,24 +73,24 @@ import ActorSetting from './layout/actor-setting.vue';
 import MaterialShop from './layout/material-shop.vue';
 import toolKitVue from "./layout/tool-kit.vue"
 import EditorFoot from './layout/editor-foot.vue';
-import { computed,provide, ref } from 'vue';
+import { computed,inject,provide, ref } from 'vue';
 import { useActorsStore } from '@/store/actors';
 import initHotKey, { copyComponent, pasteComponent } from "../../plugins/hootkeys"
-import Login from './layout/login.vue';
+import Login from './layout/modals/login.vue';
 import { GlobalEvents, Runtime } from './runtime';
+import MaterialUpload from './layout/modals/material-upload.vue';
 initHotKey();
 const showContextMenu = ref(false);
 const contextMenuRef = ref<HTMLElement | null>(null);
 const contextCache = new Map();
 const actorStore = useActorsStore();
 const contextRole = ref<"canvas"|"actor">("canvas");
+const runtime = inject("runtime") as Runtime
 const contextMenuItems = computed(()=> [
     { label: "复制", suffix: "Ctrl + C", value: 1 },
     { label: "粘贴", suffix: "Ctrl + V", value: 2 },
     { label: "删除", suffix: "Del", value: 3 },
 ].filter(({value})=> contextRole.value == "actor" || value == 2))
-const runtime = new Runtime();
-provide("runtime", runtime);
 const contextMenuResponse = (key: number) =>{
     switch(key){
         case 1:

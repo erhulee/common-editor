@@ -13,12 +13,12 @@
 import { BaseSetting, FontSetting } from '@/type/setting';
 import { mapKeys } from 'lodash-es';
 import { computed, nextTick, ref } from 'vue';
-
-const isEdit = ref(false)
-const inputRef = ref<HTMLElement | null>(null)
 function transformKeys(value: Record<string, any>) {
     return mapKeys(value, (_, key) => key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase())
 }
+
+const emit = defineEmits(["change"]);
+
 const props = defineProps<{
     id: string,
     options: Record<string, any> & {
@@ -29,25 +29,8 @@ const props = defineProps<{
         font: FontSetting
     }
 }>();
-
-const emit = defineEmits(["change"]);
-function handleClick() {
-    isEdit.value = true
-    nextTick(() => {
-        inputRef.value?.focus()
-
-    })
-}
-function handleBlur() {
-    isEdit.value = false
-}
-function handleChange(e: any) {
-    emit("change", {
-        path: ["material", "content"],
-        value: e.target.value
-    })
-}
-
+const isEdit = ref(false)
+const inputRef = ref<HTMLElement | null>(null)
 
 const style = computed(() => {
     const entry = Object.entries(props.options.font);
@@ -59,18 +42,18 @@ const style = computed(() => {
         }
         return pre
     }, {
-        whiteSpace: "nowrap"
+        whiteSpace: "nowrap",
+        opacity: props.options.base.opacity
     }))
 });
-
-
 
 const svgAttribute = computed(() => {
     // y 坐标需要兼容 字体的特殊性
     return {
+        opacity: props.options.base.opacity,
         x: props.options.base.left,
         y: props.options.base.top + props.options.font.fontSize,
-      
+
     }
 })
 
@@ -83,6 +66,23 @@ const inputAttribute = computed(() => {
         height: props.options.base.height
     }
 })
+
+
+
+function handleClick() {
+    isEdit.value = true
+    nextTick(() => inputRef.value?.focus())
+}
+function handleBlur() {
+    isEdit.value = false
+}
+function handleChange(e: any) {
+    emit("change", {
+        path: ["material", "content"],
+        value: e.target.value
+    })
+}
+
 
 
 

@@ -13,6 +13,7 @@ import App from "@/App.vue"
 import './style.css'
 import "@icon-park/vue-next/styles/index.css"
 import initAxios from './api/http'
+import { GlobalEvents, Runtime } from './page/editor/runtime'
 
 initAxios()
 const routes: Array<RouteRecordRaw> = [
@@ -55,10 +56,13 @@ app.use(eventBus)
 app.use(pinia);
 app.use(CommonDesign)
 
+const runtime = new Runtime();
+
+
 // 权限指令
 function authHandler(e: Event) {
     if (pinia.state.value.global.auth) return;
-    eventBus.event_emitter.emit("login");
+    runtime.trigger(GlobalEvents.LOGIN_MODAL_SHOW)
     e.stopImmediatePropagation();
 }
 app.directive("auth", {
@@ -75,7 +79,8 @@ app.component('image', Image);
 app.component("circle", Circle);
 app.component("rectangle", Rectangle);
 app.component("triangle", Triangle);
-app.component("diamond", Diamond)
+app.component("diamond", Diamond);
+app.provide("runtime", runtime)
 app.mount('#app')
 
 

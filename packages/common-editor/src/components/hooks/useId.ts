@@ -7,6 +7,5 @@ function* createIDMachine() {
 
 const IDMachine = createIDMachine();
 export function useId() {
-    console.log("!!!", IDMachine.next().value)
-    return IDMachine.next().value
+    return String(IDMachine.next().value || "")
 }

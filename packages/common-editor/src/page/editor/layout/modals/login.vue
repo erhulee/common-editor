@@ -1,5 +1,5 @@
 <template>
-    <div  v-if="show" class=" w-screen h-screen fixed bg-opacity-20 bg-black flex items-center justify-center">
+    <div v-if="show" class=" w-screen h-screen fixed bg-opacity-20 bg-black flex items-center justify-center">
         <div class="form shadow-lg bg-white p-10 w-96 rounded-md relative  ">
             <div @click="handleCancel" class=" inline-block w-auto  absolute top-2 right-2 cursor-pointer  hover:text-slate-700 ">
                 <Close></Close>
@@ -37,13 +37,16 @@ import { Close } from "@icon-park/vue-next"
 import { inject, ref } from "vue";
 import { register, login } from "@/api/user"
 import { useGlobalStore } from "@/store/global";
-const listener = inject("listener") as any;
+import { Runtime } from "../../runtime";
+import { GlobalEvents } from "../../runtime";
+const runtime = inject("runtime") as Runtime;
 const global = useGlobalStore();
 enum Stage {
     LOGIN,
     REGISTER
 }
-listener("login", () => {
+
+runtime.listen(GlobalEvents.LOGIN_MODAL_SHOW, () => {
     show.value = true;
 })
 const show = ref(false);

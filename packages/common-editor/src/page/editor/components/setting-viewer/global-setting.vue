@@ -2,7 +2,7 @@
     <div class="font-semibold mb-3">画布</div>
     <div class=" flex justify-between text-sm mb-2">
         <span class="text-gray-600">尺寸</span>
-        <span class=" text-gray-400">624 x 567mm</span>
+        <span class=" text-gray-400 center">{{ size }}</span>
     </div>
     <c-button class=" w-full" @click="changeSize">调整尺寸</c-button>
 
@@ -15,23 +15,28 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
+import { inject, computed } from "vue";
 import { ColorPicker } from "vue3-colorpicker";
+import { Runtime, SettingRouter } from "../../runtime";
+import { useGlobalStore } from "@/store/global";
 
 import "vue3-colorpicker/style.css";
-import { Runtime, SettingRouter } from "../../runtime";
+
 const emit = defineEmits(["change"])
+const globalStore = useGlobalStore();
 const runtime = inject("runtime") as Runtime;
 const props = defineProps<{
     backgroundColor: string
 }>()
+const size = computed(()=>{
+    return `${globalStore.canvas_style.width} x ${globalStore.canvas_style.height}`
+})
 function handleChange(value:any) {
     emit("change", {
         path: "backgroundColor",
         value,
     })
 }
-
 function changeSize(){
     runtime.settingRouterPush(SettingRouter.SIZE)
 }

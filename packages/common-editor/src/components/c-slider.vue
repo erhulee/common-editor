@@ -1,5 +1,5 @@
 <template>
-    <div class=" flex items-center">
+    <div class=" flex items-center" :id="id">
         <slot name="prefix"></slot>
         <div ref="ref" v-bind="api.rootProps" class="flex-1 slider ">
             <div v-bind="api.controlProps" class="h-6 ">
@@ -21,8 +21,8 @@
 <script lang="ts">
 import * as slider from "@zag-js/slider"
 import { normalizeProps, useMachine } from "@zag-js/vue"
-import { defineComponent, computed } from "vue"
-
+import { defineComponent, computed, onUpdated } from "vue"
+import { useId } from "./hooks/useId"
 export default defineComponent({
     name: "c-slider",
     emits:["change"],
@@ -48,10 +48,12 @@ export default defineComponent({
             default: 1
         }
     },
+
     setup(props, ctx) {
+        const id = useId();
         const [state, send] = useMachine(
             slider.machine({
-                id: Math.random(),
+                id,
                 value: props.value,
                 min: props.min,
                 max: props.max,
@@ -61,10 +63,14 @@ export default defineComponent({
                 }
             }))
         const api = computed(() =>
-            slider.connect(state.value, send, normalizeProps),
+            slider.connect(state.value, send, normalizeProps)
         )
+        onUpdated(() => {
+            console.log("sad")
+        })
 
         return {
+            id,
             api,
             outputFormatter: props.outputFormatter
         }

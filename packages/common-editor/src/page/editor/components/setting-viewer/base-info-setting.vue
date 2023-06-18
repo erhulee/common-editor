@@ -26,17 +26,22 @@
         </CTooltip>
     </div>
     <div class=" my-2 mx-2">
-        <c-slider :outputFormatter="outputFormatter" :min="0" :max="1" :step="0.01" :value="props.opacity"
+        <CSlider
+            :key="props.id"
+            :outputFormatter="outputFormatter" 
+            :min="0" :max="1" :step="0.01" 
+            :value="props.opacity"
             @change="handleChange('opacity', $event)">
             <template #prefix>
                 <Mosaic></Mosaic>
             </template>
-        </c-slider>
+        </CSlider>
     </div>
 </template>
 
 <script setup lang="ts">
 import CButton from '@/components/c-button.vue';
+import CSlider from '@/components/c-slider.vue';
 import CTooltip from '@/components/c-tooltip.vue';
 import { useActorsStore } from '@/store/actors';
 import { BaseSetting } from '@/type/setting';
@@ -47,7 +52,9 @@ function outputFormatter(value: number) {
     return (value * 100).toFixed(0) + "%"
 }
 
-const props = defineProps<Partial<BaseSetting>>();
+const props = defineProps<Partial<BaseSetting & {
+    id: string
+}>>();
 const emit = defineEmits(["change"]);
 const actorStore = useActorsStore();
 

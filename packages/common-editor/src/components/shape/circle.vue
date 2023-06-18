@@ -30,7 +30,9 @@ export default defineComponent({
 
             fill: props.options.fill.color,
             stroke: props.options.stroke.color,
-            ['stroke-width']: props.options.stroke.width
+            ['stroke-width']: props.options.stroke.width,
+
+            opacity: props.options.base.opacity
         }))
 
         return{

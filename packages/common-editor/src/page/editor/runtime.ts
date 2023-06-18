@@ -5,7 +5,9 @@ import { Ref, ref } from "vue";
 
 export enum GlobalEvents {
     SAVING_STATUS_CHANGE = "saving_status_change",
-    ZOOM = "zoom"
+    ZOOM = "zoom",
+    LOGIN_MODAL_SHOW = "login_modal_show",
+    MATERIAL_MANAGER_SHOW = "material_manager_show"
 }
 
 export enum SettingRouter {

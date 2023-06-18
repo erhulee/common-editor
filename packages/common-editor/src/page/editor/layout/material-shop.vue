@@ -7,14 +7,12 @@
             <img v-for="item in image_list" :src="item.material.src" class=" rounded mb-2" @click="handleClick(item)" />
         </div>
 
-        <c-upload>
-            <c-button class="w-full flex items-center justify-center" type="primary">
-                <template #icon>
-                    <Upload />
-                </template>
-                上传素材
-            </c-button>
-        </c-upload>
+        <c-button class="w-full flex items-center justify-center" type="primary" @click="runtime.trigger(GlobalEvents.MATERIAL_MANAGER_SHOW)">
+            <template #icon>
+                <Upload />
+            </template>
+            上传素材
+        </c-button>
     </div>
 </template>
 
@@ -22,7 +20,11 @@
 import CInput from '@/components/c-input.vue';
 import { useActorsStore } from '@/store/actors';
 import { Search, Upload } from "@icon-park/vue-next"
+import { inject } from 'vue';
+import { Runtime, GlobalEvents } from '../runtime';
 const actorsStore = useActorsStore();
+const runtime = inject("runtime") as Runtime;
+
 function handleClick(option: {
     material: {
         src: string

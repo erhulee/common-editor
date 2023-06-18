@@ -27,7 +27,7 @@ function handleMouseEnter() {
     showHover.value = true
 }
 function handleMouseLeave(){
-      showHover.value = false
+    showHover.value = false
 }
 </script>
 

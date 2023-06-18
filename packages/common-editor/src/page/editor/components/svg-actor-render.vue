@@ -45,11 +45,12 @@ const options = computed(() => {
     return {
         ... props.options,
         base: {
-            ...props.options,
+            ...props.options.base,
             ...transformValue
         }
     }
 })
+
 function handleMaterialChange(payload: { path: string[], value: string | number }) {
     actorStore.updateOption(payload.path, payload.value)
 }
@@ -68,7 +69,7 @@ function handleContext(event: Event){
 
 function handleChange(payload: Record<string, any>){
     Object.entries(payload).forEach(([key, value])=>{
-        transformValue[key as any] = value
+        transformValue[key] = value
     })
 }
 
