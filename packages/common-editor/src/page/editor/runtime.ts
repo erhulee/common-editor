@@ -14,21 +14,20 @@ export enum SettingRouter {
     SIZE = "size"
 }
 
-
-type GlobalState = "editing" | "saving"
-let _state: GlobalState = "editing";
+type GlobalState = "editing" | "saving" | "idle"
 
 
 export class Runtime {
     eventsEmitter: EventEmitter
     globalState: Ref<GlobalState>
     actorStore: ReturnType<typeof useActorsStore>;
+    private preGlobalState: GlobalState = "idle"
     private routerStack: Ref<string[]>
 
     constructor() {
         this.eventsEmitter = new EventEmitter();
         this.routerStack = ref([]);
-        this.globalState = ref("editing")
+        this.globalState = ref("idle")
         this.actorStore = useActorsStore();
     }
 
@@ -45,6 +44,7 @@ export class Runtime {
             }
         }
     }
+
     settingRouterPush(path: SettingRouter) {
         this.routerStack.value.push(path)
     }
@@ -62,10 +62,10 @@ export class Runtime {
     }
 
     globalStateChange(state: GlobalState) {
-        _state = state
+        this.preGlobalState = state
         this.globalState.value = state
     }
     globalStateReset() {
-        this.globalState.value = _state
+        this.globalState.value = this.preGlobalState
     }
 }

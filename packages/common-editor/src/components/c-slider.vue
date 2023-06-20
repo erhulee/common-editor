@@ -1,7 +1,7 @@
 <template>
-    <div class=" flex items-center" :id="id">
+    <div class=" flex items-center justify-between gap-4" :id="id">
         <slot name="prefix"></slot>
-        <div ref="ref" v-bind="api.rootProps" class="flex-1 slider ">
+        <div ref="ref" v-bind="api.rootProps" class="slider ">
             <div v-bind="api.controlProps" class="h-6 ">
                 <div v-bind="api.trackProps" class="track">
                     <div v-bind="api.rangeProps" class="range" />
@@ -80,8 +80,10 @@ export default defineComponent({
 
 <style scoped>
 .slider {
-    margin: 0px 20px 0px 8px;
+    /* margin: 0px 20px 0px 8px; */
     min-width: 100px;
+    width: 100%;
+
 }
 
 .thumb {
@@ -101,7 +103,6 @@ export default defineComponent({
 .track {
     background: #F1F5F9;
     height: 4px;
-
     top: calc( 50% - 2px);
 
 }
@@ -109,7 +110,7 @@ export default defineComponent({
 .output {
     color: #5f5d5d;
     font-size: 14px;
-    min-width: 3rem;
+   
 
     text-align: right;
 }

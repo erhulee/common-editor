@@ -6,7 +6,7 @@
                 <path v-bind="SVGBackGround"></path>
                 <SvgActorRender v-for="item in actors" 
                     v-bind="item" 
-                    :is-saving="runtime.globalState.value == 'saving'" />
+                    :is-saving="runtime.globalState.value === 'saving'" />
             </svg>
         </div>
     </div>
@@ -68,8 +68,10 @@ function handleContext(event: Event) {
     })
 }
 
-function selectGlobal(e: any) {
-    actorsStore.select("")
+function selectGlobal() {
+    if(runtime.globalState.value === "idle"){
+        actorsStore.select("")
+    }
 }
 
 

@@ -5,7 +5,7 @@
 
         <!-- resize dot -->
         <rect v-for="{ item, x, y } in resizeDot" :key="item" @mousedown.stop="onResize(item)" :x="x" :y="y" width="10"
-            height="10" fill="#4F80FF" stroke="rgba(0,0,0,0)" :class="item">
+            height="10" fill="#4F80FF" stroke="rgba(0,0,0,0)" :class="item" @click.stop="">
         </rect>
 
         <!-- lock icon-->
@@ -18,9 +18,9 @@
             <path d="M24 30V36" stroke="#D01" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <!-- rotate icon -->
-        <svg v-else v-bind="rotateIconSVGAttribute" class="rotate-icon">
+        <svg v-else v-bind="rotateIconSVGAttribute" class="rotate-icon" @click.stop="">
             <!-- mousedown 停止向上冒泡，触发 move -->
-            <g @mousedown.stop="onRotate" @click.stop="">
+            <g @mousedown.stop="onRotate" @click.stop="()=>console.log('rotate icon')">
                 <circle cx="25" cy="25" r="20" fill="transparent"></circle>
                 <path d="M42 8V24" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
                 </path>
@@ -66,7 +66,6 @@ const resizeDot = computed(() => {
         x: props.origin.x - 4 + (item.includes("right") ? props.size.width : 0),
         y: props.origin.y - 4 + (item.includes("bottom") ? props.size.height : 0)
     }))
-
 });
 
 const rotateIconSVGAttribute = computed(() => ({

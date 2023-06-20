@@ -132,7 +132,7 @@ provide("display_context", (event: PointerEvent, payload: {
 })
 
 // html2canvas 
-runtime.listen(GlobalEvents.SAVING_STATUS_CHANGE, (status: "editing" | "saving") => {
+runtime.listen(GlobalEvents.SAVING_STATUS_CHANGE, (status: "idle" | "saving") => {
    runtime.globalStateChange(status)
 })
 

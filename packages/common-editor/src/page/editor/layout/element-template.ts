@@ -146,6 +146,7 @@ export const text_template = [
                 width: 500,
                 height: 80,
                 rotate: 0,
+                opacity: 1,
                 isLocked: false
             }
         }
@@ -167,6 +168,7 @@ export const text_template = [
                 width: 200,
                 height: 200,
                 rotate: 0,
+                opacity: 1,
                 isLocked: false
             }
         }
@@ -188,6 +190,7 @@ export const text_template = [
                 width: 250,
                 height: 55,
                 rotate: 0,
+                opacity: 1,
                 isLocked: false
             }
         }

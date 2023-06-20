@@ -1,10 +1,13 @@
 <template>
     <!-- 考虑线性变化要不要直接在这里做更好 -->
-    <g v-bind="groupAttributeValue" @click.stop="" @mousedown.stop="startMove">
+    <g v-bind="groupAttributeValue" @click.stop="()=>console.log('click')" @mousedown.stop="startMove">
         <slot></slot>
-        <SelectorBox :is-lock="props.isLocked" v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
-            @resize="({ direction }) => startResize(direction)" @rotate="onRotate"
-            :size="{ width: props.width, height: props.height }" :origin="{ x: props.left, y: props.top }">
+        <SelectorBox  v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
+            @resize="({ direction }) => startResize(direction)" 
+            @rotate="onRotate"
+            :is-lock="props.isLocked"
+            :size="{ width: props.width, height: props.height }" 
+            :origin="{ x: props.left, y: props.top }">
         </SelectorBox>
         <div v-if="isActive && isLocked && !props.isSaving"
             class="decoration absolute top-0 left-0 right-0 bottom-0 border-red-500 border-2 text-red-500  cursor-none">
@@ -18,9 +21,17 @@
 
 <script setup lang="ts">
 import { useActorsStore } from "@/store/actors";
-import { computed, ref } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 import { Lock } from "@icon-park/vue-next"
 import SelectorBox from "./selector-box.vue";
+import { Runtime } from "../../runtime";
+
+enum ReactiveStatus{
+    IDLE = "idle",
+    MOVE = "move",
+    RESIZE = "resize",
+    ROTATE = "rotate"
+}
 const props = defineProps<{
     currentId: string
     isLocked: boolean
@@ -33,14 +44,24 @@ const props = defineProps<{
 
     isSaving: boolean
 }>();
-
+const emit = defineEmits(["change"]);
+const runtime = inject("runtime") as Runtime;
 const actorStore = useActorsStore();
 const resizeDirection = ref("");
+const reactiveStatus = ref<ReactiveStatus>(ReactiveStatus.IDLE)
+
+watch(reactiveStatus, (_, curValue)=>{
+    if(curValue == ReactiveStatus.IDLE){
+        runtime.globalStateChange("idle")
+    }else{
+        runtime.globalStateChange("editing")
+    }
+})
+
 const rotateOriginPoint = {
     x: 0,
     y: 0
 }
-const emit = defineEmits(["change"]);
 
 
 // group Transform Value
@@ -53,33 +74,43 @@ const groupAttributeValue = computed(() => {
     }
 })
 
+function clearListener(){
+    reactiveStatus.value = ReactiveStatus.IDLE;
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mousemove", resize);
+    document.removeEventListener("mousemove", rotate);
+    document.removeEventListener("mouseup", clearListener);
+}
 
+/*---- 移动 ----*/
 function startMove() {
+    if (reactiveStatus.value !== ReactiveStatus.IDLE) return;
     actorStore.select(props.currentId)
     document.addEventListener("mousemove", move);
-    document.addEventListener("mouseup", endMove);
+    document.addEventListener("mouseup", clearListener);
 }
 
 function move(event: MouseEvent) {
+    reactiveStatus.value = ReactiveStatus.MOVE;
     emit("change", {
         left: props.left + event.movementX,
         top: props.top + event.movementY
     })
 }
 
-function endMove() {
-    document.removeEventListener("mousemove", move);
-    document.removeEventListener("mouseup", endMove);
-}
 
-
+/*---- 拉伸大小 ----*/
 function startResize(direction: string) {
-    resizeDirection.value = direction;
-    document.addEventListener("mousemove", resize);
-    document.addEventListener("mouseup", endResize);
+    if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE){
+        reactiveStatus.value = ReactiveStatus.RESIZE;
+        resizeDirection.value = direction;
+        document.addEventListener("mousemove", resize);
+        document.addEventListener("mouseup", clearListener);
+    }
 }
 
 function resize(event: MouseEvent) {
+    reactiveStatus.value = ReactiveStatus.RESIZE;
     // 1. 先拿到位移的距离，规定向左/向下是正方向
     const { movementX, movementY } = event
     switch (resizeDirection.value) {
@@ -115,19 +146,22 @@ function resize(event: MouseEvent) {
     }
 }
 
-function endResize() {
-    document.removeEventListener("mousemove", resize);
-    document.removeEventListener("mouseup", endResize);
-}
 
+
+/*---- 旋转 ----*/
 function onRotate(event: MouseEvent) {
-    rotateOriginPoint.x = event.clientX;
-    rotateOriginPoint.y = event.clientY;
-    document.addEventListener("mousemove", rotate);
-    document.addEventListener("mouseup", endRotate);
+     if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE) {
+        rotateOriginPoint.x = event.clientX;
+        rotateOriginPoint.y = event.clientY;
+
+        console.log("旋转起始点：", rotateOriginPoint)
+        document.addEventListener("mousemove", rotate);
+        document.addEventListener("mouseup", clearListener);
+    }
 }
 
 function rotate(event: MouseEvent) {
+    reactiveStatus.value = ReactiveStatus.ROTATE;
     const centerX = props.left + props.width / 2;
     const centerY = props.top + props.height / 2;
 
@@ -137,7 +171,6 @@ function rotate(event: MouseEvent) {
     const vector_a = [centerX - rotateOriginPoint.x, centerY - rotateOriginPoint.y];
     const vector_b = [centerX - endPointX, centerY - endPontY];
 
-    // // console.log(vector_a, vector_b)
     const len_a = Math.sqrt(Math.pow(vector_a[0], 2) + Math.pow(vector_a[1], 2));
     const len_b = Math.sqrt(Math.pow(vector_b[0], 2) + Math.pow(vector_b[1], 2));
     const dot_ab = (vector_a[0] * vector_b[0] + vector_a[1] * vector_b[1])
@@ -151,67 +184,7 @@ function rotate(event: MouseEvent) {
         degrees = -degrees;
     }
     emit("change", { rotate: degrees })
-    // result = deg + degrees;
-    // contentRef.value!.style.transform = `rotate(${deg + degrees}deg`
 }
-
-function endRotate() {
-    document.removeEventListener("mousemove", rotate);
-    document.removeEventListener("mouseup", endRotate);
-}
-// const { startMove, endMove, status: moveStatus } = useSVGMove(transformValue, {
-//     endMove: (x, y) => {
-//         actorStore.batchUpdateOption([
-//             { paths: ["base", "top"], value: y },
-//             { paths: ["base", "left"], value: x }
-//         ])
-//     }
-// })
-
-
-// const onMove = (event: MouseEvent) => {
-//     if (event.button === 2)  return
-//     if (resizeStatus.value == "resizing") return;
-//     actorStore.select(props.currentId);
-//     if (props.isLocked) return;
-//     // endResize();
-//     // endRotate();
-//     startMove();
-// }
-
-// const { startResize, status: resizeStatus, endResize } = useResize(wrapperRef as any, {
-//     endResize: (x, y, width, height) => {
-//         actorStore.batchUpdateOption([
-//             { paths: ["base", "top"], value: y },
-//             { paths: ["base", "left"], value: x },
-//             { paths: ["base", "width"], value: width },
-//             { paths: ["base", "height"], value: height }
-//         ])
-//     }
-// })
-
-// const onResize = () => {
-//     if (props.isLocked) return;
-//     endMove();
-//     endRotate();
-//     startResize()
-// }
-
-// const { startRotate, status: rotateStatus, endRotate } = useRotate(wrapperRef as any, {
-//     endRotate: (deg) => {
-//         actorStore.updateOption(["base", "rotate"], deg)
-//     }
-// })
-
-// const onRotate = (event: MouseEvent) => {
-//     event.preventDefault();
-//     if( props.isLocked ) return;
-//     endMove();
-//     endResize();
-//     startRotate(event)
-// }
-
-
 
 </script>
 

@@ -25,7 +25,6 @@ export default async function exportAsImage(svgId: string, imageName: string = '
     await new Promise((resolve, reject) => {
         setTimeout(async () => {
             try {
-                console.log(svg.innerHTML)
                 const url = await toPng({
                     width: 600,
                     height: 1000,
