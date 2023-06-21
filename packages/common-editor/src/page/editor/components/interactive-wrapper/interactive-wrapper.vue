@@ -70,7 +70,6 @@ const rotateOriginPoint = {
     y: 0
 }
 
-
 // group Transform Value
 const groupAttributeValue = computed(() => {
     const centerX = props.left + props.width / 2;
@@ -128,25 +127,24 @@ function resize(event: MouseEvent) {
                 height: props.height + movementY
             })
             break;
-
         case "right-top":
             emit("change", {
                 width: props.width + movementX,
-                height: props.height + movementY,
+                height: props.height - movementY,
                 top: props.top + movementY
             })
             break;
         case "left-bottom":
             emit("change", {
-                width: props.width + movementX,
+                width: props.width - movementX,
                 height: props.height + movementY,
                 left: props.left + movementX
             })
             break;
         case "left-top":
             emit("change", {
-                width: props.width + movementX,
-                height: props.height + movementY,
+                width: props.width - movementX,
+                height: props.height - movementY,
                 left: props.left + movementX,
                 top: props.top + movementY
             })
