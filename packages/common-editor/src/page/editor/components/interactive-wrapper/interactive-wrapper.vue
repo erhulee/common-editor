@@ -1,13 +1,10 @@
 <template>
     <!-- 考虑线性变化要不要直接在这里做更好 -->
-    <g v-bind="groupAttributeValue" @click.stop="()=>console.log('click')" @mousedown.stop="startMove">
+    <g v-bind="groupAttributeValue" @click.stop="() => console.log('click')" @mousedown.stop="startMove">
         <slot></slot>
-        <SelectorBox  v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
-            @resize="({ direction }) => startResize(direction)" 
-            @rotate="onRotate"
-            :is-lock="props.isLocked"
-            :size="{ width: props.width, height: props.height }" 
-            :origin="{ x: props.left, y: props.top }">
+        <SelectorBox v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
+            @resize="({ direction }) => startResize(direction)" @rotate="onRotate" :is-lock="props.isLocked"
+            :size="{ width: props.width, height: props.height }" :origin="{ x: props.left, y: props.top }">
         </SelectorBox>
         <div v-if="isActive && isLocked && !props.isSaving"
             class="decoration absolute top-0 left-0 right-0 bottom-0 border-red-500 border-2 text-red-500  cursor-none">
@@ -25,8 +22,9 @@ import { computed, inject, onMounted, ref, watch } from 'vue';
 import { Lock } from "@icon-park/vue-next"
 import SelectorBox from "./selector-box.vue";
 import { Runtime } from "../../runtime";
+import { calculateRotatedPointCoordinate } from "./math";
 
-enum ReactiveStatus{
+enum ReactiveStatus {
     IDLE = "idle",
     MOVE = "move",
     RESIZE = "resize",
@@ -49,17 +47,17 @@ const runtime = inject("runtime") as Runtime;
 const actorStore = useActorsStore();
 const resizeDirection = ref("");
 const reactiveStatus = ref<ReactiveStatus>(ReactiveStatus.IDLE)
-let svgCanvasRect:any = {};
+let svgCanvasRect: any = {};
 
-onMounted(()=>{
+onMounted(() => {
     const rect = document.getElementById("editor-canvas")?.getBoundingClientRect()
     svgCanvasRect = rect
 })
 
-watch(reactiveStatus, (_, curValue)=>{
-    if(curValue == ReactiveStatus.IDLE){
+watch(reactiveStatus, (_, curValue) => {
+    if (curValue == ReactiveStatus.IDLE) {
         runtime.globalStateChange("idle")
-    }else{
+    } else {
         runtime.globalStateChange("editing")
     }
 })
@@ -80,7 +78,7 @@ const groupAttributeValue = computed(() => {
     }
 })
 
-function clearListener(){
+function clearListener() {
     reactiveStatus.value = ReactiveStatus.IDLE;
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mousemove", resize);
@@ -108,7 +106,7 @@ function move(event: MouseEvent) {
 
 /*---- 拉伸大小 ----*/
 function startResize(direction: string) {
-    if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE){
+    if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE) {
         reactiveStatus.value = ReactiveStatus.RESIZE;
         resizeDirection.value = direction;
         document.addEventListener("mousemove", resize);
@@ -119,34 +117,109 @@ function startResize(direction: string) {
 function resize(event: MouseEvent) {
     reactiveStatus.value = ReactiveStatus.RESIZE;
     // 1. 先拿到位移的距离，规定向左/向下是正方向
-    const { movementX, movementY } = event
+    /*
+    https://github.com/woai3c/Front-end-articles/issues/20 恩师！！
+    */
+    const clickPoint = {
+        x: event.clientX - svgCanvasRect.left,
+        y: event.clientY - svgCanvasRect.top
+    }
+
+    let originPoint = { x: 0, y: 0 };
+    let newCenterPoint = { x: 0, y: 0 };
+    let newBottomRightPoint = { x: 0, y: 0 };
+    let newTopLeftPoint = { x: 0, y: 0 };
+    let newBottomLeftPoint = { x: 0, y: 0 };
+    let newTopRightPoint = { x: 0, y: 0 };
     switch (resizeDirection.value) {
         case "right-bottom":
+            originPoint = calculateRotatedPointCoordinate({
+                x: props.left,
+                y: props.top
+            }, {
+                x: props.left + props.width / 2,
+                y: props.top + props.height / 2
+            }, props.rotate)
+
+            newCenterPoint = {
+                x: (originPoint.x + clickPoint.x) / 2,
+                y: (originPoint.y + clickPoint.y) / 2
+            }
+            newBottomRightPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
+            newTopLeftPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
+
             emit("change", {
-                width: props.width + movementX,
-                height: props.height + movementY
+                width: newBottomRightPoint.x - newTopLeftPoint.x,
+                height: newBottomRightPoint.y - newTopLeftPoint.y,
+                top: newTopLeftPoint.y,
+                left: newTopLeftPoint.x
             })
             break;
         case "right-top":
+            originPoint = calculateRotatedPointCoordinate({
+                x: props.left,
+                y: props.top + props.height
+            }, {
+                x: props.left + props.width / 2,
+                y: props.top + props.height / 2
+            }, props.rotate)
+
+            newCenterPoint = {
+                x: (originPoint.x + clickPoint.x) / 2,
+                y: (originPoint.y + clickPoint.y) / 2
+            }
+
+            newBottomLeftPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
+            newTopRightPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
             emit("change", {
-                width: props.width + movementX,
-                height: props.height - movementY,
-                top: props.top + movementY
+                width: newTopRightPoint.x - newBottomLeftPoint.x,
+                height: newBottomLeftPoint.y - newTopRightPoint.y,
+                top: newTopRightPoint.y,
+                left: newBottomLeftPoint.x
             })
             break;
         case "left-bottom":
+            originPoint = calculateRotatedPointCoordinate({
+                x: props.left + props.width,
+                y: props.top,
+            }, {
+                x: props.left + props.width / 2,
+                y: props.top + props.height / 2
+            }, props.rotate)
+            newCenterPoint = {
+                x: (originPoint.x + clickPoint.x) / 2,
+                y: (originPoint.y + clickPoint.y) / 2
+            }
+            newBottomLeftPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
+            newTopRightPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
             emit("change", {
-                width: props.width - movementX,
-                height: props.height + movementY,
-                left: props.left + movementX
+                width: newTopRightPoint.x - newBottomLeftPoint.x,
+                height: newBottomLeftPoint.y - newTopRightPoint.y,
+                top: newTopRightPoint.y,
+                left: newBottomLeftPoint.x
             })
             break;
         case "left-top":
+            originPoint = calculateRotatedPointCoordinate({
+                x: props.left + props.width,
+                y: props.top + props.height
+            }, {
+                x: props.left + props.width / 2,
+                y: props.top + props.height / 2
+            }, props.rotate)
+
+            newCenterPoint = {
+                x: (originPoint.x + clickPoint.x) / 2,
+                y: (originPoint.y + clickPoint.y) / 2
+            }
+            newBottomRightPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
+            newTopLeftPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
+
             emit("change", {
-                width: props.width - movementX,
-                height: props.height - movementY,
-                left: props.left + movementX,
-                top: props.top + movementY
+                width: newBottomRightPoint.x - newTopLeftPoint.x,
+                height: newBottomRightPoint.y - newTopLeftPoint.y,
+                top: newTopLeftPoint.y,
+                left: newTopLeftPoint.x
             })
             break;
     }
@@ -156,7 +229,7 @@ function resize(event: MouseEvent) {
 
 /*---- 旋转 ----*/
 function onRotate(event: MouseEvent) {
-     if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE) {
+    if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE) {
         rotateOriginPoint.x = event.clientX;
         rotateOriginPoint.y = event.clientY;
         console.log("旋转起始点：", rotateOriginPoint)
