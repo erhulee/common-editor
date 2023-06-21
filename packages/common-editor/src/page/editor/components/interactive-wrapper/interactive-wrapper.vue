@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { useActorsStore } from "@/store/actors";
-import { computed, inject, ref, watch } from 'vue';
+import { computed, inject, onMounted, ref, watch } from 'vue';
 import { Lock } from "@icon-park/vue-next"
 import SelectorBox from "./selector-box.vue";
 import { Runtime } from "../../runtime";
@@ -49,6 +49,12 @@ const runtime = inject("runtime") as Runtime;
 const actorStore = useActorsStore();
 const resizeDirection = ref("");
 const reactiveStatus = ref<ReactiveStatus>(ReactiveStatus.IDLE)
+let svgCanvasRect:any = {};
+
+onMounted(()=>{
+    const rect = document.getElementById("editor-canvas")?.getBoundingClientRect()
+    svgCanvasRect = rect
+})
 
 watch(reactiveStatus, (_, curValue)=>{
     if(curValue == ReactiveStatus.IDLE){
@@ -58,6 +64,7 @@ watch(reactiveStatus, (_, curValue)=>{
     }
 })
 
+// svg 画布坐标下
 const rotateOriginPoint = {
     x: 0,
     y: 0
@@ -91,6 +98,7 @@ function startMove() {
 }
 
 function move(event: MouseEvent) {
+    console.log(event.clientX)
     reactiveStatus.value = ReactiveStatus.MOVE;
     emit("change", {
         left: props.left + event.movementX,
@@ -153,7 +161,9 @@ function onRotate(event: MouseEvent) {
      if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE) {
         rotateOriginPoint.x = event.clientX;
         rotateOriginPoint.y = event.clientY;
-
+        console.log("旋转起始点：", rotateOriginPoint)
+        rotateOriginPoint.x = props.left + props.width / 2 + 10;
+        rotateOriginPoint.y = props.top + props.height + 30;
         console.log("旋转起始点：", rotateOriginPoint)
         document.addEventListener("mousemove", rotate);
         document.addEventListener("mouseup", clearListener);
@@ -161,12 +171,15 @@ function onRotate(event: MouseEvent) {
 }
 
 function rotate(event: MouseEvent) {
+
     reactiveStatus.value = ReactiveStatus.ROTATE;
+    // svg 坐标系
     const centerX = props.left + props.width / 2;
     const centerY = props.top + props.height / 2;
 
-    const endPointX = event.clientX;
-    const endPontY = event.clientY;
+    // clientX 和 clientY 是windows坐标系
+    const endPointX = event.clientX - svgCanvasRect.left;
+    const endPontY = event.clientY - svgCanvasRect.top;
 
     const vector_a = [centerX - rotateOriginPoint.x, centerY - rotateOriginPoint.y];
     const vector_b = [centerX - endPointX, centerY - endPontY];
@@ -177,6 +190,7 @@ function rotate(event: MouseEvent) {
     const cos = dot_ab / (len_a * len_b);
     const radians = Math.acos(cos);
     let degrees = radians * (180 / Math.PI);
+    console.log(degrees)
 
     // // 判断旋转方向，使用叉积（外积）判断向量叉积的方向
     const cross_ab = vector_a[0] * vector_b[1] - vector_a[1] * vector_b[0];
