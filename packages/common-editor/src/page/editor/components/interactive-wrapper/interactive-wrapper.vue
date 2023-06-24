@@ -95,7 +95,6 @@ function startMove() {
 }
 
 function move(event: MouseEvent) {
-    console.log(event.clientX)
     reactiveStatus.value = ReactiveStatus.MOVE;
     emit("change", {
         left: props.left + event.movementX,
@@ -131,6 +130,7 @@ function resize(event: MouseEvent) {
     let newTopLeftPoint = { x: 0, y: 0 };
     let newBottomLeftPoint = { x: 0, y: 0 };
     let newTopRightPoint = { x: 0, y: 0 };
+    const rotate = props.rotate || 0;
     switch (resizeDirection.value) {
         case "right-bottom":
             originPoint = calculateRotatedPointCoordinate({
@@ -139,14 +139,14 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            }, props.rotate)
+            },rotate)
 
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,
                 y: (originPoint.y + clickPoint.y) / 2
             }
-            newBottomRightPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
-            newTopLeftPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
+            newBottomRightPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -rotate)
+            newTopLeftPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -rotate)
 
             emit("change", {
                 width: newBottomRightPoint.x - newTopLeftPoint.x,
@@ -162,15 +162,15 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            }, props.rotate)
+            },rotate)
 
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,
                 y: (originPoint.y + clickPoint.y) / 2
             }
 
-            newBottomLeftPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
-            newTopRightPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
+            newBottomLeftPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -rotate)
+            newTopRightPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -rotate)
             emit("change", {
                 width: newTopRightPoint.x - newBottomLeftPoint.x,
                 height: newBottomLeftPoint.y - newTopRightPoint.y,
@@ -185,13 +185,13 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            }, props.rotate)
+            },rotate)
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,
                 y: (originPoint.y + clickPoint.y) / 2
             }
-            newBottomLeftPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
-            newTopRightPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
+            newBottomLeftPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -rotate)
+            newTopRightPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -rotate)
             emit("change", {
                 width: newTopRightPoint.x - newBottomLeftPoint.x,
                 height: newBottomLeftPoint.y - newTopRightPoint.y,
@@ -206,14 +206,14 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            }, props.rotate)
+            },rotate)
 
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,
                 y: (originPoint.y + clickPoint.y) / 2
             }
-            newBottomRightPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -props.rotate)
-            newTopLeftPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -props.rotate)
+            newBottomRightPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -rotate)
+            newTopLeftPoint = calculateRotatedPointCoordinate(clickPoint, newCenterPoint, -rotate)
 
             emit("change", {
                 width: newBottomRightPoint.x - newTopLeftPoint.x,

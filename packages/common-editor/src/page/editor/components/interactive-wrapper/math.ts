@@ -24,7 +24,6 @@ export function calculateRotatedPointCoordinate(
      * nx = cosθ * (ax - cx) - sinθ * (ay - cy) + cx
      * ny = sinθ * (ax - cx) + cosθ * (ay - cy) + cy
      */
-
     return {
         x:
             (point.x - center.x) * Math.cos(angleToRadian(rotate)) -

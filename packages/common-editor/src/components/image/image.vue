@@ -35,6 +35,7 @@ export default defineComponent({
             y: props.options.base.top,
             href: props.options.material.src,
             ['xlink:href']: props.options.material.src,
+            opacity: props.options.base.opacity
         }))
         return {
             imageSVGAttribute
