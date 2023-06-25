@@ -4,7 +4,7 @@
             <Search fill="#aaa" />
         </c-input>
         <div class="gap-3 columns-2 mt-2 flex-1">
-            <img v-for="item in image_list" :src="item.material.src" class=" rounded mb-2" @click="handleClick(item)" />
+            <img v-for="item in image_template" :src="item.material.src" class=" rounded mb-2" @click="handleClick(item)" />
         </div>
 
         <c-button class="w-full flex items-center justify-center" type="primary" @click="runtime.trigger(GlobalEvents.MATERIAL_MANAGER_SHOW)">
@@ -20,8 +20,9 @@
 import CInput from '@/components/c-input.vue';
 import { useActorsStore } from '@/store/actors';
 import { Search, Upload } from "@icon-park/vue-next"
-import { inject } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import { Runtime, GlobalEvents } from '../runtime';
+import { getMaterial } from '@/api/material';
 const actorsStore = useActorsStore();
 const runtime = inject("runtime") as Runtime;
 
@@ -40,46 +41,28 @@ function handleClick(option: {
     actorsStore.add("image", option)
 }
 
-const image_list = [
-    {
-        material: {
-            src: "https://t7.baidu.com/it/u=2291349828,4144427007&fm=193&f=GIF"
-        },
-        base: {
-            top: 100,
-            left: 100,
-            width: 200,
-            height: 100,
-            isLocked: false,
-            opacity: 0.5
-        }
-    },
-    {
-        material: {
-            src: "https://t7.baidu.com/it/u=963301259,1982396977&fm=193&f=GIF"
-        },
-        base: {
-            top: 100,
-            left: 100,
-            width: 200,
-            height: 100,
-            isLocked: false,
-            opacity: 0.5
-        }
-    },
-    {
-        material: {
-            src: "https://t7.baidu.com/it/u=852388090,130270862&fm=193&f=GIF"
-        },
-        base: {
-            top: 100,
-            left: 100,
-            width: 200,
-            height: 100,
-            isLocked: false,
-            opacity: 0.5
-        }
-    },
+onMounted( async ()=>{
+ const { data} = await getMaterial()
+    image_list.value = data
+})
 
-]
+const image_list = ref<Array<{
+    id: number;
+    address: string;
+}>>([])
+const image_template = computed(()=>{
+    return image_list.value.map(item => ({
+        material:{
+            src: item.address
+        },
+        base: {
+                top: 100,
+                left: 100,
+                width: 200,
+                height: 100,
+                isLocked: false,
+                opacity: 0.5
+        }
+    }))
+})
 </script>

@@ -6,17 +6,24 @@
                 <Close @click="handleClose" class=" cursor-pointer"></Close>
             </div>
 
-            <div class=" flex my-4 items-center ">
+            <!-- <div class=" flex my-4 items-center ">
                 <CInput class=" flex-1 mr-2"></CInput>
                 <CButton type="primary" class=" px-4" size="normal">
                     上传资源
                 </CButton>
-            </div>
+            </div> -->
 
-            <div class=" flex gap-1 flex-wrap my-4">
-                <span v-for="label in labels" class=" bg-slate-200 py-1 px-2 rounded text-sm text-gray-600">
-                    {{ label }}
-                </span>
+            <div class=" flex my-4 items-center justify-between ">
+                <div class="flex gap-1 flex-wrap items-center">
+                    <span v-for="label in labels" class=" bg-slate-200 py-1 px-2 rounded text-sm text-gray-600 ">
+                        {{ label }}
+                    </span>
+                </div>
+                <CUpload action="http://localhost:8080/material/image" :headers="uploadHeader" :on-progress="onProgress" >
+                    <CButton type="primary" class=" px-4 " size="small">
+                        上传资源
+                    </CButton>
+                </CUpload>
             </div>
 
             <div class="">
@@ -67,17 +74,26 @@
 import { inject, ref } from 'vue';
 import { GlobalEvents, Runtime } from '../../runtime';
 import { Close } from "@icon-park/vue-next"
-import CInput from '@/components/c-input.vue';
 import CButton from '@/components/c-button.vue';
 import defaultImage from "./default-image.webp"
+import CUpload from '@/components/c-upload.vue';
+import { useGlobalStore } from '@/store/global';
 const show = ref(false)
 const runtime = inject("runtime") as Runtime;
+const globalStore = useGlobalStore();
+
 runtime.listen(GlobalEvents.MATERIAL_MANAGER_SHOW, () => {
     show.value = true
 })
 const labels = ["风景", "电商", "培训", "科技"];
 function handleClose(){
     show.value = false
+}
+const uploadHeader = {
+    "Authorization": globalStore.auth
+}
+const onProgress = ({percent} : {percent: number}) => { 
+    console.log(percent)
 }
 </script>
 
