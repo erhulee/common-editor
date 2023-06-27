@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { useActorsStore } from "@/store/actors";
-import { computed, inject, onMounted, onUpdated, ref, watch } from 'vue';
+import { computed, inject, onMounted, ref, watch } from 'vue';
 import { Lock } from "@icon-park/vue-next"
 import SelectorBox from "./selector-box.vue";
 import { Runtime } from "../../runtime";

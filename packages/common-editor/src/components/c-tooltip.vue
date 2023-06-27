@@ -3,7 +3,7 @@
         <slot></slot>
     </span>
      <div v-if="true" v-bind="api.positionerProps" class="z-10" >
-          <div v-bind="api.contentProps" class="z-10 bg-slate-600 text-white text-sm px-2 py-1 rounded" >{{ content }}</div>
+          <div v-bind="api.contentProps" class="z-10 bg-slate-600 text-white text-sm px-2 py-1 rounded font-light" >{{ content }}</div>
     </div>
 </template>
 

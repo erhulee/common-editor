@@ -13,6 +13,7 @@ type ActorOptions = {
 type Actor = {
     id: string;
     tag: string;
+    layer?: number;
     options: ActorOptions & {
         material: TextRenderMaterial
     }
@@ -88,12 +89,14 @@ export const useActorsStore = defineStore("actors", {
             }
         ) {
             const id = v1();
-
-
+            const layers = this.actors.map(item => item.layer || 1).sort((a, b) => a - b);
+            // 确保 push 到尾部的图层是正确的
+            const maxLayer = layers.length == 0 ? 1 : layers[0];
             this.actors.push({
                 id,
                 tag,
                 options: cloneDeep(options),
+                layer: maxLayer + 1
             });
             this.select(id)
             this.memory(ActionType.AddActor, {
@@ -194,6 +197,32 @@ export const useActorsStore = defineStore("actors", {
                     });
                     break
             }
+        },
+
+
+        // 图层
+        sortActor() {
+            const copy = cloneDeep(this.actors);
+            copy.sort((a, b) => a.layer! - b.layer!)
+            this.actors = copy;
+        },
+        layerUp(componentId: string) {
+            const targetIndex = this.actors.findIndex(item => item.id == componentId);
+            const target = this.actors[targetIndex];
+            const next = this.actors[targetIndex + 1];
+            if (next == null) return;
+            const additionLayer = next.layer! + 1;
+            target.layer = additionLayer
+            this.sortActor();
+        },
+        layerDown(componentId: string) {
+            const targetIndex = this.actors.findIndex(item => item.id == componentId);
+            const target = this.actors[targetIndex];
+            const pre = this.actors[targetIndex - 1];
+            if (pre == null) return;
+            const additionLayer = pre.layer! - 1;
+            target.layer = additionLayer
+            this.sortActor();
         }
     },
 

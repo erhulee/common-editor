@@ -1,6 +1,11 @@
 <template>
-    <div class="font-semibold mb-3 ">
-        基础信息
+    <div class="font-semibold mb-3 flex items-center gap-2 ">
+        <CTooltip content="图层唤出">
+            <span @click="runtime.trigger(GlobalEvents.LAYER_TREE_TOGGLE)">
+                <MenuFold fill="#888" class="cursor-pointer"></MenuFold>
+            </span>
+        </CTooltip>
+        <span>基础信息</span>
     </div>
     <div class=" flex flex-row justify-start gap-3">
         <CTooltip content="锁定" class=" inline-block">
@@ -20,7 +25,7 @@
             </CButton>
         </CTooltip>
         <CTooltip content="复制" class=" inline-block">
-            <CButton type="text" class=" " @click="handleDelete">
+            <CButton type="text" @click="handleCopy">
                 <Copy fill="#888" size="16"></Copy>
             </CButton>
         </CTooltip>
@@ -45,29 +50,23 @@ import CSlider from '@/components/c-slider.vue';
 import CTooltip from '@/components/c-tooltip.vue';
 import { useActorsStore } from '@/store/actors';
 import { BaseSetting } from '@/type/setting';
-import { Lock, DeleteOne, Mosaic, FlipHorizontally, Copy } from "@icon-park/vue-next"
-
-
-function outputFormatter(value: number) {
-    return (value * 100).toFixed(0) + "%"
-}
+import { Lock, DeleteOne, Mosaic, FlipHorizontally, Copy, MenuFold } from "@icon-park/vue-next"
+import { inject } from 'vue';
+import { GlobalEvents, Runtime } from '../../runtime';
 
 const props = defineProps<Partial<BaseSetting & {
     id: string
 }>>();
+
 const emit = defineEmits(["change"]);
+const runtime = inject('runtime') as Runtime;
 const actorStore = useActorsStore();
 
+const handleChange = (key: string, value: any) => emit("change", {path: key,value})
+const outputFormatter = (value: number) => (value * 100).toFixed(0) + "%"
+const handleDelete = actorStore.deleteCurrent
+const handleCopy = ()=> actorStore.copy(actorStore.currentActor, 1)
 
-function handleChange(key: string, value: any) {
-    emit("change", {
-        path: key,
-        value
-    })
-}
 
-function handleDelete() {
-    actorStore.deleteCurrent()
-}
 
 </script>

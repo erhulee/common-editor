@@ -2,7 +2,6 @@
     <div id="editor-canvas-wrapper">
         <div id="editor-canvas">
            <svg xmlns="http://www.w3.org/2000/svg" @contextmenu="handleContext" @click="selectGlobal" v-bind="zoomBox">
-                <!-- background-color -->
                 <path v-bind="SVGBackGround"></path>
                 <SvgActorRender v-for="item in actors" 
                     v-bind="item" 
@@ -84,6 +83,7 @@ function selectGlobal() {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: red;
 }
 
 #editor-canvas {

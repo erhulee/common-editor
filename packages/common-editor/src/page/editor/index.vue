@@ -1,6 +1,6 @@
 <template>
     <div class="flex w-full h-full flex-col page">
-    
+
         <div class="main">
             <div class="left  border-r">
                 <TabGroup vertical class=" h-full">
@@ -34,8 +34,13 @@
             </div>
             <div class="middle">
                 <toolKitVue></toolKitVue>
-                <div class="canvas" >
+                <div class="worker-shop-wrapper">
                     <editorCanvas />
+                    <div class="actor-tree-wrapper" v-if="actorTreeDisplay">
+                        <ActorTree></ActorTree>
+                    </div>
+
+
                 </div>
                 <EditorFoot></EditorFoot>
             </div>
@@ -44,14 +49,10 @@
             </div>
         </div>
 
-        <div
-            v-show="contextMenu.display" 
-            class=" shadow-lg w-48  bg-white rounded  fixed p-1" 
-            ref="contextMenuRef" 
-            @contextmenu="($event)=>$event.preventDefault()">
-            <div v-for="{label, suffix, value} in contextMenuItems" 
-                @click="contextMenuResponse(value)"
-                class="menu-item p-2 flex justify-between items-center hover:bg-slate-50" >
+        <div v-show="contextMenu.display" class=" shadow-lg w-48  bg-white rounded  fixed p-1" ref="contextMenuRef"
+            @contextmenu="($event) => $event.preventDefault()">
+            <div v-for="{ label, suffix, value } in contextMenuItems" @click="contextMenuResponse(value)"
+                class="menu-item p-2 flex justify-between items-center hover:bg-slate-50">
                 <span class=" text-sm">{{ label }}</span>
                 <span class=" text-xs text-gray-500  inline-flex items-center px-2 rounded">{{ suffix }}</span>
             </div>
@@ -59,12 +60,14 @@
 
         <Login></Login>
         <MaterialUpload></MaterialUpload>
-  
+
     </div>
 </template>
 
 <script setup lang="ts">
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { computed, inject, ref } from 'vue';
+
 import { FolderClose, AddFour } from "@icon-park/vue-next"
 import elementShop from './layout/element-shop.vue';
 import editorCanvas from './layout/editor-canvas.vue';
@@ -72,26 +75,31 @@ import ActorSetting from './layout/actor-setting.vue';
 import MaterialShop from './layout/material-shop.vue';
 import toolKitVue from "./layout/tool-kit.vue"
 import EditorFoot from './layout/editor-foot.vue';
-import { computed,inject, ref } from 'vue';
-import { useActorsStore } from '@/store/actors';
 import Login from './layout/modals/login.vue';
+
+import { useActorsStore } from '@/store/actors';
 import { GlobalEvents, Runtime } from './runtime';
 import MaterialUpload from './layout/modals/material-upload.vue';
 import { ActorType, preLoad } from './preLoad';
+import ActorTree from './layout/actor-tree.vue';
 
 const runtime = inject("runtime") as Runtime
 const contextMenuRef = ref<HTMLElement | null>(null);
+const actorTreeDisplay = ref<boolean>(false);
 const actorStore = useActorsStore();
-const { contextMenu , hotkeyCallback} = preLoad(runtime, contextMenuRef)
-const contextMenuItems = computed(()=> [
+const { contextMenu, hotkeyCallback } = preLoad(runtime, contextMenuRef)
+const contextMenuItems = computed(() => [
     { label: "复制", suffix: "Ctrl + C", value: 1, role: [ActorType.Actor] },
     { label: "粘贴", suffix: "Ctrl + V", value: 2, role: [ActorType.Canvas, ActorType.Actor] },
-    { label: "删除", suffix: "Del", value: 3,  role: [ActorType.Actor] },
+    { label: "向上一层", suffix: "Ctrl + ⬆", value: 4, role: [ActorType.Actor] },
+    { label: "向下一层", suffix: "Ctrl + ⬇", value: 5, role: [ActorType.Actor] },
+    { label: "删除", suffix: "Del", value: 3, role: [ActorType.Actor] },
 ].filter(item => item.role.includes(contextMenu.actorType)))
 
+runtime.listen(GlobalEvents.LAYER_TREE_TOGGLE, () => actorTreeDisplay.value = !actorTreeDisplay.value)
 
-const contextMenuResponse = (key: number) =>{
-    switch(key){
+const contextMenuResponse = (key: number) => {
+    switch (key) {
         case 1:
             hotkeyCallback.copyComponent(actorStore);
             break
@@ -100,6 +108,12 @@ const contextMenuResponse = (key: number) =>{
             break;
         case 3:
             actorStore.delete(contextMenu.currentId);
+            break;
+        case 4:
+            actorStore.layerUp(contextMenu.currentId)
+            break;
+        case 5:
+            actorStore.layerDown(contextMenu.currentId)
             break;
     }
     runtime.trigger(GlobalEvents.CONTEXT_MENU_HIDE, {})
@@ -136,11 +150,23 @@ const contextMenuResponse = (key: number) =>{
     height: 100vh;
 }
 
-.canvas{
-    overflow: scroll;
+.worker-shop-wrapper {
+    /* overflow: scroll;
+    padding-top: 150px;*/
+    position: relative;
     height: 100%;
-    padding-top: 150px;
     background-color: #f1f1f1;
+    display: flex;
+}
+
+.actor-tree-wrapper {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #f9f9f9;
+    border-left: 1px solid #dedddd;
+    z-index: 0;
 }
 
 .right {
@@ -148,21 +174,20 @@ const contextMenuResponse = (key: number) =>{
 }
 
 ::-webkit-scrollbar {
-   width: 10px;
-   height: 10px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-   background-color: #c2c2c2;
-   border-radius: 10px;
+    background-color: #c2c2c2;
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-track {
-   background-color: #f1f1f1;
+    background-color: #f1f1f1;
 }
 
-::-webkit-scrollbar-corner{
-   background-color: #f1f1f1;
+::-webkit-scrollbar-corner {
+    background-color: #f1f1f1;
 }
-
 </style>

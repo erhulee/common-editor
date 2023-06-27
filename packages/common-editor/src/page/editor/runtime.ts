@@ -9,7 +9,10 @@ export enum GlobalEvents {
     LOGIN_MODAL_SHOW = "login_modal_show",
     MATERIAL_MANAGER_SHOW = "material_manager_show",
     CONTEXT_MENU_SHOW = 'context_menu_show',
-    CONTEXT_MENU_HIDE = 'context_menu_hide'
+    CONTEXT_MENU_HIDE = 'context_menu_hide',
+    LAYER_TREE_SHOW = "layer_tree_show",
+    LAYER_TREE_HIDE = "layer_tree_hide",
+    LAYER_TREE_TOGGLE = "layer_tree_hide"
 }
 
 export enum SettingRouter {
