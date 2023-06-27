@@ -19,6 +19,7 @@ import { useGlobalStore } from '../../../store/global';
 import { GlobalEvents, Runtime } from '../runtime';
 import { PathCommand } from '@/plugins/PathCommand';
 import SvgActorRender from '../components/svg-actor-render.vue';
+import { ActorType } from '../preLoad';
 
 const actorsStore = useActorsStore();
 const globalStore = useGlobalStore();
@@ -57,14 +58,12 @@ runtime.listen(GlobalEvents.ZOOM, (arg) => {
     scaleRef.value = arg
 })
 
-
-const displayContext = inject("display_context") as (event: Event, payload: {
-    type: "canvas"
-}) => void;
-
 function handleContext(event: Event) {
-    displayContext(event, {
-        type: "canvas",
+    runtime.trigger(GlobalEvents.CONTEXT_MENU_SHOW, {
+        event,
+        info: {
+            type: ActorType.Canvas
+        }
     })
 }
 

@@ -23,6 +23,7 @@ interface UploadRequestOption<T = any> {
     onProgress: (event: UploadProgressEvent) => void;
     onError: (event: UploadRequestError | ProgressEvent, body?: T) => void;
     onSuccess: (body: T, xhr?: XMLHttpRequest) => void;
+    beforeUpload: (file: File) => void
     filename: string;
     file: File;
     action: string;
@@ -76,6 +77,7 @@ function xhrUpload(option: UploadRequestOption ){
         formData.append("files", option.file);
     }
 
+    option.beforeUpload(option.file)
     xhr.onerror = function error(e) {
         option.onError?.(e);
     };
@@ -158,6 +160,9 @@ export default defineComponent({
         onSuccess: {
             type: Function as PropType<(body: any, xhr?: XMLHttpRequest) => void>
         },
+        beforeUpload:{
+            type: Function as PropType<(file: File) => void>
+        },
         headers: {
             type: Object as PropType<Record<string, any>>,
             default: {}
@@ -176,6 +181,7 @@ export default defineComponent({
                 onProgress: props.onProgress!,
                 onError: props.onError!,
                 onSuccess: props.onSuccess!,
+                beforeUpload: props.beforeUpload!,
                 filename: file.name,
                 file: file,
                 action: props.action,

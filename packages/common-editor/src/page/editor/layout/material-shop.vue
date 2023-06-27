@@ -4,7 +4,7 @@
             <Search fill="#aaa" />
         </c-input>
         <div class="gap-3 columns-2 mt-2 flex-1">
-            <img v-for="item in image_template" :src="item.material.src" class=" rounded mb-2" @click="handleClick(item)" />
+            <img v-for="item in image_template" :src="item.material.src" class="rounded mb-2" @click="handleClick(item)" />
         </div>
 
         <c-button class="w-full flex items-center justify-center" type="primary" @click="runtime.trigger(GlobalEvents.MATERIAL_MANAGER_SHOW)">

@@ -45,10 +45,9 @@
         </div>
 
         <div
-            v-show="showContextMenu" 
+            v-show="contextMenu.display" 
             class=" shadow-lg w-48  bg-white rounded  fixed p-1" 
             ref="contextMenuRef" 
-            @blur="handleBlur"
             @contextmenu="($event)=>$event.preventDefault()">
             <div v-for="{label, suffix, value} in contextMenuItems" 
                 @click="contextMenuResponse(value)"
@@ -73,75 +72,38 @@ import ActorSetting from './layout/actor-setting.vue';
 import MaterialShop from './layout/material-shop.vue';
 import toolKitVue from "./layout/tool-kit.vue"
 import EditorFoot from './layout/editor-foot.vue';
-import { computed,inject,provide, ref } from 'vue';
+import { computed,inject, ref } from 'vue';
 import { useActorsStore } from '@/store/actors';
-import initHotKey, { copyComponent, pasteComponent } from "../../plugins/hootkeys"
 import Login from './layout/modals/login.vue';
 import { GlobalEvents, Runtime } from './runtime';
 import MaterialUpload from './layout/modals/material-upload.vue';
-initHotKey();
-const showContextMenu = ref(false);
-const contextMenuRef = ref<HTMLElement | null>(null);
-const contextCache = new Map();
-const actorStore = useActorsStore();
-const contextRole = ref<"canvas"|"actor">("canvas");
+import { ActorType, preLoad } from './preLoad';
+
 const runtime = inject("runtime") as Runtime
+const contextMenuRef = ref<HTMLElement | null>(null);
+const actorStore = useActorsStore();
+const { contextMenu , hotkeyCallback} = preLoad(runtime, contextMenuRef)
 const contextMenuItems = computed(()=> [
-    { label: "复制", suffix: "Ctrl + C", value: 1 },
-    { label: "粘贴", suffix: "Ctrl + V", value: 2 },
-    { label: "删除", suffix: "Del", value: 3 },
-].filter(({value})=> contextRole.value == "actor" || value == 2))
+    { label: "复制", suffix: "Ctrl + C", value: 1, role: [ActorType.Actor] },
+    { label: "粘贴", suffix: "Ctrl + V", value: 2, role: [ActorType.Canvas, ActorType.Actor] },
+    { label: "删除", suffix: "Del", value: 3,  role: [ActorType.Actor] },
+].filter(item => item.role.includes(contextMenu.actorType)))
+
+
 const contextMenuResponse = (key: number) =>{
     switch(key){
         case 1:
-            copyComponent(actorStore);
+            hotkeyCallback.copyComponent(actorStore);
             break
         case 2:
-            pasteComponent(actorStore);
+            hotkeyCallback.pasteComponent(actorStore);
             break;
         case 3:
-            actorStore.delete(contextCache.get("currentId"));
+            actorStore.delete(contextMenu.currentId);
             break;
     }
-    handleBlur()
+    runtime.trigger(GlobalEvents.CONTEXT_MENU_HIDE, {})
 }
-function clickOuterListener(event: Event){
-    const targetClassName = (event.target as any).className as string;
-    const isMenuItem = targetClassName.includes("menu-item");
-    if(!isMenuItem){
-        handleBlur()
-    }
-}
-
-provide("display_context", (event: PointerEvent, payload: {
-    type: "canvas" | "actor"
-    componentId: string,
-}) => {
-    const { type = "canvas"} = payload;
-    contextRole.value = type;
-    const positionX = event.clientX;
-    const positionY = event.clientY;
-    event.preventDefault();
-    contextMenuRef.value!.style.top = positionY + "px";
-    contextMenuRef.value!.style.left = positionX + "px";
-    contextMenuRef.value?.focus();
-    showContextMenu.value = true;
-    const currentId = payload.componentId;
-    contextCache.set("currentId", currentId);
-    document.addEventListener("mousedown", clickOuterListener);
-})
-
-// html2canvas 
-runtime.listen(GlobalEvents.SAVING_STATUS_CHANGE, (status: "idle" | "saving") => {
-   runtime.globalStateChange(status)
-})
-
-
-const handleBlur = ()=>{
-    showContextMenu.value = false;
-    document.removeEventListener("mousedown", clickOuterListener);
-}
-
 
 
 

@@ -7,14 +7,16 @@ export enum GlobalEvents {
     SAVING_STATUS_CHANGE = "saving_status_change",
     ZOOM = "zoom",
     LOGIN_MODAL_SHOW = "login_modal_show",
-    MATERIAL_MANAGER_SHOW = "material_manager_show"
+    MATERIAL_MANAGER_SHOW = "material_manager_show",
+    CONTEXT_MENU_SHOW = 'context_menu_show',
+    CONTEXT_MENU_HIDE = 'context_menu_hide'
 }
 
 export enum SettingRouter {
     SIZE = "size"
 }
 
-type GlobalState = "editing" | "saving" | "idle"
+type GlobalState = "busy" | "saving" | "idle"
 
 
 export class Runtime {

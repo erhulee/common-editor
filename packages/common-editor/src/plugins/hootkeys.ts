@@ -4,13 +4,13 @@ import { cloneDeep } from "lodash-es";
 let clipBoard: any = {};
 let copyCount = 0;
 
-export function copyComponent(actorStore: any) {
+function copyComponent(actorStore: any) {
     const currentCopy = cloneDeep(actorStore.currentActor);
     clipBoard = currentCopy
     copyCount = 0;
 }
 
-export function pasteComponent(actorStore: any) {
+function pasteComponent(actorStore: any) {
     copyCount++;
     actorStore.copy(clipBoard, copyCount)
 }
@@ -28,7 +28,12 @@ export default function initHotKey() {
     })
 
     useHotKeys("ctrl+z, command+z", () => {
-        console.log("hee")
         actorStore.undo()
     })
+
+    return {
+        copyComponent,
+        pasteComponent
+    }
+
 }

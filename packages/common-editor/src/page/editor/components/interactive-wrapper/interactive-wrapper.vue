@@ -58,7 +58,7 @@ watch(reactiveStatus, (_, curValue) => {
     if (curValue == ReactiveStatus.IDLE) {
         runtime.globalStateChange("idle")
     } else {
-        runtime.globalStateChange("editing")
+        runtime.globalStateChange("busy")
     }
 })
 
@@ -87,7 +87,9 @@ function clearListener() {
 }
 
 /*---- 移动 ----*/
-function startMove() {
+function startMove(e: MouseEvent) {
+    // 只要左键
+    if(e.button == 2) return; 
     if (reactiveStatus.value !== ReactiveStatus.IDLE) return;
     actorStore.select(props.currentId)
     document.addEventListener("mousemove", move);
