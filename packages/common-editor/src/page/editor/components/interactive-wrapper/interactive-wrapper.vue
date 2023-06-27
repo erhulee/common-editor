@@ -2,6 +2,8 @@
     <!-- 考虑线性变化要不要直接在这里做更好 -->
     <g v-bind="groupAttributeValue" @click.stop="() => console.log('click')" @mousedown.stop="startMove">
         <slot></slot>
+        <path v-bind="SVGBackGround" > </path>
+   
         <SelectorBox v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
             @resize="({ direction }) => startResize(direction)" @rotate="onRotate" :is-lock="props.isLocked"
             :size="{ width: props.width, height: props.height }" :origin="{ x: props.left, y: props.top }">
@@ -18,11 +20,12 @@
 
 <script setup lang="ts">
 import { useActorsStore } from "@/store/actors";
-import { computed, inject, onMounted, ref, watch } from 'vue';
+import { computed, inject, onMounted, onUpdated, ref, watch } from 'vue';
 import { Lock } from "@icon-park/vue-next"
 import SelectorBox from "./selector-box.vue";
 import { Runtime } from "../../runtime";
 import { calculateRotatedPointCoordinate } from "./math";
+import { PathCommand } from "@/plugins/PathCommand";
 
 enum ReactiveStatus {
     IDLE = "idle",
@@ -49,6 +52,21 @@ const resizeDirection = ref("");
 const reactiveStatus = ref<ReactiveStatus>(ReactiveStatus.IDLE)
 let svgCanvasRect: any = {};
 
+const SVGBackGround = computed(() => {
+    return {
+        fill: "transparent",
+        d: PathCommand.compose(PathCommand.Move(props.left, props.top), PathCommand.LineTo([{
+            x: props.left + props.width,
+            y: props.top
+        }, {
+            x: props.left + props.width,
+            y: props.top + props.height
+        }, {
+            x: props.left,
+            y: props.top + props.height
+        }])) + " Z"
+    }
+})
 onMounted(() => {
     const rect = document.getElementById("editor-canvas")?.getBoundingClientRect()
     svgCanvasRect = rect
@@ -234,10 +252,8 @@ function onRotate(event: MouseEvent) {
     if (reactiveStatus.value === ReactiveStatus.IDLE || reactiveStatus.value === ReactiveStatus.MOVE) {
         rotateOriginPoint.x = event.clientX;
         rotateOriginPoint.y = event.clientY;
-        console.log("旋转起始点：", rotateOriginPoint)
         rotateOriginPoint.x = props.left + props.width / 2 + 10;
         rotateOriginPoint.y = props.top + props.height + 30;
-        console.log("旋转起始点：", rotateOriginPoint)
         document.addEventListener("mousemove", rotate);
         document.addEventListener("mouseup", clearListener);
     }
@@ -263,7 +279,6 @@ function rotate(event: MouseEvent) {
     const cos = dot_ab / (len_a * len_b);
     const radians = Math.acos(cos);
     let degrees = radians * (180 / Math.PI);
-    console.log(degrees)
 
     // // 判断旋转方向，使用叉积（外积）判断向量叉积的方向
     const cross_ab = vector_a[0] * vector_b[1] - vector_a[1] * vector_b[0];

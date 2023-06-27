@@ -1,6 +1,6 @@
 <template >
     <g @contextmenu.stop="handleContext">
-         <path v-bind="SVGBackGround"></path>
+     
         <InteractiveWrapper
             :is-saving="props.isSaving" 
             @change="handleChange"
@@ -56,26 +56,7 @@ const options = computed(() => {
         }
     }
 })
-const SVGBackGround = computed(() => {
-    const width = props.options.base.width;
-    const height = props.options.base.height;
-    const x = props.options.base.left;
-    const y = props.options.base.top;
-    return {
-        fill: "#fff",
-        y: props.options.base.top,
-        d: PathCommand.compose(PathCommand.Move(x, y), PathCommand.LineTo([{
-            x: x + width,
-            y: y
-        }, {
-            x: x + width,
-            y: y + height
-        }, {
-            x: x + 0,
-            y: y + height
-        }])) + " Z"
-    }
-})
+
 
 function handleMaterialChange(payload: { path: string[], value: string | number }) {
     actorStore.updateOption(payload.path, payload.value)
