@@ -56,7 +56,7 @@ const svgAttribute = computed(() => {
         x: props.options.base.left,
         y: props.options.base.top + props.options.font.fontSize,
         fill: style.value.color,
-        ...pick(style.value, 'font-size', 'font-weight', 'font-style')
+        ...pick(style.value, 'font-size', 'font-weight', 'font-style', 'text-decoration')
     }
 })
 console.log(svgAttribute)
