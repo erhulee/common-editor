@@ -35,7 +35,6 @@ const textRef = ref(null)
 const style = computed(() => {
     const entry = Object.entries(props.options.font);
     return transformKeys(entry.reduce<any>((pre, [key, value]) => {
-        console.log(key, value)
         if (typeof value == "number") {
             pre[key] = value
         } else {
@@ -56,7 +55,7 @@ const svgAttribute = computed(() => {
         x: props.options.base.left,
         y: props.options.base.top + props.options.font.fontSize,
         fill: style.value.color,
-        ...pick(style.value, 'font-size', 'font-weight', 'font-style', 'text-decoration')
+        ...pick(style.value, 'font-size', 'font-weight', 'font-style', 'text-decoration', 'font-family')
     }
 })
 console.log(svgAttribute)
@@ -71,10 +70,7 @@ const inputAttribute = computed(() => {
     }
 })
 
-
-
 function handleDBClick() {
-    console.log("hello")
     isEdit.value = true
     nextTick(() => inputRef.value?.focus())
 }

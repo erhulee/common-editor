@@ -13,7 +13,7 @@
         </div>
         <slot name="output" v-if="$slots.output"></slot>
         <div class="output" v-else>
-            <output v-bind="api.outputProps">{{outputFormatter(api.value) }}</output>
+            <output v-bind="api.outputProps">{{ outputFormatter(api.value) }}</output>
         </div>
     </div>
 </template>
@@ -21,29 +21,29 @@
 <script lang="ts">
 import * as slider from "@zag-js/slider"
 import { normalizeProps, useMachine } from "@zag-js/vue"
-import { defineComponent, computed, onUpdated } from "vue"
+import { defineComponent, computed, onUpdated, watch } from "vue"
 import { useId } from "./hooks/useId"
 export default defineComponent({
     name: "c-slider",
-    emits:["change"],
+    emits: ["change"],
     props: {
-        outputFormatter:{
+        outputFormatter: {
             type: Function,
-            default:(value: number) => value
+            default: (value: number) => value
         },
-        value:{
+        value: {
             type: Number,
             default: 0
         },
-        min:{
+        min: {
             type: Number,
             default: 0
         },
-        max:{
+        max: {
             type: Number,
             default: 100
         },
-        step:{
+        step: {
             type: Number,
             default: 1
         }
@@ -58,16 +58,18 @@ export default defineComponent({
                 min: props.min,
                 max: props.max,
                 step: props.step,
-                onChange: ({value})=>{
+                onChange: ({ value }) => {
                     ctx.emit("change", value)
                 }
             }))
         const api = computed(() =>
             slider.connect(state.value, send, normalizeProps)
         )
-        onUpdated(() => {
-            console.log("sad")
+
+        watch(props, () => {
+            api.value.setValue(props.value)
         })
+
 
         return {
             id,
@@ -103,14 +105,14 @@ export default defineComponent({
 .track {
     background: #F1F5F9;
     height: 4px;
-    top: calc( 50% - 2px);
+    top: calc(50% - 2px);
 
 }
 
 .output {
     color: #5f5d5d;
     font-size: 14px;
-   
+
 
     text-align: right;
 }

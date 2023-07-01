@@ -21,14 +21,16 @@
                                 </div>
                             </Tab>
                         </TabList>
-                        <TabPanels class=" flex-1">
-                            <TabPanel class=" p-3">
-                                <element-shop />
-                            </TabPanel>
-                            <TabPanel class=" p-3 h-full">
-                                <MaterialShop></MaterialShop>
-                            </TabPanel>
-                        </TabPanels>
+                        <KeepAlive>
+                            <TabPanels class=" flex-1">
+                                <TabPanel class=" p-3">
+                                    <element-shop />
+                                </TabPanel>
+                                <TabPanel class=" p-3 h-full">
+                                    <MaterialShop></MaterialShop>
+                                </TabPanel>
+                            </TabPanels>
+                        </KeepAlive>
                     </div>
                 </TabGroup>
             </div>
@@ -39,8 +41,6 @@
                     <div class="actor-tree-wrapper" v-if="actorTreeDisplay">
                         <ActorTree></ActorTree>
                     </div>
-
-
                 </div>
                 <EditorFoot></EditorFoot>
             </div>
@@ -82,18 +82,21 @@ import { GlobalEvents, Runtime } from './runtime';
 import MaterialUpload from './layout/modals/material-upload.vue';
 import { ActorType, preLoad } from './preLoad';
 import ActorTree from './layout/actor-tree.vue';
+import { useGlobalStore } from '@/store/global';
 
 const runtime = inject("runtime") as Runtime
 const contextMenuRef = ref<HTMLElement | null>(null);
 const actorTreeDisplay = ref<boolean>(false);
 const actorStore = useActorsStore();
+const globalStore = useGlobalStore();
 const { contextMenu, hotkeyCallback } = preLoad(runtime, contextMenuRef)
 const contextMenuItems = computed(() => [
     { label: "复制", suffix: "Ctrl + C", value: 1, role: [ActorType.Actor] },
     { label: "粘贴", suffix: "Ctrl + V", value: 2, role: [ActorType.Canvas, ActorType.Actor] },
-    { label: "向上一层", suffix: "Ctrl + ⬆", value: 4, role: [ActorType.Actor] },
-    { label: "向下一层", suffix: "Ctrl + ⬇", value: 5, role: [ActorType.Actor] },
+    { label: "向上一层", suffix: "Ctrl + ↑", value: 4, role: [ActorType.Actor] },
+    { label: "向下一层", suffix: "Ctrl + ↓", value: 5, role: [ActorType.Actor] },
     { label: "删除", suffix: "Del", value: 3, role: [ActorType.Actor] },
+    { label: "画布还原", suffix: "", value: 6, role: [ActorType.Actor, ActorType.Canvas] }
 ].filter(item => item.role.includes(contextMenu.actorType)))
 
 runtime.listen(GlobalEvents.LAYER_TREE_TOGGLE, () => actorTreeDisplay.value = !actorTreeDisplay.value)
@@ -114,6 +117,10 @@ const contextMenuResponse = (key: number) => {
             break;
         case 5:
             actorStore.layerDown(contextMenu.currentId)
+            break;
+        case 6:
+            globalStore.canvas_style.top = 0;
+            globalStore.canvas_style.left = 0;
             break;
     }
     runtime.trigger(GlobalEvents.CONTEXT_MENU_HIDE, {})

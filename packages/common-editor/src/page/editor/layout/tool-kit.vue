@@ -34,12 +34,12 @@
             </c-button>
             <CMenu>
                 <template #trigger>
-                    <c-button type="primary" class="" v-auth @click="handleSave">
+                    <c-button type="primary">
                         <Down></Down>
                     </c-button>
                 </template>
                 <template #content>
-                    <div class=" bg-white shadow p-1 mt-1 flex flex-col rounded absolute right-0 w-40">
+                    <div class=" bg-white shadow p-1 mt-1 flex flex-col rounded absolute -right-8 top-1 w-40">
                         <div class=" text-sm text-slate-800 hover:bg-slate-50 py-2 rounded px-2" @click="handleExportImage">
                             导出为图片
                         </div>
@@ -90,7 +90,7 @@ async function handleExportImage() {
     runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "saving")
     try {
         await exportAsImage("editor-canvas", "default.jpg")
-    } catch(e) {
+    } catch (e) {
         console.log("error", e)
     } finally {
         runtime.trigger(GlobalEvents.SAVING_STATUS_CHANGE, "idle")

@@ -34,7 +34,7 @@ export default defineComponent({
             x: props.options.base.left,
             y: props.options.base.top,
             href: props.options.material.src,
-            ['xlink:href']: props.options.material.src,
+            // ['xlink:href']: props.options.material.src,
             opacity: props.options.base.opacity
         }))
         return {

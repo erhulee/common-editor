@@ -33,7 +33,6 @@ export default async function exportAsImage(svgId: string, imageName: string = '
                 img.href = url.replace("image/jpeg", "image/octet-stream");
                 img.download = imageName;
                 img.click();
-
                 resolve("")
             } catch (e) {
                 reject(e)

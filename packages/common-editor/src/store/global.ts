@@ -1,4 +1,3 @@
-import { getInfo } from "@/api/user";
 import { defineStore } from "pinia";
 enum UserState {
     VISITOR,
@@ -7,8 +6,17 @@ enum UserState {
 export const useGlobalStore = defineStore("global", {
     state: () => ({
         canvas_style: {
+            // 仅作为 ratio
             width: 600,
             height: 1000,
+            // 缩放
+            scale: 1,
+            // viewPort: left, top, real_width, real_height
+            top: 0,
+            left: 0,
+            real_width: 600,
+            real_height: 1000,
+
             backgroundColor: "rgb(255,255,255)"
         },
         auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjE0fQ.Icvjm074v6zkgfzT5C_qGqlqBNRw3R4O0sILMVptn5c",

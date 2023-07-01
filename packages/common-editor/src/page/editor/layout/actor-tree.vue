@@ -4,7 +4,7 @@
             <div class=" bg-white w-5 h-5 flex justify-center items-center rounded-md border-gray-100 shadow-sm " >
                 <component :is="IconRenderMap[item.type]" size="12" fill="#aaa"></component>
             </div>
-            <div class=" w-24 overflow-hidden text-ellipsis whitespace-nowrap mx-4 text-xs">{{ item.id }}</div>
+            <div class=" w-24 overflow-hidden text-ellipsis whitespace-nowrap mx-4 text-xs">{{ item.detail.name }}</div>
             <Eyes size="13" :stroke-width="2" class="eye-icon" ></Eyes>
         </div>
     </div>

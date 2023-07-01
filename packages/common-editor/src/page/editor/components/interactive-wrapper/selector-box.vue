@@ -10,7 +10,7 @@
 
         <!-- lock icon-->
         <svg v-if="props.isLock" v-bind="lockSVGAttribute" xmlns="http://www.w3.org/2000/svg">
-            <path fill="red" d="M 0 0 L 60 0 L 60 60 L 0 60 Z" />    
+            <path fill="red" d="M 0 0 L 60 0 L 60 60 L 0 60 Z" />
             <rect x="6" y="22" width="36" height="22" rx="2" fill="#fff" stroke="#fff" stroke-width="4"
                 stroke-linejoin="round" />
             <path d="M14 22V14C14 8.47715 18.4772 4 24 4C29.5228 4 34 8.47715 34 14V22" stroke="#fff" stroke-width="4"
@@ -20,7 +20,7 @@
         <!-- rotate icon -->
         <svg v-else v-bind="rotateIconSVGAttribute" class="rotate-icon" @click.stop="">
             <!-- mousedown 停止向上冒泡，触发 move -->
-            <g @mousedown.stop="onRotate" @click.stop="()=>console.log('rotate icon')">
+            <g @mousedown.stop="onRotate" @click.stop="() => console.log('rotate icon')">
                 <circle cx="25" cy="25" r="20" fill="transparent"></circle>
                 <path d="M42 8V24" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
                 </path>
@@ -46,7 +46,8 @@ const props = defineProps<{
         width: number
         height: number
     },
-    isLock: boolean
+    isLock: boolean,
+    scale: number
 }>()
 const emit = defineEmits(["resize", "rotate"])
 
@@ -77,7 +78,7 @@ const rotateIconSVGAttribute = computed(() => ({
     viewBox: "0 0 100 100"
 }))
 
-const lockSVGAttribute = computed(()=>({
+const lockSVGAttribute = computed(() => ({
     fill: "none",
     x: props.origin.x,
     y: props.origin.y,
@@ -110,4 +111,5 @@ const onRotate = (e: MouseEvent) => emit("rotate", e)
 
 .right-bottom {
     cursor: nwse-resize;
-}</style>
+}
+</style>

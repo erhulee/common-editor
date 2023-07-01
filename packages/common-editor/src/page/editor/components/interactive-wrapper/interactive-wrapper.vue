@@ -1,12 +1,15 @@
 <template>
     <!-- 考虑线性变化要不要直接在这里做更好 -->
-    <g v-bind="groupAttributeValue" @click.stop="() => console.log('click')" @mousedown.stop="startMove">
-        <slot></slot>
-        <path v-bind="SVGBackGround" > </path>
-   
+    <g v-bind="groupAttributeValue" @click="() => console.log('click')" @dblclick="handleDoubleClick"
+        @mousedown.stop="startMove">
+        <g class=" z-20">
+            <slot ref="renderInstance"></slot>
+        </g>
+        <path v-bind="SVGBackGround"> </path>
         <SelectorBox v-if="actorStore.currentActorId == props.currentId && !props.isSaving"
             @resize="({ direction }) => startResize(direction)" @rotate="onRotate" :is-lock="props.isLocked"
-            :size="{ width: props.width, height: props.height }" :origin="{ x: props.left, y: props.top }">
+            :size="{ width: props.width, height: props.height }" :origin="{ x: props.left, y: props.top }"
+            :scale="globalStore.canvas_style.scale">
         </SelectorBox>
         <div v-if="isActive && isLocked && !props.isSaving"
             class="decoration absolute top-0 left-0 right-0 bottom-0 border-red-500 border-2 text-red-500  cursor-none">
@@ -20,12 +23,14 @@
 
 <script setup lang="ts">
 import { useActorsStore } from "@/store/actors";
+
 import { computed, inject, onMounted, ref, watch } from 'vue';
 import { Lock } from "@icon-park/vue-next"
 import SelectorBox from "./selector-box.vue";
 import { Runtime } from "../../runtime";
 import { calculateRotatedPointCoordinate } from "./math";
 import { PathCommand } from "@/plugins/PathCommand";
+import { useGlobalStore } from "@/store/global";
 
 enum ReactiveStatus {
     IDLE = "idle",
@@ -42,14 +47,16 @@ const props = defineProps<{
     width: number
     height: number
     rotate: number
-
     isSaving: boolean
 }>();
 const emit = defineEmits(["change"]);
 const runtime = inject("runtime") as Runtime;
 const actorStore = useActorsStore();
+const globalStore = useGlobalStore();
+const slots = defineSlots();
 const resizeDirection = ref("");
 const reactiveStatus = ref<ReactiveStatus>(ReactiveStatus.IDLE)
+const renderInstance = ref(null);
 let svgCanvasRect: any = {};
 
 const SVGBackGround = computed(() => {
@@ -70,6 +77,7 @@ const SVGBackGround = computed(() => {
 onMounted(() => {
     const rect = document.getElementById("editor-canvas")?.getBoundingClientRect()
     svgCanvasRect = rect
+
 })
 
 watch(reactiveStatus, (_, curValue) => {
@@ -80,6 +88,10 @@ watch(reactiveStatus, (_, curValue) => {
     }
 })
 
+function handleDoubleClick() {
+    console.log("ref:12321", renderInstance)
+    console.log(slots.default())
+}
 // svg 画布坐标下
 const rotateOriginPoint = {
     x: 0,
@@ -91,7 +103,7 @@ const groupAttributeValue = computed(() => {
     const centerX = props.left + props.width / 2;
     const centerY = props.top + props.height / 2;
     return {
-        transform: `rotate(${props.rotate},${centerX},${centerY})`,
+        transform: `rotate(${props.rotate || 0},${centerX},${centerY})`,
         id: props.currentId
     }
 })
@@ -107,7 +119,7 @@ function clearListener() {
 /*---- 移动 ----*/
 function startMove(e: MouseEvent) {
     // 只要左键
-    if(e.button == 2) return; 
+    if (e.button == 2) return;
     if (reactiveStatus.value !== ReactiveStatus.IDLE) return;
     actorStore.select(props.currentId)
     document.addEventListener("mousemove", move);
@@ -117,8 +129,8 @@ function startMove(e: MouseEvent) {
 function move(event: MouseEvent) {
     reactiveStatus.value = ReactiveStatus.MOVE;
     emit("change", {
-        left: props.left + event.movementX,
-        top: props.top + event.movementY
+        left: props.left + event.movementX / globalStore.canvas_style.scale,
+        top: props.top + event.movementY / globalStore.canvas_style.scale,
     })
 }
 
@@ -159,7 +171,7 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            },rotate)
+            }, rotate)
 
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,
@@ -169,8 +181,8 @@ function resize(event: MouseEvent) {
             newTopLeftPoint = calculateRotatedPointCoordinate(originPoint, newCenterPoint, -rotate)
 
             emit("change", {
-                width: newBottomRightPoint.x - newTopLeftPoint.x,
-                height: newBottomRightPoint.y - newTopLeftPoint.y,
+                width: (newBottomRightPoint.x - newTopLeftPoint.x),
+                height: (newBottomRightPoint.y - newTopLeftPoint.y),
                 top: newTopLeftPoint.y,
                 left: newTopLeftPoint.x
             })
@@ -182,7 +194,7 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            },rotate)
+            }, rotate)
 
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,
@@ -205,7 +217,7 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            },rotate)
+            }, rotate)
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,
                 y: (originPoint.y + clickPoint.y) / 2
@@ -226,7 +238,7 @@ function resize(event: MouseEvent) {
             }, {
                 x: props.left + props.width / 2,
                 y: props.top + props.height / 2
-            },rotate)
+            }, rotate)
 
             newCenterPoint = {
                 x: (originPoint.x + clickPoint.x) / 2,

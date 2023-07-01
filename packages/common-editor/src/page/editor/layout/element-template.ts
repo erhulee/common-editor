@@ -27,6 +27,7 @@ export const shape_template: Array<{
             icon: Round,
             default_options: {
                 base: {
+                    name: "圆形",
                     width: 100,
                     height: 100,
                     top: 100,
@@ -53,6 +54,7 @@ export const shape_template: Array<{
             icon: Rectangle,
             default_options: {
                 base: {
+                    name: "矩形",
                     width: 100,
                     height: 100,
                     top: 100,
@@ -79,6 +81,7 @@ export const shape_template: Array<{
             icon: Triangle,
             default_options: {
                 base: {
+                    name: "三角形",
                     width: 100,
                     height: 100,
                     top: 100,
@@ -105,6 +108,7 @@ export const shape_template: Array<{
             icon: DiamondThree,
             default_options: {
                 base: {
+                    name: "菱形",
                     width: 100,
                     height: 100,
                     top: 100,
@@ -141,6 +145,7 @@ export const text_template = [
                 textAlignLast: "center"
             },
             base: {
+                name: "标题",
                 top: 100,
                 left: 100,
                 width: 500,
@@ -163,6 +168,7 @@ export const text_template = [
                 textAlignLast: "center"
             },
             base: {
+                name: "副标题",
                 top: 100,
                 left: 100,
                 width: 200,
@@ -185,6 +191,7 @@ export const text_template = [
                 textAlignLast: "center"
             },
             base: {
+                name: "正文",
                 top: 100,
                 left: 100,
                 width: 250,

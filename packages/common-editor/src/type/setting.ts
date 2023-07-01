@@ -9,6 +9,7 @@ export type FontSetting = {
 }
 
 export type BaseSetting = {
+    name: string,
     width: number,
     height: number,
     left: number,

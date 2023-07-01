@@ -1,15 +1,13 @@
 <template>
     <div class="  py-2 px-4 flex justify-end items-center     absolute left-0 right-0 bottom-0 shadow">
-        <div class="bg-white px-4 py-1 shadow rounded mr-3" >
-            <c-slider :outputFormatter="outputFormatter"  
-                :max = "5" 
-                :min="0" 
-                :step="0.01"
-                @change="runtime.trigger(GlobalEvents.ZOOM, $event)"
-                ></c-slider>
+        <div class="bg-white px-4 py-1 shadow rounded mr-3">
+            <CSlider :outputFormatter="outputFormatter" :max="3" :min="0" :step="0.01"
+                :value="globalStore.canvas_style.scale" @change="handleSliderChange">
+            </CSlider>
+
         </div>
         <Transition>
-           <div class="bg-white absolute top-0 p-3 shadow-md rounded-md panel" v-if="hotKeysVisible">
+            <div class="bg-white absolute top-0 p-3 shadow-md rounded-md panel" v-if="hotKeysVisible">
                 <div class=" font-semibold text-zinc-700">
                     快捷键
                 </div>
@@ -21,10 +19,8 @@
                 </div>
             </div>
         </Transition>
-        <div  @mouseenter="handleHotKeysClick" 
-              @mouseleave="handleHotKeysClick"
-              class=" bg-white rounded-md shadow-md flex items-center justify-center p-1"
-            >
+        <div @mouseenter="handleHotKeysClick" @mouseleave="handleHotKeysClick"
+            class=" bg-white rounded-md shadow-md flex items-center justify-center p-1">
             <Help size="22" fill="#666" class=" cursor-help">
             </Help>
         </div>
@@ -34,10 +30,11 @@
 
 <script setup lang="ts">
 import { Help } from "@icon-park/vue-next"
-import { inject, ref } from "vue";
-import { Runtime } from "../runtime";
-import { GlobalEvents } from "../runtime";
-const runtime = inject("runtime") as Runtime;
+import { onMounted, ref } from "vue";
+import CSlider from "@/components/c-slider.vue";
+import { useGlobalStore } from "@/store/global";
+
+const globalStore = useGlobalStore();
 const hotKeysVisible = ref(false);
 const hootKeys = [
     {
@@ -66,27 +63,41 @@ const hootKeys = [
     }
 ]
 
-function handleHotKeysClick(){
+onMounted(() => {
+    document.addEventListener('wheel', function (event: WheelEvent) {
+        event.preventDefault();
+        const ctrlDown = event.ctrlKey;
+        const wheelDeltaY = event.deltaY / 1000;
+        if (ctrlDown) {
+            if (globalStore.canvas_style.scale + wheelDeltaY >= 0.1) {
+                globalStore.canvas_style.scale += wheelDeltaY;
+            }
+        }
+    }, { capture: false, passive: false });
+})
+function handleHotKeysClick() {
     hotKeysVisible.value = !hotKeysVisible.value
 }
 
 function outputFormatter(value: number) {
     return (value * 100).toFixed(0) + "%"
 }
+function handleSliderChange(value: number) {
+    globalStore.canvas_style.scale = value
+}
 </script>
 
-<style> 
-.panel {
+<style> .panel {
      transform: translateY(-100%)
-}
+ }
 
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.2s ease;
-}
+ .v-enter-active,
+ .v-leave-active {
+     transition: opacity 0.2s ease;
+ }
 
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
+ .v-enter-from,
+ .v-leave-to {
+     opacity: 0;
+ }
 </style>
