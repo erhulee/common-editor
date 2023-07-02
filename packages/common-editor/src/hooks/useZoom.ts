@@ -1,4 +1,4 @@
-import { Runtime } from "@/page/editor/runtime";
+import { GlobalState, Runtime } from "@/page/editor/runtime";
 import { useActorsStore } from "@/store/actors";
 import { useGlobalStore } from "@/store/global";
 import { onMounted, ref } from "vue";
@@ -19,24 +19,23 @@ function useZoom(runtime: Runtime) {
     const ctrlKeyStatus = ref<ButtonStatus>(ButtonStatus.Up);
     const startMove = () => {
         // idle 并且没有选中某个元素
-        if (runtime.globalState.value == "idle" && actorStore.currentActorId == '' && ctrlKeyStatus.value == ButtonStatus.Down) {
+        if (runtime.globalState.value == GlobalState.IDLE && ctrlKeyStatus.value == ButtonStatus.Down) {
             status.value = KnobStatus.MOVE;
-            runtime.globalStateChange('busy');
-
+            // runtime.globalStateChange('busy');
         }
     }
     const moveHandler = (e: MouseEvent) => {
         if (status.value == KnobStatus.IDLE) return;
-
         const moveX = e.movementX;
         const moveY = e.movementY;
         globalStore.canvas_style.top -= moveY;
         globalStore.canvas_style.left -= moveX;
+        runtime.globalStateChange(GlobalState.DRAG)
     }
 
     const endMove = () => {
         status.value = KnobStatus.IDLE;
-        runtime.globalStateChange('idle');
+        runtime.globalStateChange(GlobalState.IDLE);
     }
 
     onMounted(() => {
@@ -54,7 +53,7 @@ function useZoom(runtime: Runtime) {
             }
         })
         document.addEventListener('mousedown', startMove);
-        document.addEventListener('mouseup', moveHandler);
+        document.addEventListener('mouseup', endMove);
         document.addEventListener('mousemove', moveHandler);
     })
 }

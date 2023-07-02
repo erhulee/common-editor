@@ -31,8 +31,8 @@
 <script setup lang="ts">
 import { Help } from "@icon-park/vue-next"
 import { onMounted, ref } from "vue";
-import CSlider from "@/components/c-slider.vue";
 import { useGlobalStore } from "@/store/global";
+import CSlider from "@/components/c-slider.vue";
 
 const globalStore = useGlobalStore();
 const hotKeysVisible = ref(false);

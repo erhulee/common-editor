@@ -1,6 +1,6 @@
 <template>
     <div id="editor-canvas-wrapper">
-        <div id="editor-canvas">
+        <div id="editor-canvas" :class="className">
             <svg xmlns="http://www.w3.org/2000/svg" @contextmenu="handleContext" @click="selectGlobal" v-bind="zoomBox">
                 <path v-bind="SVGBackGround"></path>
                 <SvgActorRender v-for="item in actors" v-bind="item" :is-saving="runtime.globalState.value === 'saving'" />
@@ -13,7 +13,7 @@
 import { computed, inject, ref } from "vue";
 import { useActorsStore } from "../../../store/actors";
 import { useGlobalStore } from "../../../store/global";
-import { GlobalEvents, Runtime } from "../runtime";
+import { GlobalEvents, GlobalState, Runtime } from "../runtime";
 import { PathCommand } from "@/plugins/PathCommand";
 import SvgActorRender from "../components/svg-actor-render.vue";
 import useZoom from "@/hooks/useZoom";
@@ -41,8 +41,9 @@ useResize(() => {
     }
 })
 
-
-
+const className = computed(() => {
+    return runtime.globalState.value == GlobalState.DRAG ? "cursor-move" : ""
+})
 
 const zoomBox = computed(() => {
     return {
@@ -95,7 +96,7 @@ function handleContext(event: Event) {
 }
 
 function selectGlobal() {
-    if (runtime.globalState.value === "idle") {
+    if (runtime.globalState.value === GlobalState.IDLE) {
         actorsStore.select("");
     }
 }
@@ -109,7 +110,7 @@ function selectGlobal() {
     align-items: center;
 }
 
-/* #editor-canvas {
+#editor-canvas {
     box-shadow: 10px 10px 10px #e6e6e6;
-} */
+}
 </style>

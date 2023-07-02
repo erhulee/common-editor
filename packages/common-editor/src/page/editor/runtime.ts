@@ -19,20 +19,25 @@ export enum SettingRouter {
     SIZE = "size"
 }
 
-type GlobalState = "busy" | "saving" | "idle"
 
+export enum GlobalState {
+    BUSY,       // 元素在拖拉拽的时候
+    SAVING,     // 主要解决在 HTML2Canvas 的时候，部分特殊 case
+    IDLE,       // 空闲时态
+    DRAG        // 用户按下 Ctrl 后，拖动画布
+}
 
 export class Runtime {
     eventsEmitter: EventEmitter
     globalState: Ref<GlobalState>
     actorStore: ReturnType<typeof useActorsStore>;
-    private preGlobalState: GlobalState = "idle"
+    private preGlobalState: GlobalState = GlobalState.IDLE
     private routerStack: Ref<string[]>
 
     constructor() {
         this.eventsEmitter = new EventEmitter();
         this.routerStack = ref([]);
-        this.globalState = ref("idle")
+        this.globalState = ref(GlobalState.IDLE);
         this.actorStore = useActorsStore();
     }
 

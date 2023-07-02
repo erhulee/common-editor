@@ -27,7 +27,7 @@ import { useActorsStore } from "@/store/actors";
 import { computed, inject, onMounted, ref, watch } from 'vue';
 import { Lock } from "@icon-park/vue-next"
 import SelectorBox from "./selector-box.vue";
-import { Runtime } from "../../runtime";
+import { GlobalState, Runtime } from "../../runtime";
 import { calculateRotatedPointCoordinate } from "./math";
 import { PathCommand } from "@/plugins/PathCommand";
 import { useGlobalStore } from "@/store/global";
@@ -82,9 +82,9 @@ onMounted(() => {
 
 watch(reactiveStatus, (_, curValue) => {
     if (curValue == ReactiveStatus.IDLE) {
-        runtime.globalStateChange("idle")
+        runtime.globalStateChange(GlobalState.IDLE)
     } else {
-        runtime.globalStateChange("busy")
+        runtime.globalStateChange(GlobalState.BUSY)
     }
 })
 
