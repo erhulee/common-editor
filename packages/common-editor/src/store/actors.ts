@@ -1,3 +1,4 @@
+import { FabricBase } from "@/fabric-sdk/fabric-component/element";
 import { BaseSetting, FillSetting, FontSetting, ShapeSetting, StrokeSetting, TextRenderMaterial } from "@/type/setting";
 import { cloneDeep, get } from "lodash-es";
 import { defineStore } from "pinia";
@@ -14,6 +15,7 @@ type Actor = {
     id: string;
     tag: string;
     layer?: number;
+    fabricElement?: FabricBase;
     options: ActorOptions & {
         material: TextRenderMaterial
     }

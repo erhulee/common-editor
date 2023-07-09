@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.13",
     "@icon-park/vue-next": "^1.4.2",
+    "@types/fabric": "^5.3.3",
     "@types/lodash-es": "^4.17.7",
     "@types/uuid": "^9.0.1",
     "@zag-js/menu": "^0.10.2",
@@ -22,6 +23,7 @@
     "axios": "^1.4.0",
     "canvg": "^4.0.1",
     "eventemitter3": "^5.0.1",
+    "fabric": "^5.3.0",
     "hotkeys-js": "^3.10.2",
     "html2canvas": "^1.4.1",
     "lodash-es": "^4.17.21",

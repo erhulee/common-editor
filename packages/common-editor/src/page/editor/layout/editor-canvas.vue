@@ -1,11 +1,12 @@
 <template>
     <div id="editor-canvas-wrapper">
-        <div id="editor-canvas" :class="className">
+        <CanvasActorRender v-bind="fabricCanvasProps"></CanvasActorRender>
+        <!-- <div id="editor-canvas" :class="className">
             <svg xmlns="http://www.w3.org/2000/svg" @contextmenu="handleContext" @click="selectGlobal" v-bind="zoomBox">
                 <path v-bind="SVGBackGround"></path>
                 <SvgActorRender v-for="item in actors" v-bind="item" :is-saving="runtime.globalState.value === 'saving'" />
             </svg>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -16,6 +17,7 @@ import { useGlobalStore } from "../../../store/global";
 import { GlobalEvents, GlobalState, Runtime } from "../runtime";
 import { PathCommand } from "@/plugins/PathCommand";
 import SvgActorRender from "../components/svg-actor-render.vue";
+import CanvasActorRender from "../components/fabric-render/index.vue";
 import useZoom from "@/hooks/useZoom";
 
 import { ActorType } from "../preLoad";
@@ -53,6 +55,16 @@ const zoomBox = computed(() => {
         viewBox: `${globalStore.canvas_style.left} ${globalStore.canvas_style.top} ${globalStore.canvas_style.real_width * (1 / globalStore.canvas_style.scale)} ${globalStore.canvas_style.real_height * (1 / globalStore.canvas_style.scale)}`,
     };
 });
+
+const fabricCanvasProps = computed(() => {
+    return {
+        // 实现 zoom 的效果
+        width: globalStore.canvas_style.real_width,
+        height: globalStore.canvas_style.real_height,
+        // viewBox: `${globalStore.canvas_style.left} ${globalStore.canvas_style.top} ${globalStore.canvas_style.real_width * (1 / globalStore.canvas_style.scale)} ${globalStore.canvas_style.real_height * (1 / globalStore.canvas_style.scale)}`,
+    };
+});
+
 
 const SVGBackGround = computed(() => {
     const width = globalStore.canvas_style.real_width;

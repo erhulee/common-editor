@@ -58,7 +58,6 @@ const svgAttribute = computed(() => {
         ...pick(style.value, 'font-size', 'font-weight', 'font-style', 'text-decoration', 'font-family')
     }
 })
-console.log(svgAttribute)
 
 const inputAttribute = computed(() => {
     // y 坐标需要兼容 字体的特殊性

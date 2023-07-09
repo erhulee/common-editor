@@ -5,5 +5,6 @@ export default function useModel<T>(callback: (value: any) => void, value: T) {
     watch(valueRef, (value, oldValue) => {
         callback(value);
     })
+    
     return valueRef
 }

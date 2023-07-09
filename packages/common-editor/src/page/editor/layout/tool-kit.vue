@@ -62,16 +62,18 @@ import { useRouter } from "vue-router";
 
 import { inject } from "vue";
 import { GlobalEvents, Runtime } from "../runtime";
-import exportAsImage from "@/utils/exportAsImage"
+import exportAsImage, { exportAsBase64 } from "@/utils/exportAsImage"
 const router = useRouter();
 const actorStore = useActorsStore();
 const globalStore = useGlobalStore();
 const runtime = inject("runtime") as Runtime
 
-function handleSave() {
+async function handleSave() {
+    const imgData = await exportAsBase64("editor-canvas");
     save({
         projectId: "",
-        elementJSON: JSON.stringify(actorStore.actors)
+        elementJSON: JSON.stringify(actorStore.actors),
+        imgData,
     })
 }
 function handleSetting() {

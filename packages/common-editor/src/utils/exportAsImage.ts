@@ -41,3 +41,20 @@ export default async function exportAsImage(svgId: string, imageName: string = '
     })
 }
 
+export async function exportAsBase64(svgId: string): Promise<string> {
+    const svg = document.getElementById(svgId) as HTMLElement;
+    const preset = presets.offscreen()
+    const canvas = new OffscreenCanvas(600, 10000);
+    const ctx = canvas.getContext('2d')
+    const v = await Canvg.from(ctx!, svg.innerHTML, preset)
+    await v.render()
+    const blob = await canvas.convertToBlob()
+    const file = new File([blob], 'screenshot.png', { type: 'image/jpeg' });
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    return new Promise((resolve) => {
+        reader.onload = function () {
+            resolve(reader.result as string)
+        }
+    })
+}

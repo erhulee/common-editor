@@ -1,6 +1,5 @@
 <template>
     <div class="flex w-full h-full flex-col page">
-
         <div class="main">
             <div class="left  border-r">
                 <TabGroup vertical class=" h-full">

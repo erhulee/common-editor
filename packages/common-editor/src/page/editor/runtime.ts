@@ -1,3 +1,4 @@
+import { FabricController } from "@/fabric-sdk/fabric-controller";
 import { useActorsStore } from "@/store/actors";
 import { isShape } from "@/utils/isShape";
 import EventEmitter from "eventemitter3";
@@ -31,6 +32,7 @@ export class Runtime {
     eventsEmitter: EventEmitter
     globalState: Ref<GlobalState>
     actorStore: ReturnType<typeof useActorsStore>;
+    fabricController: FabricController
     private preGlobalState: GlobalState = GlobalState.IDLE
     private routerStack: Ref<string[]>
 
@@ -39,6 +41,7 @@ export class Runtime {
         this.routerStack = ref([]);
         this.globalState = ref(GlobalState.IDLE);
         this.actorStore = useActorsStore();
+        this.fabricController = new FabricController();
     }
 
     get setting() {
